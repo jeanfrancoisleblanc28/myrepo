@@ -9,12 +9,16 @@ Welcome to MyRepo! This is a professional project repository designed to showcas
 - CI/CD pipeline with GitHub Actions
 - Contributing guidelines
 - License information
+- Issue and pull request templates for streamlined collaboration
+- Makefile with common development commands
+- Changelog tracking
 
 ## Getting Started
 
 1. Clone the repository
-2. Install dependencies
-3. Start contributing
+2. Run `make setup` to install dependencies
+3. Run `make help` to see all available commands
+4. Start contributing
 
 ## Contributing
 
