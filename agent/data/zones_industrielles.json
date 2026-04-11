@@ -70,8 +70,12 @@
         {
           "code": "M-1",
           "type": "Industrielle légère / agroalimentaire",
+          "description": "Industries légères et transformation agroalimentaire",
           "superficie_disponible_ha": 6,
-          "prix_moyen_pied_carre": 2.20
+          "prix_moyen_pied_carre": 2.20,
+          "infrastructures": ["eau potable", "égout", "électricité"],
+          "acces": ["Route 235", "Route 132 (via Sainte-Victoire)"],
+          "secteurs": ["Rang Sud", "Route de l'Église"]
         }
       ]
     },
@@ -82,8 +86,12 @@
         {
           "code": "M-1",
           "type": "Industrielle légère",
+          "description": "Petite zone industrielle légère en milieu villageois",
           "superficie_disponible_ha": 3,
-          "prix_moyen_pied_carre": 2.00
+          "prix_moyen_pied_carre": 2.00,
+          "infrastructures": ["eau potable", "égout", "électricité"],
+          "acces": ["Route 132", "Route Marie-Victorin"],
+          "secteurs": ["Rue Bonsecours"]
         }
       ]
     }

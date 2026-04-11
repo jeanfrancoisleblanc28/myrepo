@@ -426,7 +426,7 @@ def run_anthropic_agent(data: dict, api_key: Optional[str] = None):
 
         try:
             response = client.messages.create(
-                model="claude-opus-4-5",
+                model="claude-opus-4-6",
                 max_tokens=1500,
                 system=system_prompt,
                 messages=messages,
