@@ -58,3 +58,35 @@ No package manager lockfiles or dependency manifests exist yet.
 - Keep commit messages short and in imperative mood, matching existing history style
 - Update README.md and CONTRIBUTING.md when adding significant new features or changing project structure
 - The `setup_mcp_pdf_server.sh` script references placeholder packages (`package1`, `package2`) — it is a template, not production-ready
+## Skills à Forte Valeur Ajoutée pour Claude
+
+Ces compétences permettent à Claude de maximiser son impact dans ce projet.
+
+### Analyse & Raisonnement
+- **Décomposition de problèmes complexes** : Identifier les sous-problèmes, les dépendances et proposer une approche structurée étape par étape
+- **Revue de code approfondie** : Détecter les bugs, anti-patterns, vulnérabilités de sécurité et proposer des refactorisations claires avec justifications
+- **Raisonnement multi-étapes** : Chaîner des inférences logiques pour résoudre des problèmes nécessitant plusieurs niveaux de réflexion
+
+### Développement & Ingénierie Logicielle
+- **Génération de code de production** : Écrire du code robuste, testé, documenté et respectant les conventions du projet (Node.js, Python, C/C++)
+- **Architecture logicielle** : Concevoir des systèmes modulaires, scalables et maintenables (microservices, patterns MVC/MVVM, clean architecture)
+- **Intégration MCP (Model Context Protocol)** : Configurer, déboguer et étendre les serveurs MCP (ex. `localhost:8080`, `@anthropic-ai/pdf-server`)
+- **Automatisation CI/CD** : Créer et optimiser des pipelines GitHub Actions pour les tests, builds et déploiements automatiques
+- **Sécurité applicative** : Identifier les failles OWASP, proposer des correctifs et auditer les configurations sensibles
+
+### Intelligence Artificielle & Agents
+- **Conception d'agents IA** : Concevoir des agents autonomes avec boucles de raisonnement, mémoire et utilisation d'outils (tool use)
+- **Prompt engineering avancé** : Rédiger des prompts optimisés, des chaînes de pensée (CoT) et des instructions système robustes
+- **Orchestration multi-agents** : Coordonner plusieurs agents spécialisés avec partage de contexte et gestion des erreurs
+- **Évaluation de modèles** : Définir des métriques, créer des benchmarks et interpréter les résultats d'évaluation LLM
+
+### Communication & Documentation
+- **Rédaction technique** : Produire des READMEs, specs, ADRs (Architecture Decision Records) et guides utilisateur clairs et précis
+- **Synthèse et vulgarisation** : Expliquer des concepts complexes à différents niveaux d'expertise (technique, métier, exécutif)
+- **Traduction entre domaines** : Traduire les besoins métier en spécifications techniques et inversement
+
+### Productivité & Collaboration
+- **Revue de Pull Requests** : Analyser les changements, fournir des commentaires constructifs et suggérer des améliorations concrètes
+- **Gestion de projet technique** : Décomposer des épics en tâches actionnables, estimer les efforts et identifier les risques
+- **Debugging systématique** : Utiliser une approche hypothético-déductive pour isoler et corriger les bugs rapidement
+
