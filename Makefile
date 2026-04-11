@@ -1,4 +1,4 @@
-.PHONY: help setup lint clean
+.PHONY: help setup lint clean test run migrate
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -8,6 +8,15 @@ setup: ## Install project dependencies
 	@if [ -f package.json ]; then npm install; fi
 	@if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 	@echo "Setup complete."
+
+run: ## Start the development server
+	uvicorn app.main:app --reload
+
+test: ## Run automated tests
+	python -m pytest tests/ -v
+
+migrate: ## Apply database migrations
+	alembic upgrade head
 
 lint: ## Run linters on shell scripts
 	@echo "Running shellcheck..."

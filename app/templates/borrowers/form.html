@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Modifier' if borrower else 'Nouvel' }} emprunteur{% endblock %}
+{% block content %}
+<h2>{{ 'Modifier l\'emprunteur' if borrower else 'Nouvel emprunteur' }}</h2>
+<div class="card" style="max-width:540px">
+  {% if errors %}
+  <ul class="errors">{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+  {% endif %}
+  <form method="post">
+    <div class="form-group">
+      <label for="legal_name">Nom légal *</label>
+      <input type="text" id="legal_name" name="legal_name"
+             value="{{ (form.legal_name if form else '') or (borrower.legal_name if borrower else '') }}" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Courriel</label>
+      <input type="email" id="email" name="email"
+             value="{{ (form.email if form else '') or (borrower.email if borrower else '') }}">
+    </div>
+    <div class="form-group">
+      <label for="phone">Téléphone</label>
+      <input type="text" id="phone" name="phone"
+             value="{{ (form.phone if form else '') or (borrower.phone if borrower else '') }}">
+    </div>
+    <div class="form-group">
+      <label for="address">Adresse</label>
+      <textarea id="address" name="address">{{ (form.address if form else '') or (borrower.address if borrower else '') }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Enregistrer</button>
+    <a href="/borrowers/" class="btn btn-primary" style="margin-left:.5rem">Annuler</a>
+  </form>
+</div>
+{% endblock %}
