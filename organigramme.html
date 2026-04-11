@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organigramme — DÉPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deps-navy:        #141F4E;
+    --deps-navy-deep:   #0B1336;
+    --deps-navy-soft:   #2A3770;
+    --deps-teal:        #2BC4D4;
+    --deps-teal-soft:   #6FDFEA;
+    --deps-ink:         #0E1430;
+    --deps-paper:       #F5F7FB;
+    --deps-line:        #B8C1DB;
+    --deps-white:       #FFFFFF;
+    --shadow-sm:        0 1px 2px rgba(11, 19, 54, 0.06), 0 2px 6px rgba(11, 19, 54, 0.08);
+    --shadow-md:        0 4px 10px rgba(11, 19, 54, 0.10), 0 12px 30px rgba(11, 19, 54, 0.12);
+    --shadow-lg:        0 10px 24px rgba(11, 19, 54, 0.14), 0 24px 60px rgba(11, 19, 54, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--deps-ink);
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(43, 196, 212, 0.08), transparent 60%),
+      radial-gradient(900px 500px at 0% 100%, rgba(20, 31, 78, 0.06), transparent 60%),
+      var(--deps-paper);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .page {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 48px 56px 80px;
+  }
+
+  /* ---------- Header ---------- */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(20, 31, 78, 0.10);
+    margin-bottom: 48px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .logo {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 56px;
+    letter-spacing: -0.04em;
+    color: var(--deps-navy);
+    line-height: 0.9;
+    position: relative;
+    padding-right: 2px;
+  }
+  .logo .bar {
+    display: inline-block;
+    position: relative;
+  }
+  .logo .bar::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 12%;
+    width: 76%;
+    height: 6px;
+    background: var(--deps-teal);
+    border-radius: 2px;
+  }
+
+  .brand-text {
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--deps-navy);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-left: 2px solid rgba(20, 31, 78, 0.15);
+    padding-left: 16px;
+  }
+
+  .title-block {
+    text-align: right;
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--deps-teal);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--deps-navy);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--deps-navy-soft);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* ---------- Chart ---------- */
+  .chart {
+    position: relative;
+    padding: 24px 0 12px;
+  }
+
+  .chart svg.lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .row {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 28px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 68px;
+  }
+  .row:last-child { margin-bottom: 0; }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 68px;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+  }
+
+  /* ---------- Card Base ---------- */
+  .card {
+    position: relative;
+    background: linear-gradient(145deg, var(--deps-navy) 0%, var(--deps-navy-deep) 100%);
+    color: var(--deps-white);
+    border-radius: 14px;
+    padding: 18px 22px;
+    min-width: 210px;
+    max-width: 260px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--deps-teal) 0%, var(--deps-teal-soft) 100%);
+    border-radius: 14px 14px 0 0;
+  }
+  .card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 85% 110%, rgba(43, 196, 212, 0.14), transparent 55%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .role {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.35;
+    color: var(--deps-white);
+    margin: 0 0 6px;
+  }
+  .name {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  /* ---------- Card Variants ---------- */
+  .card.exec {
+    min-width: 250px;
+    padding: 22px 26px;
+    box-shadow: var(--shadow-lg);
+  }
+  .card.exec .role { font-size: 15px; }
+  .card.exec .name { font-size: 13px; }
+
+  .card.board {
+    min-width: 230px;
+    background: linear-gradient(145deg, var(--deps-navy-deep) 0%, #060A24 100%);
+  }
+  .card.board::before {
+    background: var(--deps-teal);
+    height: 4px;
+  }
+
+  .card.staff {
+    background: var(--deps-white);
+    color: var(--deps-navy);
+    border: 1px solid rgba(20, 31, 78, 0.10);
+  }
+  .card.staff::before {
+    background: linear-gradient(90deg, var(--deps-navy) 0%, var(--deps-teal) 100%);
+    height: 3px;
+  }
+  .card.staff::after {
+    background: radial-gradient(circle at 85% 110%, rgba(20, 31, 78, 0.05), transparent 55%);
+  }
+  .card.staff .role { color: var(--deps-navy); font-size: 12.5px; }
+  .card.staff .name { color: var(--deps-navy-soft); }
+
+  .card.admin {
+    background: var(--deps-white);
+    color: var(--deps-navy);
+    border: 1px dashed rgba(20, 31, 78, 0.30);
+  }
+  .card.admin::before {
+    background: var(--deps-teal);
+  }
+  .card.admin .role { color: var(--deps-navy); font-size: 12.5px; }
+  .card.admin .name { color: var(--deps-navy-soft); }
+
+  /* ---------- Layout positioning helpers ---------- */
+  .branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .branch-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    justify-content: center;
+  }
+
+  .row-top { justify-content: center; margin-bottom: 60px; }
+  .row-dg  { justify-content: center; margin-bottom: 60px; }
+  .row-dga {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 70px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .branches {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px;
+    align-items: start;
+    position: relative;
+    z-index: 1;
+  }
+
+  .branch .leaf-group {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 60px;
+    width: 100%;
+  }
+
+  .leaf {
+    flex: 1 1 0;
+    max-width: 240px;
+  }
+
+  /* ---------- Footer / legend ---------- */
+  .legend {
+    display: flex;
+    gap: 22px;
+    justify-content: center;
+    margin-top: 64px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(20, 31, 78, 0.10);
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--deps-navy-soft);
+    font-weight: 500;
+  }
+  .swatch {
+    width: 18px;
+    height: 12px;
+    border-radius: 3px;
+    box-shadow: var(--shadow-sm);
+  }
+  .swatch.gov   { background: linear-gradient(145deg, #060A24, var(--deps-navy-deep)); }
+  .swatch.exec  { background: linear-gradient(145deg, var(--deps-navy), var(--deps-navy-deep)); border-top: 2px solid var(--deps-teal); }
+  .swatch.mgr   { background: linear-gradient(145deg, var(--deps-navy), var(--deps-navy-deep)); }
+  .swatch.staff { background: var(--deps-white); border: 1px solid rgba(20,31,78,0.12); border-top: 2px solid var(--deps-teal); }
+  .swatch.admin { background: var(--deps-white); border: 1px dashed rgba(20,31,78,0.35); border-top: 2px solid var(--deps-teal); }
+
+  .footer {
+    text-align: center;
+    margin-top: 42px;
+    font-size: 11px;
+    color: var(--deps-navy-soft);
+    letter-spacing: 0.04em;
+  }
+
+  @media print {
+    body { background: white; }
+    .card:hover { transform: none; box-shadow: var(--shadow-md); }
+    .page { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ================= HEADER ================= -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo">d<span class="bar">ē</span>ps</div>
+        <div class="brand-text">
+          Développement<br>
+          Économique<br>
+          Pierre-De Saurel
+        </div>
+      </div>
+      <div class="title-block">
+        <div class="eyebrow">Structure organisationnelle</div>
+        <h1 class="title">Organigramme</h1>
+        <div class="subtitle">Équipe &middot; 2026</div>
+      </div>
+    </header>
+
+    <!-- ================= CHART ================= -->
+    <section class="chart">
+
+      <!-- Connector lines -->
+      <svg class="lines" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1200 1200">
+        <defs>
+          <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stop-color="#2BC4D4" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#141F4E" stop-opacity="0.55"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#lineGrad)" stroke-width="2.25" stroke-linecap="round">
+          <!-- CA -> DG -->
+          <path d="M 600 80 L 600 150"/>
+          <!-- DG -> DGA -->
+          <path d="M 600 220 L 600 290"/>
+          <!-- DGA -> Coord. admin (side) -->
+          <path d="M 545 325 L 465 325"/>
+          <!-- DG -> 4 branches bus -->
+          <path d="M 600 355 L 600 395 L 170 395 L 170 440"/>
+          <path d="M 600 395 L 600 440"/>
+          <path d="M 600 395 L 900 395 L 900 440"/>
+          <path d="M 600 395 L 1060 395 L 1060 440"/>
+          <!-- Tourisme -> 2 leaves -->
+          <path d="M 170 520 L 170 565 L 80 565 L 80 620"/>
+          <path d="M 170 565 L 260 565 L 260 620"/>
+          <!-- Commissaire DGA -> 3 leaves  -->
+          <path d="M 600 520 L 600 560 L 480 560 L 480 620"/>
+          <path d="M 600 560 L 600 620"/>
+          <path d="M 600 560 L 720 560 L 720 620"/>
+          <!-- Cheffe comm -> Conseillère attraction -->
+          <path d="M 1060 520 L 1060 620"/>
+        </g>
+      </svg>
+
+      <!-- ROW 1 : Conseil d'administration -->
+      <div class="row row-top">
+        <div class="card board">
+          <p class="role">Conseil d'administration<br><span style="opacity:.75;font-weight:500;font-size:11px;letter-spacing:.05em;text-transform:uppercase;">Présidente</span></p>
+          <p class="name">Chantal Cimon</p>
+        </div>
+      </div>
+
+      <!-- ROW 2 : Directrice Générale -->
+      <div class="row row-dg">
+        <div class="card exec">
+          <p class="role">Directrice Générale</p>
+          <p class="name">Julie Gagnon, MBA</p>
+        </div>
+      </div>
+
+      <!-- ROW 3 : DGA + Coordonnatrice administrative -->
+      <div class="row-dga">
+        <div class="card admin">
+          <p class="role">Coordonnatrice administrative</p>
+          <p class="name">Marie-Soleil Patenaude</p>
+        </div>
+        <div class="card exec">
+          <p class="role">Directeur Général-Adjoint</p>
+          <p class="name">Jean-François Leblanc, C.P.A</p>
+        </div>
+      </div>
+
+      <!-- ROW 4 : 4 branches -->
+      <div class="branches">
+
+        <!-- Branch 1 : Tourisme -->
+        <div class="branch">
+          <div class="card">
+            <p class="role">Directrice Tourisme</p>
+            <p class="name">Marie-Josée Picard</p>
+          </div>
+          <div class="leaf-group">
+            <div class="card staff leaf">
+              <p class="role">Conseillère touristique</p>
+              <p class="name">Karianne Lafrenière</p>
+            </div>
+            <div class="card staff leaf">
+              <p class="role">Conseillère au développement agricole et agroalimentaire (PDZA)</p>
+              <p class="name">Camille Bergeron</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Branch 2 : Entreprises (under DGA) -->
+        <div class="branch">
+          <div class="card">
+            <p class="role">Équipe entreprises</p>
+            <p class="name" style="opacity:.7">Sous la Direction Générale-Adjointe</p>
+          </div>
+          <div class="leaf-group" style="gap:14px;">
+            <div class="card staff leaf">
+              <p class="role">Conseillère aux entreprises</p>
+              <p class="name">Mélanie Dulong</p>
+            </div>
+            <div class="card staff leaf">
+              <p class="role">Conseiller aux entreprises</p>
+              <p class="name">Éric Coulombe</p>
+            </div>
+            <div class="card staff leaf">
+              <p class="role">Conseillère aux entreprises et à la direction</p>
+              <p class="name">Daniella Marie Eunice Icart</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Branch 3 : Commissaire -->
+        <div class="branch">
+          <div class="card">
+            <p class="role">Commissaire au développement économique</p>
+            <p class="name">Jean-Philip Beaumier</p>
+          </div>
+          <div class="leaf-group" style="visibility:hidden;">
+            <div class="card staff leaf"><p class="role">&nbsp;</p><p class="name">&nbsp;</p></div>
+          </div>
+        </div>
+
+        <!-- Branch 4 : Communications -->
+        <div class="branch">
+          <div class="card">
+            <p class="role">Cheffe des communications</p>
+            <p class="name">Emanuèle Roux</p>
+          </div>
+          <div class="leaf-group">
+            <div class="card staff leaf">
+              <p class="role">Conseillère à l'attraction et rétention des talents</p>
+              <p class="name">Caroline Roberge</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================= LEGEND ================= -->
+    <div class="legend">
+      <div class="legend-item"><span class="swatch gov"></span>Gouvernance</div>
+      <div class="legend-item"><span class="swatch exec"></span>Direction</div>
+      <div class="legend-item"><span class="swatch mgr"></span>Gestion</div>
+      <div class="legend-item"><span class="swatch admin"></span>Soutien administratif</div>
+      <div class="legend-item"><span class="swatch staff"></span>Équipe conseil</div>
+    </div>
+
+    <p class="footer">DÉVELOPPEMENT ÉCONOMIQUE PIERRE-DE SAUREL &nbsp;·&nbsp; deps.qc.ca</p>
+
+  </div>
+</body>
+</html>
