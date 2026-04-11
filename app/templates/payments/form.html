@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Saisir un paiement{% endblock %}
+{% block content %}
+<h2>Saisir un paiement</h2>
+<div class="card" style="max-width:540px">
+  {% if errors %}
+  <ul class="errors">{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+  {% endif %}
+  <form method="post">
+    <div class="form-group">
+      <label for="loan_id">Prêt *</label>
+      <select id="loan_id" name="loan_id" required>
+        <option value="">— Sélectionner —</option>
+        {% for loan in loans %}
+        <option value="{{ loan.id }}"
+          {% if selected_loan and selected_loan.id == loan.id %}selected
+          {% elif form and form.loan_id == loan.id|string %}selected{% endif %}>
+          {{ loan.loan_number }} — {{ loan.borrower.legal_name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="payment_date">Date du paiement *</label>
+      <input type="date" id="payment_date" name="payment_date"
+             value="{{ form.payment_date if form else '' }}" required>
+    </div>
+    <div class="form-group">
+      <label for="amount">Montant ($) *</label>
+      <input type="number" id="amount" name="amount" step="0.01" min="0.01"
+             value="{{ form.amount if form else '' }}" required>
+    </div>
+    <div class="form-group">
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes">{{ form.notes if form else '' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Enregistrer</button>
+    <a href="/loans/" class="btn btn-primary" style="margin-left:.5rem">Annuler</a>
+  </form>
+</div>
+{% endblock %}

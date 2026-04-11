@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Emprunteurs{% endblock %}
+{% block content %}
+<div class="actions">
+  <h2>Emprunteurs</h2>
+  <a href="/borrowers/new" class="btn btn-primary">+ Nouvel emprunteur</a>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Nom légal</th>
+      <th>Courriel</th>
+      <th>Téléphone</th>
+      <th>Prêts</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for b in borrowers %}
+    <tr>
+      <td><a href="/borrowers/{{ b.id }}">{{ b.legal_name }}</a></td>
+      <td>{{ b.email or '—' }}</td>
+      <td>{{ b.phone or '—' }}</td>
+      <td>{{ b.loans | length }}</td>
+      <td>
+        <a href="/borrowers/{{ b.id }}/edit" class="btn btn-primary btn-sm">Modifier</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" class="text-muted" style="padding:1rem">Aucun emprunteur enregistré.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

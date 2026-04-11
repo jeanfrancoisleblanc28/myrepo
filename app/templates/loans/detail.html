@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Prêt {{ loan.loan_number }}{% endblock %}
+{% block content %}
+<div class="actions">
+  <h2>Prêt {{ loan.loan_number }}</h2>
+  <a href="/loans/" class="btn btn-primary btn-sm">← Prêts</a>
+  <a href="/payments/new?loan_id={{ loan.id }}" class="btn btn-success btn-sm">+ Paiement</a>
+  <a href="/reports/payments/{{ loan.id }}" class="btn btn-primary btn-sm">Historique</a>
+  <a href="/reports/payments/{{ loan.id }}/csv" class="btn btn-primary btn-sm">📥 CSV</a>
+  {% if loan.status.value == 'active' %}
+  <form method="post" action="/loans/{{ loan.id }}/close" style="display:inline">
+    <button type="submit" class="btn btn-danger btn-sm"
+            onclick="return confirm('Fermer ce prêt?')">Fermer</button>
+  </form>
+  {% endif %}
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi">
+    <div class="label">Emprunteur</div>
+    <div class="value" style="font-size:1rem">
+      <a href="/borrowers/{{ loan.borrower.id }}">{{ loan.borrower.legal_name }}</a>
+    </div>
+  </div>
+  <div class="kpi">
+    <div class="label">Capital initial</div>
+    <div class="value">{{ "%.2f $"|format(loan.principal_amount|float) }}</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Solde capital</div>
+    <div class="value">{{ "%.2f $"|format(loan.outstanding_principal|float) }}</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Taux annuel</div>
+    <div class="value">{{ "%.4f %%"|format(loan.annual_interest_rate|float * 100) }}</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Durée</div>
+    <div class="value">{{ loan.term_months }} mois</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Statut</div>
+    <div class="value"><span class="badge badge-{{ loan.status.value }}">{{ loan.status.value }}</span></div>
+  </div>
+</div>
+
+<h3>Calendrier d'amortissement</h3>
+<div style="overflow-x:auto">
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Date d'échéance</th>
+      <th>Solde ouverture</th>
+      <th>Paiement</th>
+      <th>Intérêts</th>
+      <th>Capital</th>
+      <th>Solde fermeture</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in loan.amortization_schedule %}
+    <tr>
+      <td>{{ entry.period_number }}</td>
+      <td>{{ entry.due_date }}</td>
+      <td class="text-right">{{ "%.2f"|format(entry.opening_balance|float) }}</td>
+      <td class="text-right">{{ "%.2f"|format(entry.scheduled_payment|float) }}</td>
+      <td class="text-right">{{ "%.2f"|format(entry.interest_portion|float) }}</td>
+      <td class="text-right">{{ "%.2f"|format(entry.principal_portion|float) }}</td>
+      <td class="text-right">{{ "%.2f"|format(entry.closing_balance|float) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% if loan.payments %}
+<h3 style="margin-top:1.5rem">Paiements reçus</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Montant</th>
+      <th>Intérêts</th>
+      <th>Capital</th>
+      <th>Solde après</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in loan.payments %}
+    <tr>
+      <td>{{ p.payment_date }}</td>
+      <td class="text-right">{{ "%.2f $"|format(p.amount|float) }}</td>
+      <td class="text-right">{{ "%.2f"|format(p.interest_applied|float) }}</td>
+      <td class="text-right">{{ "%.2f"|format(p.principal_applied|float) }}</td>
+      <td class="text-right">{{ "%.2f"|format(p.balance_after|float) }}</td>
+      <td>{{ p.notes or '' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

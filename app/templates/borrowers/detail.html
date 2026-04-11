@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ borrower.legal_name }}{% endblock %}
+{% block content %}
+<div class="actions">
+  <h2>{{ borrower.legal_name }}</h2>
+  <a href="/borrowers/{{ borrower.id }}/edit" class="btn btn-primary btn-sm">Modifier</a>
+  <a href="/borrowers/" class="btn btn-primary btn-sm">← Retour</a>
+</div>
+<div class="card" style="max-width:500px">
+  <p><strong>Courriel :</strong> {{ borrower.email or '—' }}</p>
+  <p style="margin-top:.5rem"><strong>Téléphone :</strong> {{ borrower.phone or '—' }}</p>
+  <p style="margin-top:.5rem"><strong>Adresse :</strong> {{ borrower.address or '—' }}</p>
+</div>
+
+<h3>Prêts ({{ borrower.loans | length }})</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Numéro</th>
+      <th>Capital initial</th>
+      <th>Taux</th>
+      <th>Durée</th>
+      <th>Statut</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for loan in borrower.loans %}
+    <tr>
+      <td>{{ loan.loan_number }}</td>
+      <td class="text-right">{{ "%.2f $"|format(loan.principal_amount|float) }}</td>
+      <td>{{ "%.2f %%"|format(loan.annual_interest_rate|float * 100) }}</td>
+      <td>{{ loan.term_months }} mois</td>
+      <td><span class="badge badge-{{ loan.status.value }}">{{ loan.status.value }}</span></td>
+      <td><a href="/loans/{{ loan.id }}" class="btn btn-primary btn-sm">Voir</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" class="text-muted">Aucun prêt.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div style="margin-top:1rem">
+  <a href="/loans/new" class="btn btn-success">+ Nouveau prêt pour cet emprunteur</a>
+</div>
+{% endblock %}

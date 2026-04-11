@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Prêts{% endblock %}
+{% block content %}
+<div class="actions">
+  <h2>Prêts</h2>
+  <a href="/loans/new" class="btn btn-primary">+ Nouveau prêt</a>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Numéro</th>
+      <th>Emprunteur</th>
+      <th>Capital initial</th>
+      <th>Taux annuel</th>
+      <th>Durée</th>
+      <th>Solde</th>
+      <th>Statut</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for loan in loans %}
+    <tr>
+      <td><a href="/loans/{{ loan.id }}">{{ loan.loan_number }}</a></td>
+      <td>{{ loan.borrower.legal_name }}</td>
+      <td class="text-right">{{ "%.2f $"|format(loan.principal_amount|float) }}</td>
+      <td>{{ "%.2f %%"|format(loan.annual_interest_rate|float * 100) }}</td>
+      <td>{{ loan.term_months }} mois</td>
+      <td class="text-right">{{ "%.2f $"|format(loan.outstanding_principal|float) }}</td>
+      <td><span class="badge badge-{{ loan.status.value }}">{{ loan.status.value }}</span></td>
+      <td><a href="/loans/{{ loan.id }}" class="btn btn-primary btn-sm">Voir</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8" class="text-muted" style="padding:1rem">Aucun prêt enregistré.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

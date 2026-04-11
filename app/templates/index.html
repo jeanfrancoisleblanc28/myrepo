@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Accueil — Gestionnaire de prêts{% endblock %}
+{% block content %}
+<h2>Bienvenue dans le Gestionnaire de prêts à terme</h2>
+<div class="kpi-grid" style="margin-top:1.5rem;">
+  <div class="kpi">
+    <div class="label">Emprunteurs</div>
+    <div class="value"><a href="/borrowers/">Gérer →</a></div>
+  </div>
+  <div class="kpi">
+    <div class="label">Prêts actifs</div>
+    <div class="value"><a href="/loans/">Gérer →</a></div>
+  </div>
+  <div class="kpi">
+    <div class="label">Paiements</div>
+    <div class="value"><a href="/payments/new">Saisir →</a></div>
+  </div>
+  <div class="kpi">
+    <div class="label">Rapports</div>
+    <div class="value"><a href="/reports/summary">Voir →</a></div>
+  </div>
+</div>
+{% endblock %}
