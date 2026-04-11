@@ -13,3 +13,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pull request template with checklist
 - Makefile with common development commands (`help`, `setup`, `lint`, `clean`)
 - CHANGELOG.md to track project changes
+- Verified GitHub connector integration (issue #1 — test de démonstration)
