@@ -1,6 +1,6 @@
 # Agent Commissaire Industriel — MRC Pierre-De Saurel
 
-> **Jean-François Leblanc** — Le meilleur commissaire industriel au monde, au service de la MRC Pierre-De Saurel (Sorel-Tracy, Québec).
+>  — Le meilleur commissaire industriel au monde, au service de la MRC Pierre-De Saurel (Sorel-Tracy, Québec).
 
 ## Description
 
