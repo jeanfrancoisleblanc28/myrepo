@@ -1,4 +1,4 @@
-# MyRepo
+# Awesome MyRepo [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
 Welcome to MyRepo! This is a professional project repository designed to showcase best practices in software development.
 
@@ -23,10 +23,6 @@ Welcome to MyRepo! This is a professional project repository designed to showcas
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
-## License
-
-This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Contact
 
