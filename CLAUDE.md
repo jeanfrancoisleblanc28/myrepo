@@ -57,4 +57,4 @@ No package manager lockfiles or dependency manifests exist yet.
 - Do not commit `node_modules/`, `__pycache__/`, IDE configs, or OS-specific files
 - Keep commit messages short and in imperative mood, matching existing history style
 - Update README.md and CONTRIBUTING.md when adding significant new features or changing project structure
-- The `setup_mcp_pdf_server.sh` script references placeholder packages (`package1`, `package2`) — it is a template, not production-ready
+- The `setup_mcp_pdf_server.sh` script installs Node.js (required to run `npx @anthropic-ai/pdf-server`); its configuration-copy step and validation check are still illustrative placeholders

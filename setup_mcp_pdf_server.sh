@@ -2,13 +2,18 @@
 # Setup Script for MCP PDF Server
 
 # Function to install dependencies
+# The MCP PDF server runs via `npx @anthropic-ai/pdf-server`, so the only
+# system-level dependency required is Node.js (which provides npm and npx).
 install_dependencies() {
     echo "Installing dependencies..."
-    # Example for Linux/Mac
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        sudo apt-get install -y package1 package2
-    elif [[ "$OSTYPE" == "darwin" ]]; then
-        brew install package1 package2
+        sudo apt-get update
+        sudo apt-get install -y nodejs npm
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        brew install node
+    else
+        echo "Unsupported OS: $OSTYPE. Please install Node.js manually."
+        return 1
     fi
 }
 
@@ -39,8 +44,8 @@ setup_configuration
 validate_installation
 
 # Instructions for Windows
-# 1. Download and install package1 and package2 manually.
+# 1. Download and install Node.js (which includes npm and npx) from https://nodejs.org/
 # 2. Set up MCP configuration in C:\Program Files\MCP\
-# 3. Validate installation by checking the installed applications in Control Panel.
+# 3. Validate installation by running `npx @anthropic-ai/pdf-server --version` in a terminal.
 
 echo "Setup script execution completed."
