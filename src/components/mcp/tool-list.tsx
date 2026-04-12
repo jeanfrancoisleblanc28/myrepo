@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/toast";
 
 export function ToolList() {
   const [tools, setTools] = useState<string[]>([]);
@@ -13,6 +14,7 @@ export function ToolList() {
   const [error, setError] = useState<string | null>(null);
   const [invoking, setInvoking] = useState<string | null>(null);
   const [output, setOutput] = useState<Record<string, string>>({});
+  const { toast } = useToast();
 
   const load = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
@@ -37,10 +39,16 @@ export function ToolList() {
     setInvoking(tool);
     const res = await invokeTool(tool, {});
     setInvoking(null);
-    setOutput((prev) => ({
-      ...prev,
-      [tool]: res.ok ? JSON.stringify(res.data, null, 2) : (res.error || "Erreur"),
-    }));
+
+    if (res.ok) {
+      const data = JSON.stringify(res.data, null, 2);
+      setOutput((prev) => ({ ...prev, [tool]: data }));
+      toast({ title: `${tool} exécuté`, description: "Résultat disponible ci-dessous.", variant: "success", duration: 3000 });
+    } else {
+      const err = res.error || "Erreur";
+      setOutput((prev) => ({ ...prev, [tool]: err }));
+      toast({ title: `Échec de ${tool}`, description: err, variant: "error", duration: 5000 });
+    }
   }
 
   if (loading) {

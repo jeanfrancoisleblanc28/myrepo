@@ -39,7 +39,23 @@ export function Navbar() {
             ))}
           </ul>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true }))}
+            className={cn(
+              "hidden sm:inline-flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-1.5 text-sm text-muted-foreground",
+              "hover:bg-accent hover:text-accent-foreground transition-colors",
+            )}
+            aria-label="Ouvrir la palette de commandes"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+            </svg>
+            Rechercher...
+            <kbd className="ml-2 rounded border bg-background px-1.5 py-0.5 font-mono text-[10px]">Ctrl K</kbd>
+          </button>
+          <ThemeToggle />
+        </div>
       </nav>
     </header>
   );
