@@ -63,8 +63,7 @@ jobs:
         run: |
           black --check --diff . || echo "Run 'black .' to fix formatting"
 
-      - name: Lint with flake8 (non-blocking - report only)
-        continue-on-error: true
+      - name: Lint with flake8
         run: |
           flake8 . --count --max-line-length=120 --extend-ignore=E203,W503 \
             --exclude=.git,__pycache__,venv,env,*.egg-info \
