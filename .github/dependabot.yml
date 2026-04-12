@@ -1,0 +1,46 @@
+# Dependabot — Mises a jour automatiques des dependances
+# Cree des PRs automatiques quand des mises a jour de securite sont disponibles.
+# Documentation : https://docs.github.com/en/code-security/dependabot
+
+version: 2
+updates:
+
+  # --- Python (pip) ---
+  - package-ecosystem: "pip"
+    directory: "/agent"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Montreal"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "chore(deps)"
+    reviewers:
+      - "jeanfrancoisleblanc28"
+    groups:
+      python-patch-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+
+  # --- GitHub Actions ---
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Montreal"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"
+    reviewers:
+      - "jeanfrancoisleblanc28"
