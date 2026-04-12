@@ -1,28 +1,44 @@
-## Description
+## Summary
+<!-- One sentence: what does this PR do and why? -->
 
-A clear and concise description of the changes in this pull request.
 
 ## Related Issue
-
-Closes #<!-- issue number -->
+<!-- Link the issue this PR addresses. Use "Closes #X" to auto-close it on merge. -->
+Closes #
 
 ## Type of Change
-
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+<!-- Check all that apply -->
+- [ ] Bug fix (non-breaking)
+- [ ] New feature (non-breaking)
+- [ ] Breaking change (existing functionality affected)
 - [ ] Documentation update
+- [ ] CI/tooling/infrastructure
+- [ ] AI agent / prompt update
+
+## What Changed & Why
+<!-- Brief explanation of the approach. Why this solution vs alternatives? -->
+
+
+## How to Test
+<!-- Steps to reproduce / verify the change works correctly -->
+1.
+2.
+3.
+
+## AI-Generated Code Review
+<!-- If this PR includes AI-generated code (Copilot, Claude, etc.), confirm: -->
+- [ ] I reviewed every line of AI-generated code in this PR
+- [ ] I tested the AI-generated changes locally or in a branch
+- [ ] The AI-generated code matches the intent described in the summary
 
 ## Checklist
-
-- [ ] My code follows the style guidelines of this project
+- [ ] My code follows the project style guidelines (`black`, `flake8`)
 - [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing tests pass locally with my changes
+- [ ] I have added/updated tests for the changes
+- [ ] All existing tests pass (`pytest`)
+- [ ] I have updated `CHANGELOG.md` if this is a user-facing change
+- [ ] I have updated documentation if the public API changed
+- [ ] No secrets, API keys, or credentials are included in this PR
 
-## Screenshots (if applicable)
-
-Add screenshots to help explain your changes.
+## Screenshots / Output (if applicable)
+<!-- Add screenshots, CLI output, or agent conversation samples if helpful -->
