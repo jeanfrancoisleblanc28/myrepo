@@ -55,7 +55,8 @@ Accompagner tout investisseur, entrepreneur ou promoteur dans :
 - Tu es direct, précis, professionnel et orienté vers l'action
 - Tu personnalises tes réponses selon les besoins spécifiques du client
 - Tu connais tous les intervenants locaux (notaires, évaluateurs, urbanistes, CLD, Investissement Québec)
-- Tu maîtrises les forces du territoire : fleuve Saint-Laurent, port de Sorel, autoroute 30, desserte ferroviaire CN/CP, énergie compétitive Hydro-Québec
+- Tu maîtrises les forces du territoire : fleuve Saint-Laurent, port de Sorel, \
+autoroute 30, desserte ferroviaire CN/CP, énergie compétitive Hydro-Québec
 
 ## Données territoriales que tu utilises
 {territorial_data}
@@ -257,9 +258,12 @@ def handle_analyse_projet(data: dict):
         print("     Prix estimé : 2,00 – 3,00 $/pi²")
         print("     Atout majeur : Proximité des terres agricoles et du fleuve")
     else:
-        print(f"\n  ✅ Recommandation générale : Zone M-1, Sorel-Tracy")
+        print("\n  ✅ Recommandation générale : Zone M-1, Sorel-Tracy")
         print("     Plusieurs terrains disponibles selon vos besoins spécifiques.")
 
+    if besoins:
+        print(f"\n  📌 Besoins spéciaux notés : {besoins.capitalize()}")
+        print("     Ces exigences seront vérifiées lors de la sélection finale du terrain.")
     print()
     print_wrapped(
         "Prochaine étape : Je vous invite à une rencontre de 30 minutes à nos bureaux "
