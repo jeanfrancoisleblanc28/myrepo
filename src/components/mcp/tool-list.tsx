@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { listTools, invokeTool } from "@/lib/mcp-client";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -14,23 +14,24 @@ export function ToolList() {
   const [invoking, setInvoking] = useState<string | null>(null);
   const [output, setOutput] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      const res = await listTools();
-      if (cancelled) return;
-      setLoading(false);
-      if (res.ok && res.data) {
-        setTools(res.data.tools);
-      } else {
-        setError(res.error || "Impossible de charger les outils.");
-      }
+  const load = useCallback(async (signal?: AbortSignal) => {
+    setLoading(true);
+    setError(null);
+    const res = await listTools(signal);
+    if (signal?.aborted) return;
+    setLoading(false);
+    if (res.ok && res.data) {
+      setTools(res.data.tools);
+    } else {
+      setError(res.error || "Impossible de charger les outils.");
     }
-
-    load();
-    return () => { cancelled = true; };
   }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    load(controller.signal);
+    return () => controller.abort();
+  }, [load]);
 
   async function handleInvoke(tool: string) {
     setInvoking(tool);
@@ -54,8 +55,11 @@ export function ToolList() {
 
   if (error) {
     return (
-      <div role="alert" className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
-        {error}
+      <div role="alert" className="flex items-center justify-between rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+        <span>{error}</span>
+        <Button variant="outline" size="sm" onClick={() => load()}>
+          Réessayer
+        </Button>
       </div>
     );
   }

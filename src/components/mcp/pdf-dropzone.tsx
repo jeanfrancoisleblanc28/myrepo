@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useRef, type DragEvent } from "react";
+import { useCallback, useState, useRef, useEffect, type DragEvent } from "react";
 import { analyzePdf } from "@/lib/mcp-client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
@@ -18,6 +18,12 @@ export function PdfDropzone() {
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // Abort in-flight request on unmount
+  useEffect(() => {
+    return () => abortRef.current?.abort();
+  }, []);
 
   const handleFile = useCallback(async (file: File) => {
     if (file.type !== "application/pdf") {
@@ -29,12 +35,19 @@ export function PdfDropzone() {
       return;
     }
 
+    // Cancel any previous in-flight request
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setError(null);
     setResult(null);
     setFileName(file.name);
     setLoading(true);
 
-    const res = await analyzePdf(file);
+    const res = await analyzePdf(file, controller.signal);
+
+    if (controller.signal.aborted) return;
     setLoading(false);
 
     if (res.ok && res.data) {
@@ -73,11 +86,15 @@ export function PdfDropzone() {
         role="button"
         tabIndex={0}
         aria-label="Zone de dépôt de fichier PDF. Cliquez ou glissez-déposez un fichier."
+        aria-busy={loading}
+        aria-describedby={error ? "pdf-dropzone-error" : undefined}
         className={cn(
           "flex min-h-[200px] cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-8 transition-colors",
           dragging
             ? "border-primary bg-primary/5"
-            : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/50",
+            : error
+              ? "border-destructive/50 hover:border-destructive"
+              : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/50",
         )}
       >
         {/* Upload icon */}
@@ -122,8 +139,11 @@ export function PdfDropzone() {
 
       {/* Error */}
       {error && (
-        <div role="alert" className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
-          {error}
+        <div id="pdf-dropzone-error" role="alert" className="flex items-center justify-between rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+          <span>{error}</span>
+          <Button variant="outline" size="sm" onClick={() => { setError(null); setFileName(null); }}>
+            Réessayer
+          </Button>
         </div>
       )}
 

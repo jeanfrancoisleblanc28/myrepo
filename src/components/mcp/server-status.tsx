@@ -10,17 +10,19 @@ export function ServerStatus() {
   const [status, setStatus] = useState<Status>("checking");
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
 
     async function check() {
-      const res = await healthCheck();
-      if (!cancelled) setStatus(res.ok ? "online" : "offline");
+      const res = await healthCheck(controller.signal);
+      if (!controller.signal.aborted) {
+        setStatus(res.ok ? "online" : "offline");
+      }
     }
 
     check();
     const interval = setInterval(check, 30_000);
     return () => {
-      cancelled = true;
+      controller.abort();
       clearInterval(interval);
     };
   }, []);
@@ -34,7 +36,7 @@ export function ServerStatus() {
   const { text, variant } = labels[status];
 
   return (
-    <Badge variant={variant} aria-live="polite">
+    <Badge variant={variant} aria-live="polite" aria-atomic="true">
       <span
         className={`mr-1.5 inline-block h-2 w-2 rounded-full ${
           status === "online"
