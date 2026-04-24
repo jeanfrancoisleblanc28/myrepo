@@ -57,6 +57,11 @@ export default function SkillsPage({ searchParams }: PageProps) {
                 Mode présentation
               </Button>
             </Link>
+            <Link href="/skills/document">
+              <Button variant="outline" size="lg">
+                Document client
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -1,0 +1,418 @@
+/* ──────────────────────────────────────────────────────────────────────
+ *  A4 Document layout — screen preview + print output share one source.
+ *  Precision targets: 210 × 297mm pages, 18/22mm safe margins,
+ *  11pt body / 14.5pt lead, hard break-inside-avoid on every page.
+ * ──────────────────────────────────────────────────────────────────────*/
+
+:root {
+  --doc-page-w: 210mm;
+  --doc-page-h: 297mm;
+  --doc-margin-x: 18mm;
+  --doc-margin-top: 20mm;
+  --doc-margin-bottom: 22mm;
+  --doc-ink: #0f172a;            /* slate-900 */
+  --doc-ink-soft: #475569;       /* slate-600 */
+  --doc-ink-mute: #94a3b8;       /* slate-400 */
+  --doc-rule: #e2e8f0;           /* slate-200 */
+  --doc-paper: #ffffff;
+  --doc-accent: #7c3aed;         /* default violet-600 (overridden via inline style) */
+}
+
+/* Screen canvas (behind paper) */
+.doc-canvas {
+  background: #e5e7eb;           /* neutral-200 */
+  min-height: 100vh;
+  padding: 40px 0;
+  color: var(--doc-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Individual A4 "paper" */
+.doc-page {
+  position: relative;
+  width: var(--doc-page-w);
+  height: var(--doc-page-h);
+  margin: 0 auto 24px;
+  background: var(--doc-paper);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 12px 28px rgba(15, 23, 42, 0.12);
+  padding: var(--doc-margin-top) var(--doc-margin-x) var(--doc-margin-bottom);
+  overflow: hidden;
+  color: var(--doc-ink);
+  font-size: 11pt;
+  line-height: 1.55;
+  font-feature-settings: "ss01", "cv11", "liga";
+  break-after: page;
+  page-break-after: always;
+}
+.doc-page:last-child {
+  break-after: auto;
+  page-break-after: auto;
+}
+
+/* Cover page — full bleed, no inner padding */
+.doc-page--cover {
+  padding: 0;
+  color: #ffffff;
+  break-after: page;
+  page-break-after: always;
+}
+
+.doc-page--cover .doc-cover-inner {
+  position: absolute;
+  inset: 0;
+  padding: 24mm 22mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Full-bleed gradient layer */
+.doc-cover-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--doc-accent) 0%, #db2777 55%, #0ea5e9 100%);
+  z-index: 0;
+}
+.doc-cover-bg::before,
+.doc-cover-bg::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(0.5mm);
+  opacity: 0.45;
+}
+.doc-cover-bg::before {
+  top: -10mm;
+  right: -10mm;
+  width: 80mm;
+  height: 80mm;
+  background: radial-gradient(circle, rgba(255,255,255,0.85), transparent 70%);
+}
+.doc-cover-bg::after {
+  bottom: -20mm;
+  left: -15mm;
+  width: 110mm;
+  height: 110mm;
+  background: radial-gradient(circle, rgba(0,0,0,0.25), transparent 70%);
+}
+
+/* Typography */
+.doc-kicker {
+  font-size: 9pt;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--doc-ink-mute);
+}
+.doc-page--cover .doc-kicker {
+  color: rgba(255,255,255,0.75);
+}
+
+.doc-title {
+  font-size: 32pt;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+.doc-title--cover {
+  font-size: 54pt;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.doc-subtitle {
+  font-size: 13pt;
+  line-height: 1.45;
+  color: var(--doc-ink-soft);
+  font-weight: 400;
+  margin: 0;
+  text-wrap: balance;
+}
+.doc-page--cover .doc-subtitle {
+  color: rgba(255,255,255,0.92);
+}
+
+.doc-lead {
+  font-size: 12pt;
+  line-height: 1.55;
+  color: var(--doc-ink);
+  font-weight: 400;
+  text-wrap: pretty;
+}
+
+.doc-rule {
+  height: 1px;
+  border: 0;
+  background: var(--doc-rule);
+  margin: 0;
+}
+.doc-rule-accent {
+  height: 3px;
+  width: 32mm;
+  border: 0;
+  border-radius: 2px;
+  background: var(--doc-accent);
+  margin: 0;
+}
+.doc-page--cover .doc-rule-accent {
+  background: #ffffff;
+  opacity: 0.9;
+}
+
+/* Header + footer bands on every non-cover page */
+.doc-header,
+.doc-footer {
+  position: absolute;
+  left: var(--doc-margin-x);
+  right: var(--doc-margin-x);
+  font-size: 8.5pt;
+  color: var(--doc-ink-mute);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-feature-settings: "tnum";
+}
+.doc-header { top: 10mm; }
+.doc-footer { bottom: 10mm; }
+
+.doc-footer strong {
+  color: var(--doc-ink-soft);
+  font-weight: 600;
+}
+
+/* Table of contents */
+.doc-toc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.doc-toc__item {
+  display: grid;
+  grid-template-columns: 10mm 1fr auto;
+  align-items: baseline;
+  gap: 4mm;
+  padding: 4mm 0;
+  border-bottom: 1px dashed var(--doc-rule);
+  font-size: 11.5pt;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.doc-toc__num {
+  font-feature-settings: "tnum";
+  font-weight: 600;
+  color: var(--doc-ink-mute);
+  letter-spacing: 0.04em;
+}
+.doc-toc__title {
+  font-weight: 600;
+  color: var(--doc-ink);
+}
+.doc-toc__cat {
+  display: block;
+  font-size: 9pt;
+  font-weight: 400;
+  color: var(--doc-ink-mute);
+  letter-spacing: 0.02em;
+  margin-top: 1pt;
+}
+.doc-toc__page {
+  font-feature-settings: "tnum";
+  color: var(--doc-ink-soft);
+  font-weight: 500;
+}
+
+/* Skill page layout */
+.doc-skill {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 10mm;
+  height: 100%;
+}
+.doc-skill__index {
+  font-size: 64pt;
+  line-height: 1;
+  font-weight: 200;
+  letter-spacing: -0.04em;
+  color: var(--doc-accent);
+  font-feature-settings: "tnum";
+}
+.doc-skill__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6mm;
+}
+.doc-skill__desc {
+  font-size: 12pt;
+  line-height: 1.6;
+  color: var(--doc-ink);
+  text-wrap: pretty;
+}
+.doc-pullquote {
+  border-left: 3px solid var(--doc-accent);
+  padding: 3mm 0 3mm 6mm;
+  margin: 0;
+  font-size: 14pt;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--doc-ink);
+  font-style: italic;
+  text-wrap: balance;
+}
+.doc-kv {
+  display: grid;
+  grid-template-columns: 40mm 1fr;
+  gap: 2mm 6mm;
+  border-top: 1px solid var(--doc-rule);
+  padding-top: 6mm;
+  font-size: 10pt;
+}
+.doc-kv__k {
+  color: var(--doc-ink-mute);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 8.5pt;
+  font-weight: 600;
+  padding-top: 2pt;
+}
+.doc-kv__v {
+  color: var(--doc-ink);
+  font-weight: 400;
+}
+.doc-tagrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3mm;
+}
+.doc-tag {
+  font-size: 8.5pt;
+  padding: 1.5mm 3mm;
+  border: 1px solid var(--doc-rule);
+  border-radius: 2mm;
+  color: var(--doc-ink-soft);
+  font-feature-settings: "tnum";
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Chip / category indicator */
+.doc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2mm;
+  padding: 1.5mm 3mm;
+  border-radius: 100px;
+  background: color-mix(in srgb, var(--doc-accent) 10%, transparent);
+  color: var(--doc-accent);
+  font-size: 9pt;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  align-self: flex-start;
+}
+.doc-chip__dot {
+  width: 2mm;
+  height: 2mm;
+  border-radius: 50%;
+  background: var(--doc-accent);
+}
+
+/* Closing page */
+.doc-closing {
+  display: flex;
+  flex-direction: column;
+  gap: 10mm;
+  height: 100%;
+}
+.doc-signature {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12mm;
+  margin-top: auto;
+}
+.doc-sign-box__line {
+  border-bottom: 1px solid var(--doc-ink);
+  height: 16mm;
+}
+.doc-sign-box__label {
+  margin-top: 2mm;
+  font-size: 9pt;
+  color: var(--doc-ink-mute);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Toolbar is screen-only */
+.doc-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(249, 250, 251, 0.92);
+  backdrop-filter: saturate(140%) blur(8px);
+  border-bottom: 1px solid var(--doc-rule);
+}
+.doc-toolbar__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--doc-ink-soft);
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+ *  Print overrides — honoured when user hits Ctrl/Cmd+P or the button.
+ * ──────────────────────────────────────────────────────────────────────*/
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  html, body {
+    background: #ffffff !important;
+  }
+  .doc-canvas {
+    background: #ffffff !important;
+    padding: 0 !important;
+  }
+  .doc-toolbar,
+  .print-hide,
+  nav[aria-label="Navigation principale"],
+  header.sticky {
+    display: none !important;
+  }
+  .doc-page {
+    margin: 0 !important;
+    box-shadow: none !important;
+    page-break-after: always;
+    break-after: page;
+  }
+  .doc-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+  /* Keep hard-to-break blocks together */
+  .doc-toc__item,
+  .doc-pullquote,
+  .doc-kv {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  /* Color-accurate gradients */
+  .doc-cover-bg,
+  .doc-chip,
+  .doc-rule-accent {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  /* Hide the dark theme wrapper in print */
+  .dark .doc-page {
+    background: #ffffff !important;
+    color: var(--doc-ink) !important;
+  }
+}
