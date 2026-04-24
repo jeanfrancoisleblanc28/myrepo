@@ -23,7 +23,7 @@ export function CategoryTile({ category, selected, onToggle, index = 0 }: Catego
       className={cn(
         "group relative flex min-h-[8rem] flex-col justify-between overflow-hidden rounded-xl border p-4 text-left",
         "transition-all duration-200 will-change-transform",
-        "animate-fade-in opacity-0 [animation-fill-mode:forwards]",
+        "animate-fade-in [animation-fill-mode:both]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         selected
           ? "border-transparent ring-2 ring-offset-2 ring-offset-background shadow-lg -translate-y-0.5"

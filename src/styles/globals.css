@@ -125,13 +125,18 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    /* Purely decorative loops — cancel them */
     .animate-aurora-a,
     .animate-aurora-b,
     .animate-aurora-c,
-    .animate-float,
+    .animate-float {
+      animation: none !important;
+    }
+    /* Entrance animations — snap to end state so content stays visible */
     .animate-flip-in,
     .animate-slide-fade-in {
-      animation: none !important;
+      animation-duration: 0.001ms !important;
+      animation-delay: 0ms !important;
     }
   }
 }

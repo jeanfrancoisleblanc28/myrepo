@@ -51,7 +51,7 @@ export function SkillCard({ skill, index = 0, flipIn = false, className }: Skill
       className={cn(
         "group relative overflow-hidden rounded-xl border bg-card p-5 shadow-sm",
         "transition-transform duration-200 will-change-transform",
-        "animate-fade-in opacity-0 [animation-fill-mode:forwards]",
+        "animate-fade-in [animation-fill-mode:both]",
         flipIn && "animate-flip-in",
         className,
       )}
