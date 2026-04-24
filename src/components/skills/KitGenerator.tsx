@@ -42,6 +42,12 @@ export function KitGenerator({ autoGenerate = false }: { autoGenerate?: boolean 
   const [confettiKey, setConfettiKey] = useState(0);
   const [generationCount, setGenerationCount] = useState(0);
 
+  // Sync `kit` when the URL `?ids=...` changes (e.g. browser back/forward)
+  // so we don't render a stale kit while staying on the same page.
+  useEffect(() => {
+    if (seededKit) setKit(seededKit);
+  }, [idsParam, seededKit]);
+
   const generate = useCallback(() => {
     const next = generateKit({
       count,

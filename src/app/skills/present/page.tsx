@@ -27,6 +27,12 @@ function PresentInner() {
   const [autoplay, setAutoplay] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
 
+  // Keep index in range when the kit (and therefore totalSlides) changes,
+  // e.g. via back/forward navigation that swaps `?ids=...`.
+  useEffect(() => {
+    setIndex((current) => Math.max(0, Math.min(totalSlides - 1, current)));
+  }, [totalSlides]);
+
   const goTo = useCallback(
     (next: number) => {
       const clamped = Math.max(0, Math.min(totalSlides - 1, next));
@@ -51,6 +57,20 @@ function PresentInner() {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (helpOpen && e.key !== "?" && e.key !== "Escape") return;
+      // Don't hijack keys when the user is typing or interacting with a control.
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        tag === "SELECT" ||
+        target?.isContentEditable
+      ) {
+        return;
+      }
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      // Space is the default activator for buttons; don't steal it from focused buttons.
+      if (e.key === " " && tag === "BUTTON") return;
       switch (e.key) {
         case "ArrowRight":
         case " ":
@@ -91,14 +111,20 @@ function PresentInner() {
     return () => window.removeEventListener("keydown", handler);
   }, [next, prev, router, helpOpen, goTo, totalSlides, kit]);
 
-  // Autoplay
+  // Autoplay: timeout keyed on `index` so each user nav resets the delay
+  // and uses goTo() so transitions stay in sync. Stops at the last slide
+  // (no looping) to match manual navigation behavior.
   useEffect(() => {
     if (!autoplay) return;
-    const id = setInterval(() => {
-      setIndex((i) => (i + 1) % totalSlides);
+    if (index >= totalSlides - 1) {
+      setAutoplay(false);
+      return;
+    }
+    const id = setTimeout(() => {
+      goTo(index + 1);
     }, 6000);
-    return () => clearInterval(id);
-  }, [autoplay, totalSlides]);
+    return () => clearTimeout(id);
+  }, [autoplay, index, totalSlides, goTo]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -126,7 +152,7 @@ function PresentInner() {
         <PresentationSlide
           key={index}
           skill={currentSkill}
-          index={index - 1}
+          skillIndex={variant === "skill" ? index - 1 : 0}
           total={kit.length}
           variant={variant}
           kitSize={kit.length}

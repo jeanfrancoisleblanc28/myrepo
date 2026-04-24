@@ -6,15 +6,15 @@ import { getCategory, levelLabels } from "@/lib/skills-data";
 
 interface PresentationSlideProps {
   skill?: Skill;
-  /** 0-based index of this slide */
-  index: number;
+  /** 0-based skill position within the kit; only meaningful when variant === "skill" */
+  skillIndex: number;
   /** total number of content slides (excluding intro/outro) */
   total: number;
   variant: "intro" | "skill" | "outro";
   kitSize: number;
 }
 
-export function PresentationSlide({ skill, index, total, variant, kitSize }: PresentationSlideProps) {
+export function PresentationSlide({ skill, skillIndex, total, variant, kitSize }: PresentationSlideProps) {
   const category = skill ? getCategory(skill.categoryId) : undefined;
   const gradient = category?.gradient ?? "from-violet-500 via-fuchsia-500 to-pink-500";
 
@@ -24,7 +24,9 @@ export function PresentationSlide({ skill, index, total, variant, kitSize }: Pre
         "relative flex h-full w-full items-center justify-center overflow-hidden",
         "animate-slide-fade-in",
       )}
-      style={{ viewTransitionName: `slide-${index}` }}
+      // Constant name lets the View Transitions API treat the active slide
+      // as the same element across navigations, enabling smooth crossfades.
+      style={{ viewTransitionName: "active-slide" }}
     >
       {/* Animated gradient background */}
       <div
@@ -135,7 +137,7 @@ export function PresentationSlide({ skill, index, total, variant, kitSize }: Pre
 
       {variant === "skill" && (
         <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-xs font-mono text-white/70">
-          <span>{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
+          <span>{String(skillIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
           <span className="hidden sm:inline">UI/UX Skills Generator</span>
         </div>
       )}

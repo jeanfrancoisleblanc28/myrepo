@@ -45,7 +45,6 @@ export function SkillCard({ skill, index = 0, flipIn = false, className }: Skill
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        transitionDelay: flipIn ? `${index * 60}ms` : undefined,
         animationDelay: flipIn ? `${index * 80}ms` : `${index * 40}ms`,
       }}
       className={cn(
