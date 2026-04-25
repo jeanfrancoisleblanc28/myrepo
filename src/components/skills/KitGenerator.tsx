@@ -12,7 +12,7 @@ import {
   type Skill,
   type SkillLevel,
 } from "@/lib/skills-data";
-import { Button } from "@/components/ui/button";
+import { Button, buttonClasses } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/cn";
@@ -234,15 +234,20 @@ export function KitGenerator({ autoGenerate = false }: { autoGenerate?: boolean 
               Générer le document
             </Button>
           </Link>
-          <Link href={compareHref}>
-            <Button variant="outline" size="lg" disabled={kit.length < 2}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect x="3" y="4" width="7" height="16" rx="1" />
-                <rect x="14" y="4" width="7" height="16" rx="1" />
-              </svg>
-              {kit.length >= 3 ? "Comparer les 3 premiers" : "Comparer"}
+          {kit.length < 2 ? (
+            <Button variant="outline" size="lg" disabled>
+              <CompareIconSvg />
+              Comparer
             </Button>
-          </Link>
+          ) : (
+            <Link
+              href={compareHref}
+              className={buttonClasses({ variant: "outline", size: "lg" })}
+            >
+              <CompareIconSvg />
+              {kit.length >= 3 ? "Comparer les 3 premiers" : "Comparer"}
+            </Link>
+          )}
           <Button variant="outline" size="lg" onClick={copyShareLink} disabled={kit.length === 0}>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
@@ -275,5 +280,14 @@ export function KitGenerator({ autoGenerate = false }: { autoGenerate?: boolean 
         )}
       </div>
     </section>
+  );
+}
+
+function CompareIconSvg() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="4" width="7" height="16" rx="1" />
+      <rect x="14" y="4" width="7" height="16" rx="1" />
+    </svg>
   );
 }

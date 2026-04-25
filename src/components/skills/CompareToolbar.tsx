@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useToast } from "@/components/ui/toast";
-import { Button } from "@/components/ui/button";
+import { Button, buttonClasses } from "@/components/ui/button";
 
 interface CompareToolbarProps {
   shareHref: string;
@@ -34,21 +34,17 @@ export function CompareToolbar({ shareHref, backHref, presentHref }: CompareTool
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Link href={backHref}>
-        <Button variant="outline" size="sm">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-          Catalogue
-        </Button>
+      <Link href={backHref} className={buttonClasses({ variant: "outline", size: "sm" })}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        Catalogue
       </Link>
-      <Link href={presentHref}>
-        <Button variant="secondary" size="sm">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <polygon points="6 3 20 12 6 21 6 3" />
-          </svg>
-          Présentation
-        </Button>
+      <Link href={presentHref} className={buttonClasses({ variant: "secondary", size: "sm" })}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polygon points="6 3 20 12 6 21 6 3" />
+        </svg>
+        Présentation
       </Link>
       <Button variant="outline" size="sm" onClick={handleCopy}>
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

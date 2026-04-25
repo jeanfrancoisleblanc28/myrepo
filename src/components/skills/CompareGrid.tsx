@@ -20,12 +20,9 @@ const ROW_LABELS = {
 export function CompareGrid({ skills }: CompareGridProps) {
   if (skills.length === 0) return null;
 
-  const headerCols = `120px repeat(${skills.length}, minmax(0, 1fr))`;
-
   return (
     <div className="overflow-x-auto rounded-xl border bg-card animate-fade-in">
       <table
-        role="table"
         className="w-full table-fixed border-collapse text-left"
         style={{ minWidth: skills.length === 2 ? "640px" : "880px" }}
       >
@@ -40,10 +37,7 @@ export function CompareGrid({ skills }: CompareGridProps) {
         </colgroup>
 
         <thead>
-          <tr
-            className="border-b"
-            style={{ display: "grid", gridTemplateColumns: headerCols }}
-          >
+          <tr className="border-b">
             <th scope="col" className="sr-only">
               Attribut
             </th>
@@ -73,7 +67,7 @@ export function CompareGrid({ skills }: CompareGridProps) {
                           category?.accentText,
                         )}
                       >
-                        {category?.title.split(" ")[0]}
+                        {(category?.title ?? "").split(" ")[0]}
                       </p>
                       <h2 className="mt-1 text-balance text-lg font-semibold leading-tight text-foreground">
                         {skill.title}
@@ -87,10 +81,7 @@ export function CompareGrid({ skills }: CompareGridProps) {
         </thead>
 
         <tbody>
-          <tr
-            className="border-b"
-            style={{ display: "grid", gridTemplateColumns: headerCols }}
-          >
+          <tr className="border-b">
             <th
               scope="row"
               className="bg-muted/40 p-5 align-top text-xs font-semibold uppercase tracking-wider text-muted-foreground"
@@ -109,10 +100,7 @@ export function CompareGrid({ skills }: CompareGridProps) {
             })}
           </tr>
 
-          <tr
-            className="border-b"
-            style={{ display: "grid", gridTemplateColumns: headerCols }}
-          >
+          <tr className="border-b">
             <th
               scope="row"
               className="bg-muted/40 p-5 align-top text-xs font-semibold uppercase tracking-wider text-muted-foreground"
@@ -126,10 +114,7 @@ export function CompareGrid({ skills }: CompareGridProps) {
             ))}
           </tr>
 
-          <tr
-            className="border-b"
-            style={{ display: "grid", gridTemplateColumns: headerCols }}
-          >
+          <tr className="border-b">
             <th
               scope="row"
               className="bg-muted/40 p-5 align-top text-xs font-semibold uppercase tracking-wider text-muted-foreground"
@@ -146,7 +131,7 @@ export function CompareGrid({ skills }: CompareGridProps) {
             ))}
           </tr>
 
-          <tr style={{ display: "grid", gridTemplateColumns: headerCols }}>
+          <tr>
             <th
               scope="row"
               className="bg-muted/40 p-5 align-top text-xs font-semibold uppercase tracking-wider text-muted-foreground"

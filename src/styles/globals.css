@@ -133,6 +133,7 @@
       animation: none !important;
     }
     /* Entrance animations — snap to end state so content stays visible */
+    .animate-fade-in,
     .animate-flip-in,
     .animate-slide-fade-in {
       animation-duration: 0.001ms !important;
