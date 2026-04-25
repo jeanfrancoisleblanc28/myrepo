@@ -297,12 +297,13 @@ function ControlButton({
   disabled,
   label,
   children,
-  active = false,
+  active,
 }: {
   onClick: () => void;
   disabled?: boolean;
   label: string;
   children: React.ReactNode;
+  /** Pass a boolean to mark this as a toggle button (exposes aria-pressed). Omit for one-shot actions. */
   active?: boolean;
 }) {
   return (
@@ -311,7 +312,7 @@ function ControlButton({
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      aria-pressed={active || undefined}
+      aria-pressed={active}
       title={label}
       className={cn(
         "flex h-9 w-9 items-center justify-center rounded-full transition-colors",
