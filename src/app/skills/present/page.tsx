@@ -25,25 +25,27 @@ function PresentInner() {
   const theme: PresentationTheme = params.get("theme") === "deps" ? "deps" : "default";
   const isDeps = theme === "deps";
 
+  const kitIds = useMemo(() => kit.map((s) => s.id).join(","), [kit]);
+
   // URL helpers that preserve the current theme.
   const buildUrl = useCallback(
     (base: string, withIds: boolean) => {
       const qs = new URLSearchParams();
-      if (withIds && kit.length) qs.set("ids", kit.map((s) => s.id).join(","));
+      if (withIds && kitIds) qs.set("ids", kitIds);
       if (isDeps) qs.set("theme", "deps");
       const s = qs.toString();
       return s ? `${base}?${s}` : base;
     },
-    [kit, isDeps],
+    [kitIds, isDeps],
   );
 
   const toggleTheme = useCallback(() => {
     const qs = new URLSearchParams();
-    if (kit.length) qs.set("ids", kit.map((s) => s.id).join(","));
+    if (kitIds) qs.set("ids", kitIds);
     if (!isDeps) qs.set("theme", "deps");
     const s = qs.toString();
     router.replace(s ? `/skills/present?${s}` : "/skills/present", { scroll: false });
-  }, [router, kit, isDeps]);
+  }, [router, kitIds, isDeps]);
 
 
   // Slides: intro + skills + outro
@@ -190,13 +192,13 @@ function PresentInner() {
       <div
         className={cn(
           "pointer-events-none absolute left-0 right-0 top-0 h-1",
-          isDeps ? "bg-[#0B1336]" : "bg-white/10",
+          isDeps ? "bg-deps-navy-deep" : "bg-white/10",
         )}
       >
         <div
           className={cn(
             "h-full transition-[width] duration-500",
-            isDeps ? "bg-[#6FDFEA]" : "bg-white",
+            isDeps ? "bg-deps-teal-soft" : "bg-white",
           )}
           style={{ width: `${progress}%` }}
           aria-hidden="true"
@@ -319,7 +321,7 @@ function ControlButton({
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white",
         "disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent",
         active
-          ? "bg-[#6FDFEA]/20 text-[#6FDFEA] hover:bg-[#6FDFEA]/30"
+          ? "bg-deps-teal-soft/20 text-deps-teal-soft hover:bg-deps-teal-soft/30"
           : "text-white/80 hover:bg-white/10 hover:text-white",
       )}
     >

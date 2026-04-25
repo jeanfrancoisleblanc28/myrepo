@@ -40,11 +40,26 @@ export function DepsParticles({ count = 14 }: DepsParticlesProps) {
     let dpr = 1;
     const points: Point[] = [];
 
-    const resize = () => {
+    /**
+     * Resize the canvas backing store. If `prev` dimensions are passed, the
+     * existing points are scaled proportionally to the new size so the
+     * background doesn't visibly "jump" while the user resizes the window.
+     */
+    const resize = (prev?: { w: number; h: number }) => {
       dpr = window.devicePixelRatio || 1;
       const rect = canvas.getBoundingClientRect();
-      width = rect.width;
-      height = rect.height;
+      const newW = rect.width;
+      const newH = rect.height;
+      if (prev && prev.w > 0 && prev.h > 0 && points.length > 0) {
+        const sx = newW / prev.w;
+        const sy = newH / prev.h;
+        for (const p of points) {
+          p.x *= sx;
+          p.y *= sy;
+        }
+      }
+      width = newW;
+      height = newH;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -94,8 +109,7 @@ export function DepsParticles({ count = 14 }: DepsParticlesProps) {
     raf = requestAnimationFrame(tick);
 
     const onResize = () => {
-      resize();
-      seed();
+      resize({ w: width, h: height });
     };
     window.addEventListener("resize", onResize);
 

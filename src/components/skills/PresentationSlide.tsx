@@ -44,7 +44,7 @@ export function PresentationSlide({
       {isDeps ? (
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-br from-[#0B1336] via-[#141F4E] to-[#060A24]"
+          className="absolute inset-0 bg-gradient-to-br from-deps-navy-deep via-deps-navy to-deps-navy-darker"
         />
       ) : (
         <div
@@ -90,14 +90,14 @@ export function PresentationSlide({
               className={cn(
                 "inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-medium backdrop-blur",
                 isDeps
-                  ? "border-[#6FDFEA]/40 bg-[#141F4E]/40 tracking-[0.2em] uppercase text-[#6FDFEA]"
+                  ? "border-deps-teal-soft/40 bg-deps-navy/40 tracking-[0.2em] uppercase text-deps-teal-soft"
                   : "border-white/30 bg-white/10",
               )}
             >
               <span
                 className={cn(
                   "h-2 w-2 rounded-full animate-pulse",
-                  isDeps ? "bg-[#6FDFEA]" : "bg-white",
+                  isDeps ? "bg-deps-teal-soft" : "bg-white",
                 )}
               />
               {isDeps ? "DÉPS — Keynote institutionnel" : "UI/UX Skills Kit"}
@@ -113,7 +113,7 @@ export function PresentationSlide({
                 <>
                   Une présentation
                   <br />
-                  <span className="italic font-normal text-[#6FDFEA]">préparée pour vous.</span>
+                  <span className="italic font-normal text-deps-teal-soft">préparée pour vous.</span>
                 </>
               ) : (
                 <>
@@ -134,14 +134,14 @@ export function PresentationSlide({
             <p
               className={cn(
                 "mt-auto text-sm",
-                isDeps ? "text-[#B8C1DB]" : "text-white/70",
+                isDeps ? "text-deps-line" : "text-white/70",
               )}
             >
               Appuie sur{" "}
               <kbd
                 className={cn(
                   "rounded border px-1.5 py-0.5 font-mono text-xs",
-                  isDeps ? "border-[#B8C1DB]/40" : "border-white/40",
+                  isDeps ? "border-deps-line/40" : "border-white/40",
                 )}
               >
                 →
@@ -150,7 +150,7 @@ export function PresentationSlide({
               <kbd
                 className={cn(
                   "rounded border px-1.5 py-0.5 font-mono text-xs",
-                  isDeps ? "border-[#B8C1DB]/40" : "border-white/40",
+                  isDeps ? "border-deps-line/40" : "border-white/40",
                 )}
               >
                 Space
@@ -170,7 +170,7 @@ export function PresentationSlide({
                 className={cn(
                   "rounded-full border px-3 py-1 text-xs font-medium backdrop-blur",
                   isDeps
-                    ? "border-[#6FDFEA]/40 bg-[#141F4E]/50 text-[#6FDFEA]"
+                    ? "border-deps-teal-soft/40 bg-deps-navy/50 text-deps-teal-soft"
                     : "border-white/30 bg-white/10",
                 )}
               >
@@ -180,7 +180,7 @@ export function PresentationSlide({
                 className={cn(
                   "rounded-full border px-3 py-1 text-xs font-medium backdrop-blur",
                   isDeps
-                    ? "border-[#B8C1DB]/40 bg-[#141F4E]/50 text-white/95"
+                    ? "border-deps-line/40 bg-deps-navy/50 text-white/95"
                     : "border-white/30 bg-white/10",
                 )}
               >
@@ -203,7 +203,7 @@ export function PresentationSlide({
                   className={cn(
                     "rounded-full border px-3 py-1 font-mono text-xs backdrop-blur",
                     isDeps
-                      ? "border-[#6FDFEA]/30 bg-[#0B1336]/50 text-[#6FDFEA]/90"
+                      ? "border-deps-teal-soft/30 bg-deps-navy-deep/50 text-deps-teal-soft/90"
                       : "border-white/30 bg-white/10 text-white/90",
                   )}
                 >
@@ -220,7 +220,7 @@ export function PresentationSlide({
               className={cn(
                 "inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-medium backdrop-blur",
                 isDeps
-                  ? "border-[#6FDFEA]/40 bg-[#141F4E]/40 tracking-[0.2em] uppercase text-[#6FDFEA]"
+                  ? "border-deps-teal-soft/40 bg-deps-navy/40 tracking-[0.2em] uppercase text-deps-teal-soft"
                   : "border-white/30 bg-white/10",
               )}
             >
@@ -236,7 +236,7 @@ export function PresentationSlide({
               Merci.
               <br />
               <span
-                className={cn("italic", isDeps ? "text-[#6FDFEA]" : "text-white/80")}
+                className={cn("italic", isDeps ? "text-deps-teal-soft" : "text-white/80")}
               >
                 {isDeps ? "À l'écoute pour la suite." : "À toi de jouer."}
               </span>
@@ -251,7 +251,7 @@ export function PresentationSlide({
               <kbd
                 className={cn(
                   "rounded border px-1.5 py-0.5 font-mono text-xs",
-                  isDeps ? "border-[#B8C1DB]/40" : "border-white/40",
+                  isDeps ? "border-deps-line/40" : "border-white/40",
                 )}
               >
                 Esc
@@ -267,14 +267,14 @@ export function PresentationSlide({
         <div
           className={cn(
             "absolute bottom-6 left-6 right-6 flex items-center justify-between font-mono text-xs",
-            isDeps ? "text-[#B8C1DB]" : "text-white/70",
+            isDeps ? "text-deps-line" : "text-white/70",
           )}
         >
           <span>
             {String(skillIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
           </span>
           {isDeps ? (
-            <span className="hidden font-sans tracking-[0.25em] uppercase text-[10px] text-[#B8C1DB]/80 sm:inline">
+            <span className="hidden font-sans tracking-[0.25em] uppercase text-[10px] text-deps-line/80 sm:inline">
               DÉPS · Direction de l&apos;expérience patient et soignant
             </span>
           ) : (
