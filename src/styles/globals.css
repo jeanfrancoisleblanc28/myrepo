@@ -77,6 +77,68 @@
   .text-balance {
     text-wrap: balance;
   }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* ── Skills Generator animations ── */
+  @keyframes aurora-a {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(15%, 10%) scale(1.15); }
+  }
+  @keyframes aurora-b {
+    0%, 100% { transform: translate(0, 0) scale(1.05); }
+    50%      { transform: translate(-12%, -8%) scale(0.95); }
+  }
+  @keyframes aurora-c {
+    0%, 100% { transform: translate(0, 0) scale(0.95); }
+    50%      { transform: translate(8%, -12%) scale(1.1); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+  @keyframes flip-in {
+    from { opacity: 0; transform: perspective(800px) rotateY(-90deg) translateY(20px); }
+    to   { opacity: 1; transform: perspective(800px) rotateY(0deg) translateY(0); }
+  }
+  @keyframes slide-fade-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .animate-aurora-a { animation: aurora-a 18s ease-in-out infinite; }
+  .animate-aurora-b { animation: aurora-b 22s ease-in-out infinite; }
+  .animate-aurora-c { animation: aurora-c 26s ease-in-out infinite; }
+  .animate-float    { animation: float 4s ease-in-out infinite; }
+  .animate-flip-in  { animation: flip-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .animate-slide-fade-in { animation: slide-fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+  /* View Transitions API — global crossfade for slide swap */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.35s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Purely decorative loops — cancel them */
+    .animate-aurora-a,
+    .animate-aurora-b,
+    .animate-aurora-c,
+    .animate-float {
+      animation: none !important;
+    }
+    /* Entrance animations — snap to end state so content stays visible */
+    .animate-flip-in,
+    .animate-slide-fade-in {
+      animation-duration: 0.001ms !important;
+      animation-delay: 0ms !important;
+    }
+  }
 }
 
 /* Skip-to-content link for keyboard navigation */
