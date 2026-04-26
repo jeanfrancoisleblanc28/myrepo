@@ -41,5 +41,8 @@ build/
 out/
 next-env.d.ts
 
+# Vercel
+.vercel/
+
 # Claude Code — paramètres locaux/personnels (conserver settings.json partagé)
 .claude/settings.local.json
