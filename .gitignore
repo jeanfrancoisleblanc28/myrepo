@@ -40,6 +40,7 @@ build/
 .next/
 out/
 next-env.d.ts
+tsconfig.tsbuildinfo
 
 # Vercel
 .vercel/
