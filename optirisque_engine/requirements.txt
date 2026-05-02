@@ -1,16 +1,14 @@
-# Dépendances optionnelles pour le moteur OptiRisque.
-# Le coeur fonctionne avec stdlib seul ; les libs ci-dessous activent
-# l'extraction PDF de qualité et la génération PowerPoint native.
+# Dépendances du moteur OptiRisque.
 
-# Extraction PDF — au moins une des deux
+# OBLIGATOIRE — lecture de config.yaml
+PyYAML>=6.0
+
+# OBLIGATOIRE — extraction du texte des PDF (au moins une des deux)
 pdfplumber>=0.10.0
 PyPDF2>=3.0.0
 
-# Génération PowerPoint — sinon export Markdown seul
+# OPTIONNEL — génération PowerPoint native (sinon : outline Markdown seul)
 python-pptx>=0.6.21
 
-# Parsing config — fallback parser minimal fourni si absent
-PyYAML>=6.0
-
-# Validation de schéma JSON (optionnel)
+# OPTIONNEL — validation des livrables JSON contre les schémas
 jsonschema>=4.17.0

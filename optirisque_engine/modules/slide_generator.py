@@ -109,7 +109,11 @@ def build_slides(
             f"FLI / FLS : {_short(champs.get('fli'))} / {_short(champs.get('fls'))}",
         ],
         kpi=f"Carnet de commandes : {_short(extraction.kpi.get('carnet_commandes'))}",
-        conclusion="Profil aligné avec la mission DÉPS." if champs.get("entreprise") not in (None, NON_EXTRAIT) else "Identification incomplète — retour conseiller requis.",
+        conclusion=(
+            "Profil aligné avec la mission DÉPS."
+            if champs.get("entreprise") not in (None, NON_EXTRAIT)
+            else "Identification incomplète — retour conseiller requis."
+        ),
     ))
 
     # 4 — Montage financier
@@ -124,7 +128,11 @@ def build_slides(
             "Sommaire du financement proposé : voir section dédiée du dossier.",
         ],
         kpi=f"Endettement post-financement : {_short(extraction.kpi.get('endettement'))}",
-        conclusion="Structure conforme aux paramètres FLI/FLS." if champs.get("montant_demande") not in (None, NON_EXTRAIT) else "Montant non extrait — vérifier la complétude du gabarit.",
+        conclusion=(
+            "Structure conforme aux paramètres FLI/FLS."
+            if champs.get("montant_demande") not in (None, NON_EXTRAIT)
+            else "Montant non extrait — vérifier la complétude du gabarit."
+        ),
     ))
 
     # 5 — KPI financiers
@@ -217,7 +225,8 @@ def build_slides(
         titre="Annexes",
         sous_titre="Références et trace",
         corps=[
-            f"Sections gabarit présentes : {len(extraction.sections_detectees)}/{len(config.get('gabarit_sections', []))}",
+            (f"Sections gabarit présentes : {len(extraction.sections_detectees)}"
+             f"/{len(config.get('gabarit_sections', []))}"),
             f"Alertes d'extraction : {len(extraction.alertes)}",
             f"Run ID : {score.run_id}",
             "Voir run_report.json et advisor_score.json pour le détail audit-ready.",

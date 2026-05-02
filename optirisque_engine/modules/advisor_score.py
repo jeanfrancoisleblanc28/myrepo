@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import datetime as _dt
 import re
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, asdict
 from typing import Any, Dict, List, Optional
 
 from .pdf_extractor import ExtractionResult, TemplateValidation, NON_EXTRAIT, _normalize
@@ -218,7 +218,9 @@ def _is_smart(condition: str, smart_kw: Dict[str, List[str]]) -> Dict[str, bool]
     }
 
 
-def _crit_8_conditions_smart(extraction: ExtractionResult, poids: float, smart_kw: Dict[str, List[str]]) -> CritereResultat:
+def _crit_8_conditions_smart(
+    extraction: ExtractionResult, poids: float, smart_kw: Dict[str, List[str]]
+) -> CritereResultat:
     conds = extraction.suivi.get("decaissement", []) if extraction.suivi else []
     if not conds:
         return CritereResultat(
@@ -271,26 +273,43 @@ def _crit_9_suivi_defini(extraction: ExtractionResult, poids: float) -> CritereR
 
 
 def _crit_10_charte(extraction: ExtractionResult, poids: float, charte: Dict[str, Any]) -> CritereResultat:
-    """Charte respectée si on retrouve mention DÉPS / couleurs / typo dans le PDF."""
-    text_norm = (extraction.text or "").lower()
-    couleurs = [c.lower() for c in charte.get("couleurs", {}).values()]
-    typos = [t.lower() for t in charte.get("typographies", {}).values()]
-    indices = 0
-    if "deps" in text_norm or "développement économique" in text_norm or "developpement economique" in text_norm:
-        indices += 1
-    if any(c in text_norm for c in couleurs):
-        indices += 1
-    if any(t in text_norm for t in typos):
-        indices += 1
-    score = min(indices / 2.0, 1.0)  # 2 indices sur 3 = plein
+    """Charte respectée — vérification honnête depuis le texte extrait.
+
+    Limites assumées : l'extraction texte (pdfplumber/PyPDF2) ne capture
+    pas les couleurs ni les polices appliquées visuellement. On ne cherche
+    donc que des MARQUEURS TEXTUELS d'identité institutionnelle DÉPS
+    (mention de l'organisation, slogan, contact). Une vérification
+    visuelle finale par le conseiller reste requise et est mentionnée
+    explicitement dans la preuve.
+    """
+    text_norm = _normalize(extraction.text or "")
+    marqueurs = [
+        "deps",
+        "developpement economique",
+        "mrc pierre-de saurel",
+        "pierre de saurel",
+        "commissaire industriel",
+    ]
+    hits = sum(1 for m in marqueurs if m in text_norm)
+    # 2 marqueurs ou plus = score plein ; 1 marqueur = partiel ; 0 = manquant.
+    if hits >= 2:
+        score = 1.0
+    elif hits == 1:
+        score = 0.5
+    else:
+        score = 0.0
     obtenu = poids * score
+    preuve = (
+        f"marqueurs_textuels_DEPS={hits}/{len(marqueurs)} "
+        "(vérification visuelle des couleurs/typo à effectuer manuellement)"
+    )
     return CritereResultat(
         id=10,
-        libelle="Charte graphique DÉPS respectée",
+        libelle="Charte graphique DÉPS respectée (marqueurs textuels)",
         obtenu=round(obtenu, 2),
         max=round(poids, 2),
         verdict=_verdict(score, 1.0),
-        preuve=f"indices_charte={indices}/3 (mention DÉPS, couleur officielle, typographie)",
+        preuve=preuve,
     )
 
 
@@ -308,7 +327,10 @@ def _crit_11_recommandation_conforme(extraction: ExtractionResult, poids: float)
     text_norm = str(reco).lower()
     institutionnel = any(
         kw in text_norm
-        for kw in ["favorable", "défavorable", "defavorable", "conditionnelle", "approuv", "refus", "recommandé", "recommande"]
+        for kw in [
+            "favorable", "défavorable", "defavorable", "conditionnelle",
+            "approuv", "refus", "recommandé", "recommande",
+        ]
     )
     score = 1.0 if institutionnel else 0.4
     obtenu = poids * score
@@ -439,7 +461,8 @@ _CORRECTIONS_PAR_CRITERE: Dict[int, str] = {
     7: "Ajouter au moins deux comparables sectoriels (médianes industrie / benchmark).",
     8: "Reformuler les conditions de décaissement en SMART (Spécifique, Mesurable, Atteignable, Réaliste, Temporel).",
     9: "Définir un cadre de suivi post-financement avec fréquence et indicateurs.",
-    10: "Appliquer la charte DÉPS (couleurs Indigo #24135D / Bleu #0057B8 / Cyan #00AEC7, typographie Metric ou Noto Sans).",
+    10: ("Appliquer la charte DÉPS (couleurs Indigo #24135D / Bleu #0057B8 / "
+         "Cyan #00AEC7, typographie Metric ou Noto Sans)."),
     11: "Formuler une recommandation institutionnelle explicite (favorable, défavorable, conditionnelle).",
     12: "Atteindre un score ≥ 90/100 sur les 11 premiers critères avant soumission CIC.",
 }

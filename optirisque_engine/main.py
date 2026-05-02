@@ -20,7 +20,6 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -42,120 +41,20 @@ from modules.slide_generator import (  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
-# Lecture YAML — utilise PyYAML si dispo, sinon parser minimal interne
+# Lecture YAML (PyYAML obligatoire — voir requirements.txt)
 # ---------------------------------------------------------------------------
 
 def load_config(path: Path) -> Dict[str, Any]:
     if not path.exists():
         raise FileNotFoundError(f"Config introuvable : {path}")
-    text = path.read_text(encoding="utf-8")
     try:
         import yaml  # type: ignore
-
-        return yaml.safe_load(text) or {}
-    except ImportError:
-        return _minimal_yaml(text)
-
-
-def _minimal_yaml(text: str) -> Dict[str, Any]:
-    """
-    Parser YAML très minimal (clé:valeur, listes, indentation par 2 espaces).
-    Suffisant pour config.yaml ; pour des cas complexes, installer PyYAML.
-    """
-    root: Dict[str, Any] = {}
-    stack: List = [(0, root)]
-
-    def coerce(v: str) -> Any:
-        s = v.strip()
-        if not s:
-            return ""
-        if s.startswith('"') and s.endswith('"'):
-            return s[1:-1]
-        if s.startswith("'") and s.endswith("'"):
-            return s[1:-1]
-        if s.lower() in ("true", "yes"):
-            return True
-        if s.lower() in ("false", "no"):
-            return False
-        if s.lower() in ("null", "~"):
-            return None
-        try:
-            if "." in s:
-                return float(s)
-            return int(s)
-        except ValueError:
-            return s
-
-    for raw in text.splitlines():
-        if not raw.strip() or raw.lstrip().startswith("#"):
-            continue
-        stripped = raw.rstrip()
-        # Strip trailing comments (heuristique : pas dans une string)
-        if " #" in stripped and not (stripped.lstrip().startswith('"') or stripped.lstrip().startswith("'")):
-            stripped = stripped.split(" #", 1)[0].rstrip()
-        indent = len(stripped) - len(stripped.lstrip(" "))
-        line = stripped.lstrip(" ")
-
-        # Pop de la pile jusqu'au parent correspondant
-        while stack and stack[-1][0] >= indent:
-            stack.pop()
-        parent = stack[-1][1] if stack else root
-
-        if line.startswith("- "):
-            value_part = line[2:].strip()
-            if not isinstance(parent, list):
-                # Convertir le dernier slot en liste si besoin
-                # (cas où on a fait `key:` puis bullets en-dessous)
-                if isinstance(parent, dict) and "_pending_list_key" in parent:
-                    key = parent.pop("_pending_list_key")
-                    parent[key] = []
-                    parent = parent[key]
-                    stack.append((indent, parent))
-            if ":" in value_part:
-                # élément dict: démarrer un nouveau dict
-                k, _, v = value_part.partition(":")
-                item: Dict[str, Any] = {}
-                if v.strip():
-                    item[k.strip()] = coerce(v)
-                else:
-                    item[k.strip()] = {}
-                if isinstance(parent, list):
-                    parent.append(item)
-                stack.append((indent + 2, item))
-            else:
-                if isinstance(parent, list):
-                    parent.append(coerce(value_part))
-        else:
-            if ":" not in line:
-                continue
-            key, _, value = line.partition(":")
-            key = key.strip()
-            value = value.strip()
-            if not value:
-                # Le contenu suit (dict ou list)
-                child: Any = {}
-                if isinstance(parent, dict):
-                    parent[key] = child
-                stack.append((indent + 2, child))
-                # marqueur: si on voit "- " juste après, on transforme
-                if isinstance(parent, dict):
-                    parent["_pending_list_key"] = key
-            else:
-                if isinstance(parent, dict):
-                    parent[key] = coerce(value)
-                    parent.pop("_pending_list_key", None)
-    _strip_pending_keys(root)
-    return root
-
-
-def _strip_pending_keys(obj: Any) -> None:
-    if isinstance(obj, dict):
-        obj.pop("_pending_list_key", None)
-        for v in obj.values():
-            _strip_pending_keys(v)
-    elif isinstance(obj, list):
-        for v in obj:
-            _strip_pending_keys(v)
+    except ImportError as exc:
+        raise SystemExit(
+            "PyYAML est requis pour lire config.yaml. "
+            "Installez-le : `pip install -r optirisque_engine/requirements.txt`"
+        ) from exc
+    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
 
 
 # ---------------------------------------------------------------------------

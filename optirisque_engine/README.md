@@ -41,12 +41,18 @@ optirisque_engine/
 ## Installation
 
 ```bash
-# Le coeur fonctionne en stdlib seul. Les dépendances suivantes activent :
-#   - pdfplumber / PyPDF2 : extraction PDF de qualité
-#   - python-pptx         : génération PowerPoint native (sinon : Markdown seul)
-#   - PyYAML              : parsing YAML standard (sinon : parser interne)
+# Dépendances :
+#   - PyYAML              : OBLIGATOIRE (lecture de config.yaml)
+#   - pdfplumber OU PyPDF2: OBLIGATOIRE (extraction du texte du PDF)
+#   - python-pptx         : OPTIONNEL (sinon : outline Markdown seul)
 pip install -r optirisque_engine/requirements.txt
 ```
+
+> **Note** : il n'y a pas de fallback "lecture brute des octets" pour
+> l'extraction PDF. Les PDF étant compressés/encodés, un tel fallback ne
+> reconstruit pas un texte cohérent. À défaut de bibliothèque dédiée, le
+> pipeline produit malgré tout les livrables avec tous les champs à
+> `"non extrait"` et les alertes correspondantes.
 
 ## Utilisation
 
@@ -85,7 +91,7 @@ Sortie : un résumé JSON sur stdout, et 6 fichiers dans `outputs/` :
 7. Comparables sectoriels
 8. Conditions de décaissement SMART
 9. Suivi post-financement défini
-10. Charte graphique DÉPS respectée
+10. Charte graphique DÉPS respectée (marqueurs textuels — vérification visuelle manuelle requise)
 11. Recommandation institutionnelle conforme
 12. Score qualité global ≥ 90/100
 

@@ -90,7 +90,7 @@ scoring:
       libelle: "Suivi post-financement défini"
       type: "suivi_defini"
     - id: 10
-      libelle: "Charte graphique DÉPS respectée"
+      libelle: "Charte graphique DÉPS respectée (marqueurs textuels — vérif. visuelle manuelle)"
       type: "charte_respectee"
     - id: 11
       libelle: "Recommandation institutionnelle conforme"

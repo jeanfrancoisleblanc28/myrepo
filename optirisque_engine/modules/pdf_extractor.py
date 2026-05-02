@@ -113,8 +113,15 @@ def upload_pdf(
 def _read_pdf_text(path: Path) -> Tuple[str, str]:
     """Retourne (texte, moteur). Texte vide si aucun moteur disponible.
 
+    Les PDF sont des structures binaires avec compression et encodages
+    spécifiques : un fallback "lecture des octets bruts" ne reconstruit
+    pas un texte cohérent. On exige donc une bibliothèque dédiée
+    (pdfplumber ou PyPDF2). À défaut, l'extraction est marquée comme
+    échouée et tous les champs valent "non extrait" + alertes.
+
     On attrape BaseException pour neutraliser les dépendances natives
-    cassées (pyo3 PanicException, etc.) sans interrompre le pipeline.
+    cassées (pyo3 PanicException sur cryptography, etc.) sans interrompre
+    le pipeline.
     """
     try:
         import pdfplumber  # type: ignore
@@ -134,15 +141,7 @@ def _read_pdf_text(path: Path) -> Tuple[str, str]:
     except BaseException:
         pass
 
-    # Dernier recours : tenter de récupérer du texte ASCII brut
-    try:
-        raw = path.read_bytes()
-        text = re.sub(rb"[^\x09\x0a\x0d\x20-\x7e\xc0-\xff]+", b" ", raw).decode(
-            "latin-1", errors="ignore"
-        )
-        return (text, "fallback-bytes")
-    except BaseException:
-        return ("", "aucun")
+    return ("", "aucun")
 
 
 # ---------------------------------------------------------------------------
@@ -180,7 +179,8 @@ _FIELD_PATTERNS: Dict[str, List[str]] = {
         r"(?:nature\s+du\s+projet|projet\s+[aà]\s+financer|description\s+du\s+projet)\s*[:\-]\s*([^\n\r]{2,200})",
     ],
     "montant_demande": [
-        r"(?:montant\s+demand[ée]|financement\s+demand[ée]|pr[êe]t\s+demand[ée])\s*[:\-]?\s*([0-9][0-9\s\.,]*\s*\$?(?:\s*(?:CAD|CDN))?)",
+        (r"(?:montant\s+demand[ée]|financement\s+demand[ée]|pr[êe]t\s+demand[ée])"
+         r"\s*[:\-]?\s*([0-9][0-9\s\.,]*\s*\$?(?:\s*(?:CAD|CDN))?)"),
     ],
     "recommandation": [
         r"recommandation\s*[:\-]\s*([^\n\r]{2,300})",
@@ -199,7 +199,8 @@ _KPI_PATTERNS: Dict[str, List[str]] = {
         r"marge\s+brute\s*[:\-]?\s*([0-9]+(?:[\.,][0-9]+)?\s*%)",
     ],
     "endettement": [
-        r"(?:endettement|ratio\s+d[''’]?endettement|dette\s*/\s*[ée]quit[ée])\s*[:\-]?\s*([0-9]+(?:[\.,][0-9]+)?\s*[%x]?)",
+        (r"(?:endettement|ratio\s+d[''’]?endettement|dette\s*/\s*[ée]quit[ée])"
+         r"\s*[:\-]?\s*([0-9]+(?:[\.,][0-9]+)?\s*[%x]?)"),
     ],
     "concentration_client": [
         r"concentration\s+client[s]?\s*[:\-]?\s*([0-9]+(?:[\.,][0-9]+)?\s*%)",
@@ -233,9 +234,13 @@ def _extract_swot(text: str) -> Dict[str, List[str]]:
     }
     # Recherche grossière : on capture les bullets après le label, jusqu'au
     # prochain label ou une ligne vide double.
+    stop_alt = (
+        r"forces|faiblesses|opportunites|menaces|"
+        r"opportunities|strengths|weaknesses|threats"
+    )
     for key, names in labels.items():
         for name in names:
-            pat = rf"{name}\s*[:\-]?\s*(.+?)(?=\b(?:forces|faiblesses|opportunites|menaces|opportunities|strengths|weaknesses|threats)\b|\n\n|$)"
+            pat = rf"{name}\s*[:\-]?\s*(.+?)(?=\b(?:{stop_alt})\b|\n\n|$)"
             m = re.search(pat, norm, flags=re.IGNORECASE | re.DOTALL)
             if m:
                 bloc = m.group(1)
@@ -257,9 +262,10 @@ def _extract_risk_categories(text: str, categories: List[str]) -> Dict[str, Any]
     for cat in categories:
         cat_norm = _normalize(cat).split("/")[0].strip()
         # Patterns : "Marché : Élevé — ..." / "Risque opérationnel — Faible"
+        cote_alt = r"faible|mod[ée]r[ée]|[ée]lev[ée]|critique|fort|moyen|bas"
         pats = [
-            rf"(?:risque\s+)?{re.escape(cat_norm)}\s*[:\-—]\s*(faible|mod[ée]r[ée]|[ée]lev[ée]|critique|fort|moyen|bas)\b",
-            rf"\b{re.escape(cat_norm)}\b[^\n]{{0,40}}\b(faible|mod[ée]r[ée]|[ée]lev[ée]|critique|fort|moyen|bas)\b",
+            rf"(?:risque\s+)?{re.escape(cat_norm)}\s*[:\-—]\s*({cote_alt})\b",
+            rf"\b{re.escape(cat_norm)}\b[^\n]{{0,40}}\b({cote_alt})\b",
         ]
         cote: Optional[str] = None
         for p in pats:
