@@ -1,0 +1,166 @@
+# Configuration du moteur d'automatisation OptiRisque DÉPS
+# Toute la configuration métier vit ici — ne jamais coder en dur dans les modules.
+
+project:
+  name: "Moteur d'automatisation OptiRisque DÉPS"
+  organisation: "MRC Pierre-De Saurel — Direction du développement économique"
+  contact: "62, rue Élizabeth, Sorel-Tracy (Québec) J3P 1L4 — 450-743-2703"
+
+paths:
+  inputs_pdf: "inputs/pdf"
+  outputs: "outputs"
+  reference_visual: "OptiRisque-v2-DEPS.pdf"
+  reference_template: "OptiRisque_Template.pdf"
+
+# Charte graphique DÉPS — utilisée par slide_generator.py
+charte:
+  couleurs:
+    indigo: "#24135D"
+    bleu: "#0057B8"
+    cyan: "#00AEC7"
+    blanc: "#FFFFFF"
+    gris_texte: "#1F2330"
+  typographies:
+    primaire: "Metric"
+    fallback: "Noto Sans"
+
+# Sections obligatoires du gabarit OptiRisque (FTQ / FLI-FLS)
+gabarit_sections:
+  - "Information sur l'entreprise"
+  - "Projet à financer"
+  - "Coûts et sources de financement"
+  - "Sommaire du financement proposé"
+  - "Portrait financier historique"
+  - "Portrait financier prévisionnel"
+  - "Analyse des risques"
+  - "Impact portefeuille"
+  - "Appréciation générale"
+  - "Recommandation"
+  - "Conditions préalables"
+  - "Conditions de suivi"
+  - "Autorisations"
+
+# Catégories de risques à coter (FTQ standard)
+categories_risques:
+  - "Marché"
+  - "Opérationnel"
+  - "Financier"
+  - "Gouvernance / Management"
+  - "Juridique / Réglementaire"
+
+# KPI financiers à extraire
+kpi_attendus:
+  - "DSCR"
+  - "marge_brute"
+  - "endettement"
+  - "concentration_client"
+  - "carnet_commandes"
+
+# Grille de scoring conseiller — 12 critères à pondérations équivalentes (~8.33 pts)
+# Total 100 points. Voir advisor_score.py pour la logique d'évaluation.
+scoring:
+  poids_critere: 8.34   # 12 * 8.34 ≈ 100.08, on plafonne à 100
+  seuil_max: 100
+  criteres:
+    - id: 1
+      libelle: "Sept sections présentes (sur les sections critiques)"
+      type: "completude_sections"
+    - id: 2
+      libelle: "Identification dossier complète (entreprise, FLI/FLS, secteur)"
+      type: "identification"
+    - id: 3
+      libelle: "Données financières historiques suffisantes"
+      type: "financier_historique"
+    - id: 4
+      libelle: "Prévisions documentées"
+      type: "financier_previsionnel"
+    - id: 5
+      libelle: "Cinq catégories de risques cotées"
+      type: "risques_cotes"
+    - id: 6
+      libelle: "Mitigations chiffrées"
+      type: "mitigations_chiffrees"
+    - id: 7
+      libelle: "Comparables sectoriels"
+      type: "comparables_sectoriels"
+    - id: 8
+      libelle: "Conditions de décaissement SMART"
+      type: "conditions_smart"
+    - id: 9
+      libelle: "Suivi post-financement défini"
+      type: "suivi_defini"
+    - id: 10
+      libelle: "Charte graphique DÉPS respectée"
+      type: "charte_respectee"
+    - id: 11
+      libelle: "Recommandation institutionnelle conforme"
+      type: "recommandation_conforme"
+    - id: 12
+      libelle: "Score qualité global ≥ 90/100"
+      type: "score_global_qualite"
+
+# Conversion score → niveau /10
+niveaux:
+  - max: 49
+    niveau: 3
+    qualificatif: "insuffisant"
+    decision: "retour conseiller"
+  - max: 69
+    niveau: 5
+    qualificatif: "acceptable"
+    decision: "retour conseiller"
+  - max: 89
+    niveau: 7
+    qualificatif: "standard CIC"
+    decision: "prêt CIC"
+  - max: 100
+    niveau: 10
+    qualificatif: "référence DÉPS"
+    decision: "prêt CIC"
+
+# Mots-clés SMART pour évaluation des conditions
+smart_keywords:
+  specifique: ["fournir", "remettre", "transmettre", "déposer", "présenter", "obtenir", "signer", "maintenir"]
+  mesurable: ["%", "$", "ratio", "minimum", "maximum", "≥", "≤", "supérieur", "inférieur", "x"]
+  atteignable: ["dans les", "sous", "avant"]
+  realiste: ["mensuel", "trimestriel", "annuel", "exercice"]
+  temporel: ["jours", "mois", "trimestre", "année", "exercice", "avant", "au plus tard", "duree", "durée"]
+
+# Structure du deck CIC (8 à 10 slides)
+deck_cic:
+  slides:
+    - id: 1
+      titre: "Page titre"
+      gabarit: "titre"
+    - id: 2
+      titre: "Décision attendue"
+      gabarit: "decision"
+    - id: 3
+      titre: "Portrait entreprise"
+      gabarit: "portrait"
+    - id: 4
+      titre: "Montage financier"
+      gabarit: "montage"
+    - id: 5
+      titre: "KPI financiers"
+      gabarit: "kpi"
+    - id: 6
+      titre: "Analyse des risques"
+      gabarit: "risques"
+    - id: 7
+      titre: "Conditions de décaissement"
+      gabarit: "conditions"
+    - id: 8
+      titre: "Suivi post-financement"
+      gabarit: "suivi"
+    - id: 9
+      titre: "Recommandation"
+      gabarit: "recommandation"
+    - id: 10
+      titre: "Annexes"
+      gabarit: "annexes"
+  contraintes_par_slide:
+    max_lignes_corps: 5
+    titre_decisionnel: true
+    kpi_obligatoire: true
+    conclusion_cic: true
