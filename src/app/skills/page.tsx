@@ -18,7 +18,7 @@ export const metadata = {
 };
 
 interface PageProps {
-  searchParams?: { generate?: string; ids?: string };
+  searchParams?: { generate?: string; ids?: string; preset?: string };
 }
 
 export default function SkillsPage({ searchParams }: PageProps) {

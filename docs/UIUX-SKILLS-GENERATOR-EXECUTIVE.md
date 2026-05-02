@@ -1,6 +1,6 @@
 # UI/UX Skills Generator — Note exécutive
 
-**Version** : 1.0 · **Date** : 2026-04-24 · **Branche** : `claude/uiux-skills-generator-FNDUF`
+**Version** : 1.1 · **Date** : 2026-05-02 · **Branche** : `copilot/add-goal-presets-to-skill-generator`
 **Statut** : livré, `npm run build` ✓, `npm run lint` ✓
 
 ---
@@ -21,13 +21,15 @@ Le dépôt documentait déjà 41 compétences UI/UX réparties en 9 catégories 
 
 ### `/skills` — Catalogue + Générateur
 - **Hero** avec titre dégradé animé et fond aurora (3 blobs gradient en mix-blend).
-- **Générateur** : chips catégories (9), filtres niveau (3), slider `1-9`, bouton *Générer*.
-- **Résultat** : grille de cartes qui s'animent (flip 3D stagger), confettis Canvas, toast de confirmation.
-- **Actions** : *Copier le lien*, *Lancer la présentation*.
+- **Objectif (preset)** : sélecteur de 5 objectifs d'atelier (*Audit accessibilité*, *Design System*, *UX Research*, *Stratégie produit*, *UI Polish*) — chaque preset définit un compte par défaut, des niveaux optionnels, et une recette de diversité par catégorie.
+- **Générateur** : chips catégories (9), filtres niveau (3), slider `1-9`, bouton *Générer* (adapte son label au preset actif).
+- **Résultat** : grille de cartes avec badge "objectif" + liste des catégories représentées (résumé de diversité), confettis Canvas, toast de confirmation.
+- **Actions** : *Copier le lien*, *Lancer la présentation* — URL inclut `?preset=...&ids=...` pour partage complet.
 - **Catalogue complet** plus bas : 9 sections gradient-bordered avec toutes les compétences.
 
 ### `/skills/present` — Mode présentation
 - Plein-écran, 1 slide par compétence + intro + outro (max 11 slides).
+- **Intro slide** affiche l'objectif (preset) si présent via `?preset=...`.
 - **Clavier** : `←`/`→`/`Space`, `Home`/`End`, `F` plein-écran, `P` play/pause (6s), `?` aide, `Esc` sortie.
 - **View Transitions API** entre slides (crossfade natif), fallback CSS.
 - **Controls bar** (bouton précédent, compteur `03 / 07`, suivant, play/pause, fullscreen, aide).
@@ -40,25 +42,25 @@ Le dépôt documentait déjà 41 compétences UI/UX réparties en 9 catégories 
 
 | Contrainte | Choix |
 |---|---|
-| **Pas de nouvelles dépendances** | Confettis = Canvas natif (<100 LOC). Transitions = View Transitions API. |
-| **Accessibilité** | `prefers-reduced-motion` désactive aurora/confettis/tilt. `aria-live="polite"` annonce les kits. Focus trap dans la modale d'aide (réutilise `Modal`). Skip link préservé. |
+| **Pas de nouvelles dépendances** | Confettis = Canvas natif (<100 LOC). Transitions = View Transitions API. Presets = logique pure TypeScript. |
+| **Accessibilité** | `prefers-reduced-motion` désactive aurora/confettis/tilt. `aria-live="polite"` annonce les kits. Focus trap dans la modale d'aide (réutilise `Modal`). Preset tiles avec `aria-pressed`. Skip link préservé. |
 | **Réutilisation** | 100% des composants existants (Card, Button, Badge, Modal, Toast, cn, design-tokens) réutilisés tels quels. Aucun duplicata. |
-| **Partage** | Encodage du kit en query string (`?ids=…`) — aucun backend requis, URL stable, Back/Forward OK. |
-| **Reproductibilité** | `generateKit()` accepte un `seed` optionnel (mulberry32) pour générer le même kit plusieurs fois. |
-| **Performance** | Bundle `/skills` : **5.89 kB** · `/skills/present` : **4.18 kB** · First Load JS partagé ≈ 87 kB. Confettis auto-clean après 1.8s, RAF uniquement. |
+| **Partage** | Encodage du kit en query string (`?preset=...&ids=…`) — aucun backend requis, URL stable, Back/Forward OK. `?ids=...` seul reste compatible (rétro-compatibilité). |
+| **Reproductibilité** | `generateKit()` accepte un `seed` optionnel (mulberry32). `generateBalancedKit()` utilise la même PRNG interne pour garantir le déterminisme avec seed. |
+| **Performance** | Bundle `/skills` : **6.49 kB** · `/skills/present` : **4.47 kB** · First Load JS partagé ≈ 87 kB. |
 
 ## 5. Fichiers livrés
 
 **Nouveaux (10)**
-- `src/lib/skills-data.ts` — types + catalogue (41 skills · 9 catégories) + helpers `generateKit`, `getSkillsByIds`
+- `src/lib/skills-data.ts` — types + catalogue (41 skills · 9 catégories) + helpers `generateKit`, `getSkillsByIds`, `generateBalancedKit`, `kitPresets`, `getPreset`
 - `src/app/skills/page.tsx` — page catalogue + générateur
 - `src/app/skills/present/page.tsx` + `layout.tsx` — mode présentation
 - `src/components/skills/AuroraBackground.tsx` — 3 blobs animés
 - `src/components/skills/Confetti.tsx` — Canvas particules, gravité, fade
 - `src/components/skills/SkillCard.tsx` — carte avec tilt 3D mousemove + spotlight
 - `src/components/skills/CategoryTile.tsx` — tuile filtre catégorie
-- `src/components/skills/KitGenerator.tsx` — formulaire + grille résultat
-- `src/components/skills/PresentationSlide.tsx` — layout slide
+- `src/components/skills/KitGenerator.tsx` — formulaire + sélecteur objectif + grille résultat
+- `src/components/skills/PresentationSlide.tsx` — layout slide (supporte `presetLabel` / `presetEmoji`)
 
 **Modifiés (3)**
 - `src/styles/globals.css` — keyframes `aurora-a/b/c`, `flip-in`, `slide-fade-in`, `float`, `shimmer` + `@media (prefers-reduced-motion)`
@@ -73,11 +75,12 @@ npm run dev
 ```
 
 1. **00:00** — Aller sur `http://localhost:3000/skills` → aurora fluide, hero dégradé.
-2. **00:15** — Appuyer sur `Ctrl+K`, taper « kit » → choisir *Générer un kit UI/UX*.
-3. **00:30** — Auto-génération avec confettis + toast. Cliquer une ou deux catégories, bouger le slider, re-générer.
-4. **00:50** — Cliquer *Copier le lien* (toast), coller dans un nouvel onglet → le kit se recharge identique.
-5. **01:05** — Cliquer *Lancer la présentation* → passer à plein-écran avec `F`, parcourir avec `→`, appuyer `?` pour voir les raccourcis.
-6. **01:30** — `Esc` → retour au catalogue, qui a mémorisé le kit via l'URL.
+2. **00:10** — Cliquer l'objectif **♿ Audit accessibilité** → le compte passe à 5, niveaux Avancé + Expert activés.
+3. **00:20** — Appuyer sur `Ctrl+K`, taper « kit » → choisir *Générer un kit UI/UX*.
+4. **00:35** — Auto-génération avec confettis + toast. Observer le badge « ♿ Audit accessibilité » + les catégories listées sous « Ton kit » (diversité garantie).
+5. **00:50** — Cliquer *Copier le lien* (toast), coller dans un nouvel onglet → le kit + l'objectif se rechargent identiques.
+6. **01:05** — Cliquer *Lancer la présentation* → intro slide affiche « Objectif : Audit accessibilité ». Passer à plein-écran avec `F`, parcourir avec `→`, appuyer `?` pour voir les raccourcis.
+7. **01:30** — `Esc` → retour au catalogue, kit et objectif conservés dans l'URL.
 
 ## 7. Métriques d'évaluation
 
@@ -85,10 +88,26 @@ npm run dev
 |---|---|
 | Build | ✓ `next build` sans warning TS |
 | Lint | ✓ `next lint` sans erreur |
-| Pages générées | 5 routes (`/`, `/dashboard`, `/skills`, `/skills/present`, `/_not-found`) |
-| Nouveaux fichiers | 10 · **Modifiés** : 3 · **Deps ajoutées** : 0 |
-| Accessibilité | `aria-live`, focus trap, `prefers-reduced-motion`, contraste AA sur gradients via overlay |
+| Pages générées | 6 routes (`/`, `/dashboard`, `/skills`, `/skills/present`, `/skills/document`, `/_not-found`) |
+| Nouveaux fichiers | 10 · **Modifiés** : 5 · **Deps ajoutées** : 0 |
+| Accessibilité | `aria-live`, focus trap, `prefers-reduced-motion`, contraste AA sur gradients via overlay, `aria-pressed` sur preset tiles |
 | Thème | Compatible clair/sombre, gradients blend-mode adaptés |
+
+## 7b. Presets objectifs — détail technique
+
+| Preset | Objectif | Count défaut | Niveaux défaut | Recette catégories |
+|---|---|---|---|---|
+| `a11y-audit` | Audit accessibilité | 5 | Avancé, Expert | a11y×2, components×1, ux×1, frameworks×1 |
+| `design-system` | Design System | 6 | — | design-system×2, components×2, frameworks×1, writing×1 |
+| `ux-research` | UX Research | 5 | — | ux×3, writing×1, components×1 |
+| `product-strategy` | Stratégie produit | 6 | — | ux×2, performance×1, writing×1, a11y×1, components×1 |
+| `ui-polish` | UI Polish | 5 | — | motion×2, components×1, design-system×1, responsive×1 |
+
+**Compatibilité URL** :
+- `?ids=...` seul → comportement existant préservé (lecture directe des IDs).
+- `?preset=...&ids=...` → preset affiché dans le générateur + intro slide ; IDs toujours prioritaires pour le contenu du kit.
+- `?preset=...` sans IDs → préset présélectionné, prêt à générer.
+
 
 ## 8. Limites assumées et prochaines étapes possibles
 

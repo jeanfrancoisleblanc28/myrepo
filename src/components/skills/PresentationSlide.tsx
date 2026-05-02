@@ -12,9 +12,13 @@ interface PresentationSlideProps {
   total: number;
   variant: "intro" | "skill" | "outro";
   kitSize: number;
+  /** Optional preset label to show on the intro slide. */
+  presetLabel?: string;
+  /** Optional preset emoji to show on the intro slide. */
+  presetEmoji?: string;
 }
 
-export function PresentationSlide({ skill, skillIndex, total, variant, kitSize }: PresentationSlideProps) {
+export function PresentationSlide({ skill, skillIndex, total, variant, kitSize, presetLabel, presetEmoji }: PresentationSlideProps) {
   const category = skill ? getCategory(skill.categoryId) : undefined;
   const gradient = category?.gradient ?? "from-violet-500 via-fuchsia-500 to-pink-500";
 
@@ -58,9 +62,17 @@ export function PresentationSlide({ skill, skillIndex, total, variant, kitSize }
       <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-start gap-6 px-8 text-white sm:px-12 lg:px-16">
         {variant === "intro" && (
           <>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-white" /> UI/UX Skills Kit
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-white" /> UI/UX Skills Kit
+              </span>
+              {presetLabel && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur">
+                  {presetEmoji && <span aria-hidden="true">{presetEmoji}</span>}
+                  Objectif&nbsp;: {presetLabel}
+                </span>
+              )}
+            </div>
             <h1
               className="font-bold leading-[0.95] tracking-tight text-balance"
               style={{ fontSize: "clamp(3rem, 9vw, 7rem)" }}

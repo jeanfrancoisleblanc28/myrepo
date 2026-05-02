@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { generateKit, getSkillsByIds, type Skill } from "@/lib/skills-data";
+import { generateKit, getPreset, getSkillsByIds, type Skill } from "@/lib/skills-data";
 import { PresentationSlide } from "@/components/skills/PresentationSlide";
 import { Modal } from "@/components/ui/modal";
 import { cn } from "@/lib/cn";
@@ -12,6 +12,9 @@ function PresentInner() {
   const params = useSearchParams();
   const rootRef = useRef<HTMLDivElement>(null);
 
+  const presetParam = params.get("preset");
+  const activePreset = presetParam ? getPreset(presetParam) : null;
+
   const kit: Skill[] = useMemo(() => {
     const idsParam = params.get("ids");
     if (idsParam) {
@@ -20,6 +23,15 @@ function PresentInner() {
     }
     return generateKit({ count: 5 });
   }, [params]);
+
+  // Build the back URL preserving preset context
+  const backUrl = useMemo(() => {
+    const p = new URLSearchParams();
+    if (presetParam) p.set("preset", presetParam);
+    if (kit.length > 0) p.set("ids", kit.map((s) => s.id).join(","));
+    const qs = p.toString();
+    return `/skills${qs ? `?${qs}` : ""}`;
+  }, [kit, presetParam]);
 
   // Slides: intro + skills + outro
   const totalSlides = kit.length + 2;
@@ -83,7 +95,7 @@ function PresentInner() {
           break;
         case "Escape":
           if (helpOpen) setHelpOpen(false);
-          else router.push(`/skills${kit.length ? `?ids=${kit.map((s) => s.id).join(",")}` : ""}`);
+          else router.push(backUrl);
           break;
         case "f":
         case "F":
@@ -109,7 +121,7 @@ function PresentInner() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [next, prev, router, helpOpen, goTo, totalSlides, kit]);
+  }, [next, prev, router, helpOpen, goTo, totalSlides, backUrl]);
 
   // Autoplay: timeout keyed on `index` so each user nav resets the delay
   // and uses goTo() so transitions stay in sync. Stops at the last slide
@@ -156,6 +168,8 @@ function PresentInner() {
           total={kit.length}
           variant={variant}
           kitSize={kit.length}
+          presetLabel={activePreset?.label}
+          presetEmoji={activePreset?.emoji}
         />
       </div>
 
@@ -209,7 +223,7 @@ function PresentInner() {
 
       {/* Close (top-right) */}
       <button
-        onClick={() => router.push(`/skills${kit.length ? `?ids=${kit.map((s) => s.id).join(",")}` : ""}`)}
+        onClick={() => router.push(backUrl)}
         className="absolute right-4 top-4 z-10 rounded-full border border-white/20 bg-black/40 p-2 text-white/80 backdrop-blur transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
         aria-label="Fermer la présentation"
       >
