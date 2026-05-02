@@ -1,0 +1,122 @@
+{
+  "run_id": "RUN-2026-05-02-1118",
+  "horodatage_utc": "2026-05-02T11:18:20+00:00",
+  "score_total": 100,
+  "niveau": 10,
+  "qualificatif": "référence DÉPS",
+  "decision": "prêt CIC",
+  "details_criteres": [
+    {
+      "id": 1,
+      "libelle": "Sept sections présentes (sur les sections critiques)",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "7/7 sections critiques détectées"
+    },
+    {
+      "id": 2,
+      "libelle": "Identification dossier complète (entreprise, FLI/FLS, secteur)",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "entreprise=Hydrometal Saurel Inc, secteur=Metallurgie de precision - composants electrolyseurs et piles a hydrogene, FLI=2026-008, FLS=2026-008B"
+    },
+    {
+      "id": 3,
+      "libelle": "Données financières historiques suffisantes",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "section=True, kpi_extraits=5/5"
+    },
+    {
+      "id": 4,
+      "libelle": "Prévisions documentées",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "section=True, horizon_détecté=True"
+    },
+    {
+      "id": 5,
+      "libelle": "Cinq catégories de risques cotées",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "5/5 catégories cotées"
+    },
+    {
+      "id": 6,
+      "libelle": "Mitigations chiffrées",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "5/5 mitigations chiffrées"
+    },
+    {
+      "id": 7,
+      "libelle": "Comparables sectoriels",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "mots-clés détectés : 4"
+    },
+    {
+      "id": 8,
+      "libelle": "Conditions de décaissement SMART",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "7/7 conditions SMART (S+M+T)"
+    },
+    {
+      "id": 9,
+      "libelle": "Suivi post-financement défini",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "conditions_suivi=1, indicateurs=10, section=True"
+    },
+    {
+      "id": 10,
+      "libelle": "Charte graphique DÉPS respectée (marqueurs textuels)",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "marqueurs_textuels_DEPS=4/5 (vérification visuelle des couleurs/typo à effectuer manuellement)"
+    },
+    {
+      "id": 11,
+      "libelle": "Recommandation institutionnelle conforme",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "Favorable - approbation du financement combine FLI 600 000 $ + FLS 500 000 $"
+    },
+    {
+      "id": 12,
+      "libelle": "Score qualité global ≥ 90/100",
+      "obtenu": 8.34,
+      "max": 8.34,
+      "verdict": "acquis",
+      "preuve": "score 1..11 normalisé = 100.0/100"
+    }
+  ],
+  "points_forts": [
+    "Sept sections présentes (sur les sections critiques)",
+    "Identification dossier complète (entreprise, FLI/FLS, secteur)",
+    "Données financières historiques suffisantes",
+    "Prévisions documentées",
+    "Cinq catégories de risques cotées",
+    "Mitigations chiffrées",
+    "Comparables sectoriels",
+    "Conditions de décaissement SMART",
+    "Suivi post-financement défini",
+    "Charte graphique DÉPS respectée (marqueurs textuels)",
+    "Recommandation institutionnelle conforme",
+    "Score qualité global ≥ 90/100"
+  ],
+  "lacunes": [],
+  "corrections_requises": []
+}
