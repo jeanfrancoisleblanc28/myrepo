@@ -541,7 +541,7 @@ export function generateKit({ count, categoryIds, levels, seed }: KitOptions): S
     return true;
   });
 
-  const rand = seed !== undefined ? mulberry32(seed) : Math.random;
+  const rand = seed !== undefined ? mulberry32(seed) : () => Math.random();
   const shuffled = [...pool];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
@@ -649,7 +649,7 @@ export function generateBalancedKit({
   const effectiveCategories =
     categoryIds && categoryIds.length > 0 ? categoryIds : preset.defaultCategories;
 
-  const rand = seed !== undefined ? mulberry32(seed) : Math.random;
+  const rand = seed !== undefined ? mulberry32(seed) : () => Math.random();
 
   function shuffle<T>(arr: T[]): T[] {
     const a = [...arr];
