@@ -1,7 +1,9 @@
 {
-  "server": {
-    "host": "localhost",
-    "port": 8080,
-    "protocol": "http"
+  "mcpServers": {
+    "pdf-server": {
+      "command": "npx",
+      "args": ["@anthropic-ai/pdf-server"],
+      "env": {}
+    }
   }
 }
