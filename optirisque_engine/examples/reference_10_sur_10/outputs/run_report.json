@@ -1,0 +1,207 @@
+{
+  "run_id": "RUN-2026-05-02-1118",
+  "timestamp_utc": "2026-05-02T11:18:20+00:00",
+  "dossier": {
+    "entreprise": "Hydrometal Saurel Inc",
+    "fli": "2026-008",
+    "fls": "2026-008B",
+    "secteur": "Metallurgie de precision - composants electrolyseurs et piles a hydrogene",
+    "nature_projet": "Acquisition d'une cellule de soudure robotisee TIG/MIG 6 axes pour doubler la",
+    "montant_demande": "1 100 000 $"
+  },
+  "fichiers_sources": [
+    {
+      "chemin": "/home/user/myrepo/optirisque_engine/examples/reference_10_sur_10/inputs/pdf/RUN-2026-05-02-1118__HydrometalSaurel_OptiRisque.pdf",
+      "sha256": "a37da932fcd25891d78cc720efd88a1ee44ad26e8d41b2151be53d6fab5f9160",
+      "octets": 9862
+    }
+  ],
+  "etapes_traitement": [
+    {
+      "etape": "upload_pdf",
+      "statut": "ok",
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "details": "sha256=a37da932fcd25891…, octets=9862"
+    },
+    {
+      "etape": "extract_optirisque_data",
+      "statut": "ok",
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "details": "moteur=PyPDF2, alertes=0"
+    },
+    {
+      "etape": "validate_against_template",
+      "statut": "ok",
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "details": "taux_completude=1.00, manquantes=0"
+    },
+    {
+      "etape": "advisor_score",
+      "statut": "ok",
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "details": "score=100/100, niveau=10/10, décision=prêt CIC"
+    },
+    {
+      "etape": "generate_cic_slides",
+      "statut": "ok",
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "details": "10 slides générées"
+    }
+  ],
+  "kpi_extraits": {
+    "DSCR": "1.85\n",
+    "marge_brute": "28.5%",
+    "endettement": "52%",
+    "concentration_client": "22%",
+    "carnet_commandes": "4 200 000 $"
+  },
+  "analyse_risques": {
+    "verdict": "Modere (cote globale conforme aux parametres FLI/FLS)",
+    "categories": {
+      "Marché": {
+        "cote": "modere"
+      },
+      "Opérationnel": {
+        "cote": "faible"
+      },
+      "Financier": {
+        "cote": "modere"
+      },
+      "Gouvernance / Management": {
+        "cote": "faible"
+      },
+      "Juridique / Réglementaire": {
+        "cote": "faible"
+      }
+    },
+    "swot": {
+      "forces": [
+        "equipe stable, certifications iso et aws, brevet, ratios superieurs a l'industrie."
+      ],
+      "faiblesses": [
+        "concentration top-3 clients 48%, sensibilite acier, taille critique a atteindre."
+      ],
+      "opportunites": [
+        "marche hydrogene vert europeen, electrification ferroviaire, contrats plug power."
+      ],
+      "menaces": [
+        "hausse acier, taux directeur, concurrence asiatique sur composants standardises.",
+        "impact portefeuille",
+        "concentration sectorielle fli deps post-decaissement: metallurgie 19% (vs limite 25%).",
+        "concentration geographique mrc pierre-de saurel: 41% (vs limite 50%). aucun depassement.",
+        "diversification renforcee vers la chaine de valeur hydrogene vert.",
+        "appreciation generale",
+        "dossier solide porte par une equipe de direction experimentee et une strategie clairement",
+        "positionnee sur la chaine de valeur hydrogene vert, secteur prioritaire mrc pierre-de saurel."
+      ]
+    }
+  },
+  "recommandation": "Favorable - approbation du financement combine FLI 600 000 $ + FLS 500 000 $",
+  "conditions": {
+    "decaissement": [
+      "Fournir avant le 30 juin 2026 les etats financiers verifies 2025 avec DSCR minimum 1.50.",
+      "Obtenir avant le 15 mai 2026 caution personnelle solidaire minimum 25% du capital prete.",
+      "Signer dans les 30 jours convention de garantie 1er rang couvrant minimum 110% du pret.",
+      "Deposer avant le 30 juin 2026 plan de tresorerie 12 mois reserve minimum 500 000 $.",
+      "Presenter avant le 31 juillet 2026 confirmation IQ et RenoVert minimum 700 000 $.",
+      "Remettre avant le 30 septembre 2026 attestation MELCCFP valide minimum 5 ans.",
+      "Maintenir avant chaque versement DSCR minimum 1.40 sur la duree du pret."
+    ],
+    "suivi": [
+      "Transmettre dans les 45 jours suivant chaque trimestre les etats financiers intermediaires"
+    ]
+  },
+  "cadre_suivi": {
+    "frequence": "mensuel",
+    "indicateurs": [
+      "Maintenir un DSCR superieur a 1.40 sur la duree du pret avec verification trimestrielle",
+      "exigible avant chaque versement de capital.",
+      "Maintenir un ratio dette/equite inferieur a 1.80 et une concentration client maximum 35%",
+      "par exercice.",
+      "Transmettre annuellement avant le 30 avril les etats financiers verifies par cabinet CPA",
+      "reconnu avec note du verificateur sur les covenants.",
+      "Indicateurs de suivi",
+      "DSCR mensuel; marge brute trimestrielle; carnet de commandes mensuel; concentration client",
+      "trimestrielle; taux utilisation cellule robotisee mensuel; creation emplois rapport semestriel.",
+      "Frequence revue conseiller: trimestrielle; revue annuelle complete a l'exercice."
+    ]
+  },
+  "score_conseiller": {
+    "score_total": 100,
+    "niveau": 10,
+    "decision": "prêt CIC"
+  },
+  "validation_gabarit": {
+    "sections_attendues": [
+      "Information sur l'entreprise",
+      "Projet à financer",
+      "Coûts et sources de financement",
+      "Sommaire du financement proposé",
+      "Portrait financier historique",
+      "Portrait financier prévisionnel",
+      "Analyse des risques",
+      "Impact portefeuille",
+      "Appréciation générale",
+      "Recommandation",
+      "Conditions préalables",
+      "Conditions de suivi",
+      "Autorisations"
+    ],
+    "sections_presentes": [
+      "Information sur l'entreprise",
+      "Projet à financer",
+      "Coûts et sources de financement",
+      "Sommaire du financement proposé",
+      "Portrait financier historique",
+      "Portrait financier prévisionnel",
+      "Analyse des risques",
+      "Impact portefeuille",
+      "Appréciation générale",
+      "Recommandation",
+      "Conditions préalables",
+      "Conditions de suivi",
+      "Autorisations"
+    ],
+    "sections_manquantes": [],
+    "taux_completude": 1.0
+  },
+  "audit_trail": [
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Téléversement et hash SHA-256",
+      "ref": "/home/user/myrepo/optirisque_engine/examples/reference_10_sur_10/inputs/pdf/RUN-2026-05-02-1118__HydrometalSaurel_OptiRisque.pdf"
+    },
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Extraction des champs métier",
+      "ref": "moteur=PyPDF2"
+    },
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Validation contre le gabarit OptiRisque",
+      "ref": "completude=1.00"
+    },
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Calcul du score conseiller (12 critères)",
+      "ref": "score=100"
+    },
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Génération run_report.json",
+      "ref": "/home/user/myrepo/optirisque_engine/examples/reference_10_sur_10/outputs/run_report.json"
+    },
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Génération du deck CIC",
+      "ref": "/home/user/myrepo/optirisque_engine/examples/reference_10_sur_10/outputs/slides_cic.pptx"
+    }
+  ],
+  "alertes": []
+}

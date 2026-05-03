@@ -1,0 +1,74 @@
+{
+  "run_id": "RUN-2026-05-02-1118",
+  "etapes": [
+    {
+      "etape": "upload_pdf",
+      "statut": "ok",
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "details": "sha256=a37da932fcd25891…, octets=9862"
+    },
+    {
+      "etape": "extract_optirisque_data",
+      "statut": "ok",
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "details": "moteur=PyPDF2, alertes=0"
+    },
+    {
+      "etape": "validate_against_template",
+      "statut": "ok",
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "details": "taux_completude=1.00, manquantes=0"
+    },
+    {
+      "etape": "advisor_score",
+      "statut": "ok",
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "details": "score=100/100, niveau=10/10, décision=prêt CIC"
+    },
+    {
+      "etape": "generate_cic_slides",
+      "statut": "ok",
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "details": "10 slides générées"
+    }
+  ],
+  "audit_trail": [
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Téléversement et hash SHA-256",
+      "ref": "/home/user/myrepo/optirisque_engine/examples/reference_10_sur_10/inputs/pdf/RUN-2026-05-02-1118__HydrometalSaurel_OptiRisque.pdf"
+    },
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Extraction des champs métier",
+      "ref": "moteur=PyPDF2"
+    },
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Validation contre le gabarit OptiRisque",
+      "ref": "completude=1.00"
+    },
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Calcul du score conseiller (12 critères)",
+      "ref": "score=100"
+    },
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Génération run_report.json",
+      "ref": "/home/user/myrepo/optirisque_engine/examples/reference_10_sur_10/outputs/run_report.json"
+    },
+    {
+      "horodatage": "2026-05-02T11:18:20+00:00",
+      "acteur": "moteur_optirisque",
+      "action": "Génération du deck CIC",
+      "ref": "/home/user/myrepo/optirisque_engine/examples/reference_10_sur_10/outputs/slides_cic.pptx"
+    }
+  ],
+  "alertes": []
+}

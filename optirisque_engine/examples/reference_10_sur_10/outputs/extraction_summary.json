@@ -1,0 +1,101 @@
+{
+  "run_id": "RUN-2026-05-02-1118",
+  "moteur_pdf": "PyPDF2",
+  "champs": {
+    "entreprise": "Hydrometal Saurel Inc",
+    "fli": "2026-008",
+    "fls": "2026-008B",
+    "secteur": "Metallurgie de precision - composants electrolyseurs et piles a hydrogene",
+    "nature_projet": "Acquisition d'une cellule de soudure robotisee TIG/MIG 6 axes pour doubler la",
+    "montant_demande": "1 100 000 $",
+    "recommandation": "Favorable - approbation du financement combine FLI 600 000 $ + FLS 500 000 $",
+    "verdict_risque": "Modere (cote globale conforme aux parametres FLI/FLS)"
+  },
+  "kpi": {
+    "DSCR": "1.85\n",
+    "marge_brute": "28.5%",
+    "endettement": "52%",
+    "concentration_client": "22%",
+    "carnet_commandes": "4 200 000 $"
+  },
+  "risques": {
+    "Marché": {
+      "cote": "modere"
+    },
+    "Opérationnel": {
+      "cote": "faible"
+    },
+    "Financier": {
+      "cote": "modere"
+    },
+    "Gouvernance / Management": {
+      "cote": "faible"
+    },
+    "Juridique / Réglementaire": {
+      "cote": "faible"
+    }
+  },
+  "swot": {
+    "forces": [
+      "equipe stable, certifications iso et aws, brevet, ratios superieurs a l'industrie."
+    ],
+    "faiblesses": [
+      "concentration top-3 clients 48%, sensibilite acier, taille critique a atteindre."
+    ],
+    "opportunites": [
+      "marche hydrogene vert europeen, electrification ferroviaire, contrats plug power."
+    ],
+    "menaces": [
+      "hausse acier, taux directeur, concurrence asiatique sur composants standardises.",
+      "impact portefeuille",
+      "concentration sectorielle fli deps post-decaissement: metallurgie 19% (vs limite 25%).",
+      "concentration geographique mrc pierre-de saurel: 41% (vs limite 50%). aucun depassement.",
+      "diversification renforcee vers la chaine de valeur hydrogene vert.",
+      "appreciation generale",
+      "dossier solide porte par une equipe de direction experimentee et une strategie clairement",
+      "positionnee sur la chaine de valeur hydrogene vert, secteur prioritaire mrc pierre-de saurel."
+    ]
+  },
+  "suivi": {
+    "decaissement": [
+      "Fournir avant le 30 juin 2026 les etats financiers verifies 2025 avec DSCR minimum 1.50.",
+      "Obtenir avant le 15 mai 2026 caution personnelle solidaire minimum 25% du capital prete.",
+      "Signer dans les 30 jours convention de garantie 1er rang couvrant minimum 110% du pret.",
+      "Deposer avant le 30 juin 2026 plan de tresorerie 12 mois reserve minimum 500 000 $.",
+      "Presenter avant le 31 juillet 2026 confirmation IQ et RenoVert minimum 700 000 $.",
+      "Remettre avant le 30 septembre 2026 attestation MELCCFP valide minimum 5 ans.",
+      "Maintenir avant chaque versement DSCR minimum 1.40 sur la duree du pret."
+    ],
+    "suivi": [
+      "Transmettre dans les 45 jours suivant chaque trimestre les etats financiers intermediaires"
+    ],
+    "indicateurs_mensuels_trimestriels": [
+      "Maintenir un DSCR superieur a 1.40 sur la duree du pret avec verification trimestrielle",
+      "exigible avant chaque versement de capital.",
+      "Maintenir un ratio dette/equite inferieur a 1.80 et une concentration client maximum 35%",
+      "par exercice.",
+      "Transmettre annuellement avant le 30 avril les etats financiers verifies par cabinet CPA",
+      "reconnu avec note du verificateur sur les covenants.",
+      "Indicateurs de suivi",
+      "DSCR mensuel; marge brute trimestrielle; carnet de commandes mensuel; concentration client",
+      "trimestrielle; taux utilisation cellule robotisee mensuel; creation emplois rapport semestriel.",
+      "Frequence revue conseiller: trimestrielle; revue annuelle complete a l'exercice."
+    ]
+  },
+  "sections_detectees": [
+    "Information sur l'entreprise",
+    "Projet à financer",
+    "Coûts et sources de financement",
+    "Sommaire du financement proposé",
+    "Portrait financier historique",
+    "Portrait financier prévisionnel",
+    "Analyse des risques",
+    "Impact portefeuille",
+    "Appréciation générale",
+    "Recommandation",
+    "Conditions préalables",
+    "Conditions de suivi",
+    "Autorisations"
+  ],
+  "alertes": []
+}

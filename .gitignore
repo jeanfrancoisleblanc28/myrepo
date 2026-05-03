@@ -43,3 +43,9 @@ next-env.d.ts
 
 # Claude Code — paramètres locaux/personnels (conserver settings.json partagé)
 .claude/settings.local.json
+
+# Moteur OptiRisque — PDF traités et livrables générés (artefacts de runtime)
+optirisque_engine/inputs/pdf/*
+!optirisque_engine/inputs/pdf/.gitkeep
+optirisque_engine/outputs/*
+!optirisque_engine/outputs/.gitkeep

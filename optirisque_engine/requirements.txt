@@ -1,0 +1,14 @@
+# Dépendances du moteur OptiRisque.
+
+# OBLIGATOIRE — lecture de config.yaml
+PyYAML>=6.0
+
+# OBLIGATOIRE — extraction du texte des PDF (au moins une des deux)
+pdfplumber>=0.10.0
+PyPDF2>=3.0.0
+
+# OPTIONNEL — génération PowerPoint native (sinon : outline Markdown seul)
+python-pptx>=0.6.21
+
+# OPTIONNEL — validation des livrables JSON contre les schémas
+jsonschema>=4.17.0

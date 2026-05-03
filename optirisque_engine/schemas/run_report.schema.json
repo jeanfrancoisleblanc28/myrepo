@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://deps.qc.ca/schemas/run_report.schema.json",
+  "title": "OptiRisque Run Report",
+  "description": "Rapport audit-ready produit par le moteur d'automatisation OptiRisque DÉPS.",
+  "type": "object",
+  "required": [
+    "run_id",
+    "timestamp_utc",
+    "dossier",
+    "fichiers_sources",
+    "etapes_traitement",
+    "kpi_extraits",
+    "analyse_risques",
+    "recommandation",
+    "conditions",
+    "cadre_suivi",
+    "score_conseiller",
+    "audit_trail"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "pattern": "^RUN-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{4}$",
+      "description": "Identifiant unique RUN-AAAA-MM-JJ-HHMM (UTC)."
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "dossier": {
+      "type": "object",
+      "required": ["entreprise", "secteur", "nature_projet", "montant_demande"],
+      "properties": {
+        "entreprise": { "type": ["string", "null"] },
+        "fli": { "type": ["string", "null"] },
+        "fls": { "type": ["string", "null"] },
+        "secteur": { "type": ["string", "null"] },
+        "nature_projet": { "type": ["string", "null"] },
+        "montant_demande": { "type": ["string", "null"] }
+      }
+    },
+    "fichiers_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["chemin", "sha256", "octets"],
+        "properties": {
+          "chemin": { "type": "string" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "octets": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "etapes_traitement": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["etape", "statut", "horodatage"],
+        "properties": {
+          "etape": { "type": "string" },
+          "statut": { "type": "string", "enum": ["ok", "alerte", "echec", "ignore"] },
+          "horodatage": { "type": "string" },
+          "details": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "kpi_extraits": {
+      "type": "object",
+      "properties": {
+        "DSCR": {},
+        "marge_brute": {},
+        "endettement": {},
+        "concentration_client": {},
+        "carnet_commandes": {}
+      }
+    },
+    "analyse_risques": {
+      "type": "object",
+      "properties": {
+        "verdict": { "type": ["string", "null"] },
+        "categories": { "type": "object" },
+        "swot": {
+          "type": "object",
+          "properties": {
+            "forces": { "type": "array", "items": { "type": "string" } },
+            "faiblesses": { "type": "array", "items": { "type": "string" } },
+            "opportunites": { "type": "array", "items": { "type": "string" } },
+            "menaces": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "recommandation": { "type": ["string", "null"] },
+    "conditions": {
+      "type": "object",
+      "properties": {
+        "decaissement": { "type": "array", "items": { "type": "string" } },
+        "suivi": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "cadre_suivi": {
+      "type": "object",
+      "properties": {
+        "frequence": { "type": ["string", "null"] },
+        "indicateurs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "score_conseiller": {
+      "type": "object",
+      "required": ["score_total", "niveau", "decision"],
+      "properties": {
+        "score_total": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "niveau": { "type": "integer" },
+        "decision": { "type": "string" }
+      }
+    },
+    "audit_trail": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["horodatage", "acteur", "action"],
+        "properties": {
+          "horodatage": { "type": "string" },
+          "acteur": { "type": "string" },
+          "action": { "type": "string" },
+          "ref": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "alertes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}
