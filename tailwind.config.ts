@@ -35,6 +35,18 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // DÉPS institutional palette — see organigramme.html.
+        // Used by /skills/present?theme=deps and any future DÉPS-branded surface.
+        deps: {
+          "navy-deep": "#0B1336",
+          navy: "#141F4E",
+          "navy-darker": "#060A24",
+          teal: "#2BC4D4",
+          "teal-soft": "#6FDFEA",
+          ink: "#0E1430",
+          paper: "#F5F7FB",
+          line: "#B8C1DB",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

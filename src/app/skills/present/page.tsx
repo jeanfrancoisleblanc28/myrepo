@@ -3,7 +3,8 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { generateKit, getSkillsByIds, type Skill } from "@/lib/skills-data";
-import { PresentationSlide } from "@/components/skills/PresentationSlide";
+import { PresentationSlide, type PresentationTheme } from "@/components/skills/PresentationSlide";
+import { DepsParticles } from "@/components/skills/DepsParticles";
 import { Modal } from "@/components/ui/modal";
 import { cn } from "@/lib/cn";
 
@@ -20,6 +21,32 @@ function PresentInner() {
     }
     return generateKit({ count: 5 });
   }, [params]);
+
+  const theme: PresentationTheme = params.get("theme") === "deps" ? "deps" : "default";
+  const isDeps = theme === "deps";
+
+  const kitIds = useMemo(() => kit.map((s) => s.id).join(","), [kit]);
+
+  // URL helpers that preserve the current theme.
+  const buildUrl = useCallback(
+    (base: string, withIds: boolean) => {
+      const qs = new URLSearchParams();
+      if (withIds && kitIds) qs.set("ids", kitIds);
+      if (isDeps) qs.set("theme", "deps");
+      const s = qs.toString();
+      return s ? `${base}?${s}` : base;
+    },
+    [kitIds, isDeps],
+  );
+
+  const toggleTheme = useCallback(() => {
+    const qs = new URLSearchParams();
+    if (kitIds) qs.set("ids", kitIds);
+    if (!isDeps) qs.set("theme", "deps");
+    const s = qs.toString();
+    router.replace(s ? `/skills/present?${s}` : "/skills/present", { scroll: false });
+  }, [router, kitIds, isDeps]);
+
 
   // Slides: intro + skills + outro
   const totalSlides = kit.length + 2;
@@ -83,7 +110,7 @@ function PresentInner() {
           break;
         case "Escape":
           if (helpOpen) setHelpOpen(false);
-          else router.push(`/skills${kit.length ? `?ids=${kit.map((s) => s.id).join(",")}` : ""}`);
+          else router.push(buildUrl("/skills", true));
           break;
         case "f":
         case "F":
@@ -109,7 +136,7 @@ function PresentInner() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [next, prev, router, helpOpen, goTo, totalSlides, kit]);
+  }, [next, prev, router, helpOpen, goTo, totalSlides, buildUrl]);
 
   // Autoplay: timeout keyed on `index` so each user nav resets the delay
   // and uses goTo() so transitions stay in sync. Stops at the last slide
@@ -144,7 +171,7 @@ function PresentInner() {
       ref={rootRef}
       className="fixed inset-0 z-[200] bg-black text-white"
       role="region"
-      aria-label="Présentation UI/UX"
+      aria-label={isDeps ? "Présentation UI/UX — keynote DÉPS" : "Présentation UI/UX"}
       aria-roledescription="carrousel"
     >
       {/* Slide container */}
@@ -156,13 +183,23 @@ function PresentInner() {
           total={kit.length}
           variant={variant}
           kitSize={kit.length}
+          theme={theme}
         />
+        {isDeps && <DepsParticles />}
       </div>
 
       {/* Progress bar */}
-      <div className="pointer-events-none absolute left-0 right-0 top-0 h-1 bg-white/10">
+      <div
+        className={cn(
+          "pointer-events-none absolute left-0 right-0 top-0 h-1",
+          isDeps ? "bg-deps-navy-deep" : "bg-white/10",
+        )}
+      >
         <div
-          className="h-full bg-white transition-[width] duration-500"
+          className={cn(
+            "h-full transition-[width] duration-500",
+            isDeps ? "bg-deps-teal-soft" : "bg-white",
+          )}
           style={{ width: `${progress}%` }}
           aria-hidden="true"
         />
@@ -200,6 +237,15 @@ function PresentInner() {
             <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
           </svg>
         </ControlButton>
+        <ControlButton
+          onClick={toggleTheme}
+          label={isDeps ? "Désactiver le thème DÉPS" : "Activer le thème DÉPS"}
+          active={isDeps}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </ControlButton>
         <ControlButton onClick={() => setHelpOpen(true)} label="Raccourcis clavier">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" />
@@ -209,7 +255,7 @@ function PresentInner() {
 
       {/* Close (top-right) */}
       <button
-        onClick={() => router.push(`/skills${kit.length ? `?ids=${kit.map((s) => s.id).join(",")}` : ""}`)}
+        onClick={() => router.push(buildUrl("/skills", true))}
         className="absolute right-4 top-4 z-10 rounded-full border border-white/20 bg-black/40 p-2 text-white/80 backdrop-blur transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
         aria-label="Fermer la présentation"
       >
@@ -253,11 +299,14 @@ function ControlButton({
   disabled,
   label,
   children,
+  active,
 }: {
   onClick: () => void;
   disabled?: boolean;
   label: string;
   children: React.ReactNode;
+  /** Pass a boolean to mark this as a toggle button (exposes aria-pressed). Omit for one-shot actions. */
+  active?: boolean;
 }) {
   return (
     <button
@@ -265,10 +314,15 @@ function ControlButton({
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
+      aria-pressed={active}
+      title={label}
       className={cn(
-        "flex h-9 w-9 items-center justify-center rounded-full text-white/80 transition-colors",
-        "hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white",
+        "flex h-9 w-9 items-center justify-center rounded-full transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white",
         "disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent",
+        active
+          ? "bg-deps-teal-soft/20 text-deps-teal-soft hover:bg-deps-teal-soft/30"
+          : "text-white/80 hover:bg-white/10 hover:text-white",
       )}
     >
       {children}
