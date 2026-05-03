@@ -29,19 +29,35 @@ const sizeStyles: Record<Size, string> = {
   icon: "h-10 w-10 rounded-md",
 };
 
+/**
+ * Returns the className string for the Button look. Use on a non-button element
+ * (e.g. `next/link`'s `<a>`) to avoid nesting interactive elements.
+ */
+export function buttonClasses({
+  variant = "primary",
+  size = "md",
+  className,
+}: {
+  variant?: Variant;
+  size?: Size;
+  className?: string;
+} = {}) {
+  return cn(
+    "inline-flex items-center justify-center font-medium transition-colors",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+    "disabled:pointer-events-none disabled:opacity-50",
+    variantStyles[variant],
+    sizeStyles[size],
+    className,
+  );
+}
+
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "md", loading, disabled, type = "button", children, ...props }, ref) => (
     <button
       ref={ref}
       type={type}
-      className={cn(
-        "inline-flex items-center justify-center font-medium transition-colors",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        "disabled:pointer-events-none disabled:opacity-50",
-        variantStyles[variant],
-        sizeStyles[size],
-        className,
-      )}
+      className={buttonClasses({ variant, size, className })}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       {...props}
