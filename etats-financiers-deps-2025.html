@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>États financiers DÉPS 2025 — Cahier d'administrateur</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deps-navy:        #141F4E;
+    --deps-navy-deep:   #0B1336;
+    --deps-navy-soft:   #2A3770;
+    --deps-teal:        #2BC4D4;
+    --deps-teal-soft:   #6FDFEA;
+    --deps-ink:         #0E1430;
+    --deps-paper:       #F5F7FB;
+    --deps-line:        #B8C1DB;
+    --deps-white:       #FFFFFF;
+    --deps-amber:       #F4B83B;
+    --deps-amber-soft:  #FFF4D6;
+    --deps-emerald:     #18A678;
+    --deps-coral:       #E5644E;
+    --shadow-sm:        0 1px 2px rgba(11, 19, 54, 0.06), 0 2px 6px rgba(11, 19, 54, 0.08);
+    --shadow-md:        0 4px 10px rgba(11, 19, 54, 0.10), 0 12px 30px rgba(11, 19, 54, 0.12);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--deps-ink);
+    background: #E8ECF4;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ---------- Toolbar (écran seulement) ---------- */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--deps-navy-deep);
+    color: var(--deps-white);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-md);
+  }
+  .toolbar-title {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+  }
+  .toolbar-title em { color: var(--deps-teal); font-style: normal; }
+  .toolbar-actions { display: flex; gap: 12px; }
+  .btn {
+    background: var(--deps-teal);
+    color: var(--deps-navy-deep);
+    border: 0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn:hover { background: var(--deps-teal-soft); }
+  .btn.ghost {
+    background: transparent;
+    color: var(--deps-white);
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .btn.ghost:hover { border-color: var(--deps-teal); color: var(--deps-teal); }
+
+  /* ---------- Page A4 ---------- */
+  .sheet {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 24px auto;
+    padding: 22mm 20mm;
+    background: var(--deps-white);
+    box-shadow: var(--shadow-md);
+    page-break-after: always;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .sheet:last-child { page-break-after: auto; }
+
+  /* ---------- Header / Footer de feuille ---------- */
+  .sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--deps-line);
+    margin-bottom: 24px;
+    font-size: 11px;
+    color: var(--deps-navy-soft);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .sheet-header .deps-mark {
+    color: var(--deps-navy);
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: -0.02em;
+    text-transform: none;
+  }
+  .sheet-header .deps-mark span { color: var(--deps-teal); }
+
+  .sheet-footer {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--deps-line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--deps-navy-soft);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* ---------- Couverture ---------- */
+  .cover {
+    background:
+      radial-gradient(800px 420px at 85% -5%, rgba(43, 196, 212, 0.18), transparent 60%),
+      radial-gradient(640px 360px at -10% 110%, rgba(20, 31, 78, 0.10), transparent 60%),
+      var(--deps-white);
+  }
+  .cover-eyebrow {
+    color: var(--deps-teal);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .cover-title {
+    font-size: 52px;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: var(--deps-navy);
+    font-weight: 800;
+    margin: 0 0 24px;
+    max-width: 14ch;
+  }
+  .cover-title em {
+    color: var(--deps-teal);
+    font-style: normal;
+  }
+  .cover-subtitle {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--deps-navy-soft);
+    max-width: 50ch;
+    margin: 0 0 56px;
+  }
+  .cover-meta {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 40px;
+    margin-top: auto;
+    padding-top: 32px;
+    border-top: 2px solid var(--deps-navy);
+  }
+  .cover-meta dt {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--deps-navy-soft);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .cover-meta dd {
+    margin: 0;
+    font-size: 16px;
+    color: var(--deps-navy);
+    font-weight: 600;
+  }
+
+  /* ---------- Sommaire exécutif ---------- */
+  h1.section-title {
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--deps-navy);
+    margin: 0 0 8px;
+    font-weight: 800;
+  }
+  .section-eyebrow {
+    color: var(--deps-teal);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-lede {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--deps-navy-soft);
+    max-width: 70ch;
+    margin: 0 0 28px;
+  }
+
+  h2.block-title {
+    font-size: 16px;
+    color: var(--deps-navy);
+    margin: 28px 0 12px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  h3.subblock-title {
+    font-size: 13px;
+    color: var(--deps-navy);
+    margin: 16px 0 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  p, li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--deps-ink);
+  }
+  ul.tight, ol.tight { margin: 6px 0 14px; padding-left: 18px; }
+  ul.tight li, ol.tight li { margin: 4px 0; }
+
+  /* ---------- KPI Cards ---------- */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 18px 0 24px;
+  }
+  .kpi {
+    background: var(--deps-paper);
+    border: 1px solid var(--deps-line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: var(--deps-teal);
+  }
+  .kpi.navy::before    { background: var(--deps-navy); }
+  .kpi.emerald::before { background: var(--deps-emerald); }
+  .kpi.amber::before   { background: var(--deps-amber); }
+  .kpi.coral::before   { background: var(--deps-coral); }
+  .kpi-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--deps-navy-soft);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .kpi-value {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--deps-navy);
+    line-height: 1.1;
+  }
+  .kpi-trend {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--deps-navy-soft);
+    font-weight: 600;
+  }
+  .kpi-trend.up    { color: var(--deps-emerald); }
+  .kpi-trend.down  { color: var(--deps-coral); }
+
+  /* ---------- Tableaux financiers ---------- */
+  table.fin {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px;
+    font-size: 12px;
+  }
+  table.fin th, table.fin td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--deps-line);
+  }
+  table.fin th {
+    background: var(--deps-paper);
+    color: var(--deps-navy);
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  table.fin td.num, table.fin th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.fin tr.total td {
+    font-weight: 800;
+    color: var(--deps-navy);
+    border-top: 2px solid var(--deps-navy);
+    border-bottom: 2px solid var(--deps-navy);
+    background: rgba(43, 196, 212, 0.06);
+  }
+  table.fin tr.subtotal td {
+    font-weight: 700;
+    color: var(--deps-navy);
+    border-top: 1px solid var(--deps-navy-soft);
+  }
+
+  /* ---------- Placeholders à remplir ---------- */
+  .ph {
+    display: inline-block;
+    background: var(--deps-amber-soft);
+    border: 1px dashed var(--deps-amber);
+    color: var(--deps-navy-deep);
+    padding: 1px 8px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.92em;
+    font-weight: 600;
+  }
+  .ph::before { content: "▢ "; opacity: 0.55; }
+
+  /* ---------- Encarts ---------- */
+  .callout {
+    background: linear-gradient(135deg, rgba(43,196,212,0.08), rgba(20,31,78,0.04));
+    border-left: 3px solid var(--deps-teal);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    font-size: 12.5px;
+    color: var(--deps-navy);
+  }
+  .callout strong { color: var(--deps-navy-deep); }
+  .callout.warn {
+    background: linear-gradient(135deg, var(--deps-amber-soft), rgba(244, 184, 59, 0.06));
+    border-left-color: var(--deps-amber);
+  }
+
+  /* ---------- Cartes Fonds (FLI/FLS/PAUPME) ---------- */
+  .fund-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin: 14px 0 20px;
+  }
+  .fund {
+    border: 1px solid var(--deps-line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--deps-white);
+    box-shadow: var(--shadow-sm);
+  }
+  .fund-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 14px 18px;
+    background: var(--deps-navy);
+    color: var(--deps-white);
+  }
+  .fund-head .fund-tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--deps-teal);
+    font-weight: 700;
+  }
+  .fund-head h3 {
+    margin: 4px 0 0;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .fund-head .fund-aum {
+    text-align: right;
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+  }
+  .fund-head .fund-aum strong {
+    display: block;
+    font-size: 22px;
+    color: var(--deps-white);
+    font-weight: 800;
+    margin-top: 4px;
+  }
+  .fund-body {
+    padding: 14px 18px 16px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .fund-stat .label {
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--deps-navy-soft);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .fund-stat .value {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--deps-navy);
+    letter-spacing: -0.01em;
+  }
+  .fund-stat .sublabel {
+    font-size: 10.5px;
+    color: var(--deps-navy-soft);
+    margin-top: 2px;
+  }
+
+  /* ---------- Politique : grille principes ---------- */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 14px 0 18px;
+  }
+  .principle {
+    border: 1px solid var(--deps-line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: var(--deps-paper);
+  }
+  .principle .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: var(--deps-navy);
+    color: var(--deps-teal);
+    font-weight: 800;
+    font-size: 11px;
+    margin-right: 8px;
+  }
+  .principle .title {
+    font-weight: 700;
+    color: var(--deps-navy);
+    font-size: 12.5px;
+    margin-bottom: 4px;
+  }
+  .principle .desc {
+    font-size: 11.5px;
+    color: var(--deps-navy-soft);
+    line-height: 1.45;
+  }
+
+  /* ---------- Signatures ---------- */
+  .signatures {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px 36px;
+    margin-top: 32px;
+  }
+  .sig-line {
+    border-bottom: 1.5px solid var(--deps-navy);
+    height: 38px;
+  }
+  .sig-cap {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--deps-navy-soft);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ---------- TOC ---------- */
+  .toc {
+    border: 1px solid var(--deps-line);
+    border-radius: 12px;
+    padding: 18px 22px;
+    background: var(--deps-paper);
+    margin-bottom: 24px;
+  }
+  .toc ol {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+    counter-reset: toc;
+  }
+  .toc li {
+    counter-increment: toc;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--deps-line);
+    font-size: 13px;
+  }
+  .toc li:last-child { border-bottom: 0; }
+  .toc li::before {
+    content: counter(toc, decimal-leading-zero) ".";
+    color: var(--deps-teal);
+    font-weight: 800;
+    margin-right: 12px;
+  }
+  .toc li .label {
+    flex: 1;
+    color: var(--deps-navy);
+    font-weight: 600;
+  }
+  .toc li .pg {
+    color: var(--deps-navy-soft);
+    font-variant-numeric: tabular-nums;
+    font-size: 11px;
+  }
+
+  /* ---------- Print ---------- */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  @media print {
+    body { background: white; }
+    .toolbar { display: none !important; }
+    .sheet {
+      margin: 0;
+      box-shadow: none;
+      page-break-after: always;
+    }
+    .ph {
+      background: #FFF4D6 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .kpi, .fund-head, .callout, table.fin tr.total td {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <div class="toolbar-title">
+    DÉPS · <em>Cahier d'administrateur</em> · États financiers 2025
+  </div>
+  <div class="toolbar-actions">
+    <button class="btn ghost" onclick="document.body.classList.toggle('hide-ph')">
+      Aperçu sans placeholders
+    </button>
+    <button class="btn" onclick="window.print()">Imprimer / PDF</button>
+  </div>
+</div>
+
+<style>
+  body.hide-ph .ph { background: transparent; border: 0; color: var(--deps-navy-soft); }
+  body.hide-ph .ph::before { content: ""; }
+</style>
+
+<!-- ============================================================ -->
+<!-- PAGE 1 — COUVERTURE                                          -->
+<!-- ============================================================ -->
+<section class="sheet cover">
+  <div class="sheet-header">
+    <div class="deps-mark">DÉ<span>PS</span></div>
+    <div>Conseil d'administration · Séance du <span class="ph">JJ MOIS 2026</span></div>
+  </div>
+
+  <div class="cover-eyebrow">Document confidentiel — usage interne</div>
+  <h1 class="cover-title">États financiers <em>2025</em><br>Cahier d'administrateur</h1>
+  <p class="cover-subtitle">
+    Reddition de comptes annuelle de Développement économique Pierre-De Saurel (DÉPS),
+    nouvelle politique d'investissement commune et performance des fonds FLI, FLS et PAUPME
+    pour l'exercice clos le 31 décembre 2025.
+  </p>
+
+  <dl class="cover-meta">
+    <div>
+      <dt>Présenté au</dt>
+      <dd>Conseil d'administration de DÉPS</dd>
+    </div>
+    <div>
+      <dt>Présenté par</dt>
+      <dd><span class="ph">Nom du commissaire industriel</span></dd>
+    </div>
+    <div>
+      <dt>Exercice</dt>
+      <dd>1<sup>er</sup> janvier — 31 décembre 2025</dd>
+    </div>
+    <div>
+      <dt>Date de séance</dt>
+      <dd><span class="ph">JJ MOIS 2026</span></dd>
+    </div>
+    <div>
+      <dt>Auditeur indépendant</dt>
+      <dd><span class="ph">Cabinet · Mission</span></dd>
+    </div>
+    <div>
+      <dt>Référence</dt>
+      <dd>DEPS-CA-2026-<span class="ph">###</span></dd>
+    </div>
+  </dl>
+
+  <div class="sheet-footer">
+    <span>MRC Pierre-De Saurel · Sorel-Tracy (Québec)</span>
+    <span>Page 1 / 9</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 2 — SOMMAIRE EXÉCUTIF                                   -->
+<!-- ============================================================ -->
+<section class="sheet">
+  <div class="sheet-header">
+    <div class="deps-mark">DÉ<span>PS</span></div>
+    <div>Sommaire exécutif</div>
+  </div>
+
+  <div class="section-eyebrow">À retenir en trois minutes</div>
+  <h1 class="section-title">Sommaire exécutif</h1>
+  <p class="section-lede">
+    L'exercice 2025 confirme la trajectoire de DÉPS : <span class="ph">une phrase clé · ex. portefeuille
+    en croissance, 3 nouveaux dossiers structurants, surplus opérationnel maintenu</span>.
+    Le présent cahier résume les états financiers vérifiés, la politique commune adoptée par
+    les conseils du FLI/FLS et du PAUPME, et la performance des trois fonds d'investissement.
+  </p>
+
+  <div class="kpi-grid">
+    <div class="kpi navy">
+      <div class="kpi-label">Revenus 2025</div>
+      <div class="kpi-value"><span class="ph">0 000 000 $</span></div>
+      <div class="kpi-trend up">▲ <span class="ph">+0,0 %</span> vs 2024</div>
+    </div>
+    <div class="kpi emerald">
+      <div class="kpi-label">Surplus de l'exercice</div>
+      <div class="kpi-value"><span class="ph">000 000 $</span></div>
+      <div class="kpi-trend">Avant affectations</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Actif net total</div>
+      <div class="kpi-value"><span class="ph">0 000 000 $</span></div>
+      <div class="kpi-trend up">▲ <span class="ph">+0,0 %</span> vs 2024</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Décaissements FLI+FLS+PAUPME</div>
+      <div class="kpi-value"><span class="ph">0 000 000 $</span></div>
+      <div class="kpi-trend">Sur <span class="ph">##</span> dossiers</div>
+    </div>
+    <div class="kpi emerald">
+      <div class="kpi-label">Effet de levier</div>
+      <div class="kpi-value"><span class="ph">0,0 ×</span></div>
+      <div class="kpi-trend">1 $ DÉPS = <span class="ph">0,0 $</span> total investi</div>
+    </div>
+    <div class="kpi coral">
+      <div class="kpi-label">Provision pour pertes</div>
+      <div class="kpi-value"><span class="ph">0,0 %</span> du portefeuille</div>
+      <div class="kpi-trend">Cible interne ≤ <span class="ph">0,0 %</span></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Trois messages clés à porter au CA</strong>
+    <ol class="tight" style="margin-top:6px;">
+      <li><span class="ph">Message 1 — la santé financière (ex. surplus stable, fonds réservés intacts)</span></li>
+      <li><span class="ph">Message 2 — l'adoption de la politique commune (alignement FLI/FLS/PAUPME)</span></li>
+      <li><span class="ph">Message 3 — la performance des fonds (effet de levier, emplois, déploiement)</span></li>
+    </ol>
+  </div>
+
+  <h2 class="block-title">Ordre du document</h2>
+  <div class="toc">
+    <ol>
+      <li><span class="label">États financiers DÉPS — Résultats &amp; bilan 2025</span><span class="pg">p. 3–4</span></li>
+      <li><span class="label">Politique d'investissement commune — Adoption &amp; portée</span><span class="pg">p. 5–6</span></li>
+      <li><span class="label">Performance des fonds FLI / FLS / PAUPME</span><span class="pg">p. 7–8</span></li>
+      <li><span class="label">Recommandations &amp; signatures</span><span class="pg">p. 9</span></li>
+    </ol>
+  </div>
+
+  <div class="sheet-footer">
+    <span>DÉPS · États financiers 2025</span>
+    <span>Page 2 / 9</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 3 — ÉTATS FINANCIERS — RÉSULTATS                        -->
+<!-- ============================================================ -->
+<section class="sheet">
+  <div class="sheet-header">
+    <div class="deps-mark">DÉ<span>PS</span></div>
+    <div>1. États financiers · Résultats</div>
+  </div>
+
+  <div class="section-eyebrow">Section 1 / 3</div>
+  <h1 class="section-title">État des résultats 2025</h1>
+  <p class="section-lede">
+    Exercice clos le 31 décembre 2025. Comparatif 2024 fourni à droite.
+    Audit réalisé par <span class="ph">Cabinet</span> — opinion <span class="ph">sans réserve / avec réserve</span>.
+  </p>
+
+  <table class="fin">
+    <thead>
+      <tr>
+        <th>Poste</th>
+        <th class="num">2025 ($)</th>
+        <th class="num">2024 ($)</th>
+        <th class="num">Δ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="4" style="background:var(--deps-paper);font-weight:700;color:var(--deps-navy);text-transform:uppercase;font-size:10.5px;letter-spacing:0.06em;">Revenus</td></tr>
+      <tr><td>Contribution MRC Pierre-De Saurel</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+      <tr><td>Subventions gouvernementales</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+      <tr><td>Revenus d'intérêts (FLI/FLS/PAUPME)</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+      <tr><td>Autres revenus</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+      <tr class="subtotal"><td>Total des revenus</td><td class="num"><span class="ph">0 000 000</span></td><td class="num"><span class="ph">0 000 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+
+      <tr><td colspan="4" style="background:var(--deps-paper);font-weight:700;color:var(--deps-navy);text-transform:uppercase;font-size:10.5px;letter-spacing:0.06em;padding-top:14px;">Charges</td></tr>
+      <tr><td>Salaires et avantages</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+      <tr><td>Honoraires professionnels</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+      <tr><td>Promotion et démarchage</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+      <tr><td>Frais de bureau et administration</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+      <tr><td>Provision pour pertes sur prêts</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+      <tr><td>Autres charges</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+      <tr class="subtotal"><td>Total des charges</td><td class="num"><span class="ph">0 000 000</span></td><td class="num"><span class="ph">0 000 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+
+      <tr class="total"><td>Surplus (déficit) de l'exercice</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">+0,0 %</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>Faits saillants à commenter au CA</strong> — <span class="ph">2 ou 3 phrases : variation
+    significative d'un poste, événement non récurrent, justification d'écart vs. budget initial</span>.
+  </div>
+
+  <div class="sheet-footer">
+    <span>1. États financiers · Résultats</span>
+    <span>Page 3 / 9</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 4 — ÉTATS FINANCIERS — BILAN                            -->
+<!-- ============================================================ -->
+<section class="sheet">
+  <div class="sheet-header">
+    <div class="deps-mark">DÉ<span>PS</span></div>
+    <div>1. États financiers · Bilan</div>
+  </div>
+
+  <div class="section-eyebrow">Section 1 / 3 — suite</div>
+  <h1 class="section-title">Bilan au 31 décembre 2025</h1>
+  <p class="section-lede">
+    Position financière en fin d'exercice. Les fonds réservés (FLI, FLS, PAUPME) sont distincts
+    des actifs d'opération de DÉPS conformément aux ententes.
+  </p>
+
+  <table class="fin">
+    <thead>
+      <tr>
+        <th>Poste</th>
+        <th class="num">2025 ($)</th>
+        <th class="num">2024 ($)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="3" style="background:var(--deps-paper);font-weight:700;color:var(--deps-navy);text-transform:uppercase;font-size:10.5px;letter-spacing:0.06em;">Actif</td></tr>
+      <tr><td>Encaisse et équivalents</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td></tr>
+      <tr><td>Débiteurs</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td></tr>
+      <tr><td>Prêts à recevoir — FLI</td><td class="num"><span class="ph">0 000 000</span></td><td class="num"><span class="ph">0 000 000</span></td></tr>
+      <tr><td>Prêts à recevoir — FLS</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td></tr>
+      <tr><td>Subventions à recevoir — PAUPME</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td></tr>
+      <tr><td>Immobilisations</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td></tr>
+      <tr class="subtotal"><td>Total de l'actif</td><td class="num"><span class="ph">0 000 000</span></td><td class="num"><span class="ph">0 000 000</span></td></tr>
+
+      <tr><td colspan="3" style="background:var(--deps-paper);font-weight:700;color:var(--deps-navy);text-transform:uppercase;font-size:10.5px;letter-spacing:0.06em;padding-top:14px;">Passif</td></tr>
+      <tr><td>Créditeurs et charges à payer</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td></tr>
+      <tr><td>Apports reportés</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td></tr>
+      <tr><td>Dette à long terme</td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">00 000</span></td></tr>
+      <tr class="subtotal"><td>Total du passif</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td></tr>
+
+      <tr><td colspan="3" style="background:var(--deps-paper);font-weight:700;color:var(--deps-navy);text-transform:uppercase;font-size:10.5px;letter-spacing:0.06em;padding-top:14px;">Actif net</td></tr>
+      <tr><td>Affecté — FLI</td><td class="num"><span class="ph">0 000 000</span></td><td class="num"><span class="ph">0 000 000</span></td></tr>
+      <tr><td>Affecté — FLS</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td></tr>
+      <tr><td>Affecté — PAUPME</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td></tr>
+      <tr><td>Non affecté</td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">000 000</span></td></tr>
+      <tr class="total"><td>Total passif + actif net</td><td class="num"><span class="ph">0 000 000</span></td><td class="num"><span class="ph">0 000 000</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="subblock-title">Notes complémentaires à mentionner</h3>
+  <ul class="tight">
+    <li><span class="ph">Note 1 — engagement contractuel matériel (ex. bail, entente FDT, etc.)</span></li>
+    <li><span class="ph">Note 2 — événement postérieur à la date de clôture, le cas échéant</span></li>
+    <li><span class="ph">Note 3 — opérations entre apparentés (MRC, municipalités)</span></li>
+  </ul>
+
+  <div class="sheet-footer">
+    <span>1. États financiers · Bilan</span>
+    <span>Page 4 / 9</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 5 — POLITIQUE COMMUNE — PORTÉE & PRINCIPES              -->
+<!-- ============================================================ -->
+<section class="sheet">
+  <div class="sheet-header">
+    <div class="deps-mark">DÉ<span>PS</span></div>
+    <div>2. Politique d'investissement commune</div>
+  </div>
+
+  <div class="section-eyebrow">Section 2 / 3</div>
+  <h1 class="section-title">Une politique commune pour FLI, FLS et PAUPME</h1>
+  <p class="section-lede">
+    Adoptée par <span class="ph">le CA · le comité d'investissement · la MRC</span> le
+    <span class="ph">JJ MOIS 2025</span>, la nouvelle politique commune harmonise les règles
+    d'admissibilité, les seuils de décision et la gouvernance des trois fonds gérés par DÉPS.
+    Elle remplace les politiques distinctes en vigueur depuis <span class="ph">AAAA</span>.
+  </p>
+
+  <h2 class="block-title">Pourquoi une politique commune ?</h2>
+  <ul class="tight">
+    <li><strong>Lisibilité</strong> pour les promoteurs : un seul jeu de règles, peu importe le fonds sollicité.</li>
+    <li><strong>Cohérence</strong> des décisions du comité d'investissement, peu importe la combinaison de fonds.</li>
+    <li><strong>Efficacité</strong> administrative : un seul gabarit de dossier, une seule grille d'analyse.</li>
+    <li><strong>Conformité</strong> aux orientations <span class="ph">d'Investissement Québec / Fonds de solidarité FTQ / MAMH</span>.</li>
+  </ul>
+
+  <h2 class="block-title">Principes directeurs</h2>
+  <div class="principles">
+    <div class="principle">
+      <div class="title"><span class="num">1</span>Création et maintien d'emplois</div>
+      <div class="desc">Tout dossier doit démontrer un impact net sur l'emploi durable dans la MRC Pierre-De Saurel — minimum <span class="ph">## emplois</span> par tranche de <span class="ph">000 000 $</span>.</div>
+    </div>
+    <div class="principle">
+      <div class="title"><span class="num">2</span>Effet de levier</div>
+      <div class="desc">Le financement DÉPS est complémentaire : ratio plancher de <span class="ph">1 : 0,0</span> avec d'autres sources (banque, FTQ, BDC, mise de fonds).</div>
+    </div>
+    <div class="principle">
+      <div class="title"><span class="num">3</span>Diversification sectorielle</div>
+      <div class="desc">Plafond d'exposition par secteur : <span class="ph">00 %</span> du portefeuille consolidé. Surveillance trimestrielle.</div>
+    </div>
+    <div class="principle">
+      <div class="title"><span class="num">4</span>Diligence raisonnable</div>
+      <div class="desc">Analyse financière (3 ans + projections), antécédents promoteur, plan d'affaires, cote de risque <span class="ph">A à E</span>.</div>
+    </div>
+    <div class="principle">
+      <div class="title"><span class="num">5</span>Gestion des conflits d'intérêts</div>
+      <div class="desc">Déclaration obligatoire avant chaque délibération ; abstention de vote et retrait de la salle si lien d'intérêt.</div>
+    </div>
+    <div class="principle">
+      <div class="title"><span class="num">6</span>Reddition de comptes</div>
+      <div class="desc">Tableau de bord trimestriel au CA ; rapport annuel public ; audit indépendant.</div>
+    </div>
+  </div>
+
+  <div class="sheet-footer">
+    <span>2. Politique d'investissement commune</span>
+    <span>Page 5 / 9</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 6 — POLITIQUE COMMUNE — RÈGLES & GOUVERNANCE            -->
+<!-- ============================================================ -->
+<section class="sheet">
+  <div class="sheet-header">
+    <div class="deps-mark">DÉ<span>PS</span></div>
+    <div>2. Politique commune · Règles &amp; gouvernance</div>
+  </div>
+
+  <div class="section-eyebrow">Section 2 / 3 — suite</div>
+  <h1 class="section-title">Règles d'investissement et seuils de décision</h1>
+
+  <table class="fin">
+    <thead>
+      <tr>
+        <th>Paramètre</th>
+        <th>FLI</th>
+        <th>FLS</th>
+        <th>PAUPME</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Forme d'aide</td><td>Prêt</td><td>Prêt</td><td>Subvention / contribution</td></tr>
+      <tr><td>Plafond par dossier</td><td><span class="ph">000 000 $</span></td><td><span class="ph">000 000 $</span></td><td><span class="ph">00 000 $</span></td></tr>
+      <tr><td>Taux d'intérêt</td><td><span class="ph">0,0 % – 0,0 %</span></td><td><span class="ph">0,0 % – 0,0 %</span></td><td>s.o.</td></tr>
+      <tr><td>Durée maximale</td><td><span class="ph">## ans</span></td><td><span class="ph">## ans</span></td><td><span class="ph">## mois</span></td></tr>
+      <tr><td>Moratoire capital</td><td>≤ <span class="ph">## mois</span></td><td>≤ <span class="ph">## mois</span></td><td>s.o.</td></tr>
+      <tr><td>Garanties</td><td>Hypothèque mobilière / caution</td><td>Subordonnée</td><td>Aucune</td></tr>
+      <tr><td>Cumul aide gouv.</td><td>≤ <span class="ph">00 %</span> du projet</td><td>≤ <span class="ph">00 %</span></td><td>≤ <span class="ph">00 %</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="block-title">Gouvernance et seuils d'autorisation</h2>
+  <table class="fin">
+    <thead>
+      <tr>
+        <th>Niveau de décision</th>
+        <th class="num">Plafond cumulé</th>
+        <th>Quorum</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Direction (commissaire industriel)</td><td class="num">≤ <span class="ph">00 000 $</span></td><td>1 + recommandation analyste</td></tr>
+      <tr><td>Comité d'investissement</td><td class="num">≤ <span class="ph">000 000 $</span></td><td><span class="ph">#</span> membres sur <span class="ph">#</span></td></tr>
+      <tr><td>Conseil d'administration</td><td class="num">&gt; <span class="ph">000 000 $</span></td><td>Majorité simple, hors conflits</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Décision attendue du CA</strong> — Adoption de la politique commune dans sa version
+    datée du <span class="ph">JJ MOIS 2025</span> (résolution n<sup>o</sup> <span class="ph">2026-CA-###</span>),
+    abrogation des politiques antérieures, et délégation au comité d'investissement pour les
+    ajustements de seuils mineurs.
+  </div>
+
+  <h3 class="subblock-title">Points de vigilance signalés à l'analyse</h3>
+  <ul class="tight">
+    <li><span class="ph">Vigilance 1 — concentration sectorielle actuelle (ex. métallurgie, transport)</span></li>
+    <li><span class="ph">Vigilance 2 — dossiers à surveiller (PAR &gt; 90 jours, restructuration)</span></li>
+    <li><span class="ph">Vigilance 3 — capacité de déploiement (pipeline pour 2026)</span></li>
+  </ul>
+
+  <div class="sheet-footer">
+    <span>2. Politique commune · Règles &amp; gouvernance</span>
+    <span>Page 6 / 9</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 7 — PERFORMANCE FONDS — TABLEAU DE BORD                 -->
+<!-- ============================================================ -->
+<section class="sheet">
+  <div class="sheet-header">
+    <div class="deps-mark">DÉ<span>PS</span></div>
+    <div>3. Performance des fonds</div>
+  </div>
+
+  <div class="section-eyebrow">Section 3 / 3</div>
+  <h1 class="section-title">Performance 2025 — FLI, FLS, PAUPME</h1>
+  <p class="section-lede">
+    Tableau de bord consolidé au 31 décembre 2025. Les chiffres sont vérifiés par le service
+    financier et concordent avec les états vérifiés à la section 1.
+  </p>
+
+  <div class="fund-grid">
+    <!-- FLI -->
+    <article class="fund">
+      <header class="fund-head">
+        <div>
+          <div class="fund-tag">Fonds local d'investissement</div>
+          <h3>FLI — Prêts au démarrage et à l'expansion</h3>
+        </div>
+        <div class="fund-aum">
+          Actifs sous gestion
+          <strong><span class="ph">0 000 000 $</span></strong>
+        </div>
+      </header>
+      <div class="fund-body">
+        <div class="fund-stat"><div class="label">Dossiers actifs</div><div class="value"><span class="ph">##</span></div><div class="sublabel">vs <span class="ph">##</span> en 2024</div></div>
+        <div class="fund-stat"><div class="label">Décaissements 2025</div><div class="value"><span class="ph">000 000 $</span></div><div class="sublabel">sur <span class="ph">##</span> dossiers</div></div>
+        <div class="fund-stat"><div class="label">Remboursements 2025</div><div class="value"><span class="ph">000 000 $</span></div><div class="sublabel">capital + intérêts</div></div>
+        <div class="fund-stat"><div class="label">Provision pertes</div><div class="value"><span class="ph">0,0 %</span></div><div class="sublabel">cible ≤ <span class="ph">0,0 %</span></div></div>
+        <div class="fund-stat"><div class="label">Emplois créés / maintenus</div><div class="value"><span class="ph">###</span></div><div class="sublabel">cumulatif 2025</div></div>
+        <div class="fund-stat"><div class="label">Effet de levier</div><div class="value"><span class="ph">0,0 ×</span></div><div class="sublabel">vs investissement total</div></div>
+        <div class="fund-stat"><div class="label">Taux moyen</div><div class="value"><span class="ph">0,0 %</span></div><div class="sublabel">portefeuille pondéré</div></div>
+        <div class="fund-stat"><div class="label">PAR &gt; 90 j</div><div class="value"><span class="ph">0,0 %</span></div><div class="sublabel">portefeuille à risque</div></div>
+      </div>
+    </article>
+
+    <!-- FLS -->
+    <article class="fund">
+      <header class="fund-head">
+        <div>
+          <div class="fund-tag">Fonds local de solidarité (FTQ)</div>
+          <h3>FLS — Prêts subordonnés en complémentarité</h3>
+        </div>
+        <div class="fund-aum">
+          Actifs sous gestion
+          <strong><span class="ph">0 000 000 $</span></strong>
+        </div>
+      </header>
+      <div class="fund-body">
+        <div class="fund-stat"><div class="label">Dossiers actifs</div><div class="value"><span class="ph">##</span></div><div class="sublabel">vs <span class="ph">##</span> en 2024</div></div>
+        <div class="fund-stat"><div class="label">Décaissements 2025</div><div class="value"><span class="ph">000 000 $</span></div><div class="sublabel">sur <span class="ph">##</span> dossiers</div></div>
+        <div class="fund-stat"><div class="label">Remboursements 2025</div><div class="value"><span class="ph">000 000 $</span></div><div class="sublabel">capital + intérêts</div></div>
+        <div class="fund-stat"><div class="label">Provision pertes</div><div class="value"><span class="ph">0,0 %</span></div><div class="sublabel">cible ≤ <span class="ph">0,0 %</span></div></div>
+        <div class="fund-stat"><div class="label">Emplois créés / maintenus</div><div class="value"><span class="ph">###</span></div><div class="sublabel">cumulatif 2025</div></div>
+        <div class="fund-stat"><div class="label">Effet de levier</div><div class="value"><span class="ph">0,0 ×</span></div><div class="sublabel">vs investissement total</div></div>
+        <div class="fund-stat"><div class="label">Taux moyen</div><div class="value"><span class="ph">0,0 %</span></div><div class="sublabel">portefeuille pondéré</div></div>
+        <div class="fund-stat"><div class="label">PAR &gt; 90 j</div><div class="value"><span class="ph">0,0 %</span></div><div class="sublabel">portefeuille à risque</div></div>
+      </div>
+    </article>
+
+    <!-- PAUPME -->
+    <article class="fund">
+      <header class="fund-head">
+        <div>
+          <div class="fund-tag">Programme d'aide aux entreprises</div>
+          <h3>PAUPME — Subventions ciblées (relance &amp; numérique)</h3>
+        </div>
+        <div class="fund-aum">
+          Enveloppe disponible
+          <strong><span class="ph">000 000 $</span></strong>
+        </div>
+      </header>
+      <div class="fund-body">
+        <div class="fund-stat"><div class="label">Dossiers approuvés</div><div class="value"><span class="ph">##</span></div><div class="sublabel">vs <span class="ph">##</span> en 2024</div></div>
+        <div class="fund-stat"><div class="label">Aides versées 2025</div><div class="value"><span class="ph">000 000 $</span></div><div class="sublabel">sur <span class="ph">##</span> bénéficiaires</div></div>
+        <div class="fund-stat"><div class="label">Montant moyen</div><div class="value"><span class="ph">00 000 $</span></div><div class="sublabel">par dossier</div></div>
+        <div class="fund-stat"><div class="label">Taux d'engagement</div><div class="value"><span class="ph">0,0 %</span></div><div class="sublabel">de l'enveloppe</div></div>
+        <div class="fund-stat"><div class="label">Emplois soutenus</div><div class="value"><span class="ph">###</span></div><div class="sublabel">cumulatif 2025</div></div>
+        <div class="fund-stat"><div class="label">Effet de levier</div><div class="value"><span class="ph">0,0 ×</span></div><div class="sublabel">vs investissement total</div></div>
+        <div class="fund-stat"><div class="label">Délai moyen</div><div class="value"><span class="ph">## j</span></div><div class="sublabel">dépôt → décision</div></div>
+        <div class="fund-stat"><div class="label">Reddition</div><div class="value"><span class="ph">0,0 %</span></div><div class="sublabel">rapports finaux reçus</div></div>
+      </div>
+    </article>
+  </div>
+
+  <div class="sheet-footer">
+    <span>3. Performance des fonds</span>
+    <span>Page 7 / 9</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 8 — PERFORMANCE — DOSSIERS PHARES + RISQUE              -->
+<!-- ============================================================ -->
+<section class="sheet">
+  <div class="sheet-header">
+    <div class="deps-mark">DÉ<span>PS</span></div>
+    <div>3. Performance · Dossiers &amp; risque</div>
+  </div>
+
+  <div class="section-eyebrow">Section 3 / 3 — suite</div>
+  <h1 class="section-title">Dossiers structurants &amp; profil de risque</h1>
+  <p class="section-lede">
+    Sélection des dossiers à plus fort impact engagés ou décaissés en 2025, avec un aperçu
+    consolidé du profil de risque du portefeuille.
+  </p>
+
+  <h2 class="block-title">Dossiers phares 2025</h2>
+  <table class="fin">
+    <thead>
+      <tr>
+        <th>Entreprise</th>
+        <th>Secteur</th>
+        <th>Fonds</th>
+        <th class="num">Engagement ($)</th>
+        <th class="num">Emplois</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="ph">Entreprise A</span></td><td><span class="ph">Secteur</span></td><td><span class="ph">FLI / FLS</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">##</span></td></tr>
+      <tr><td><span class="ph">Entreprise B</span></td><td><span class="ph">Secteur</span></td><td><span class="ph">FLI</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">##</span></td></tr>
+      <tr><td><span class="ph">Entreprise C</span></td><td><span class="ph">Secteur</span></td><td><span class="ph">PAUPME</span></td><td class="num"><span class="ph">00 000</span></td><td class="num"><span class="ph">##</span></td></tr>
+      <tr><td><span class="ph">Entreprise D</span></td><td><span class="ph">Secteur</span></td><td><span class="ph">FLS</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">##</span></td></tr>
+      <tr><td><span class="ph">Entreprise E</span></td><td><span class="ph">Secteur</span></td><td><span class="ph">FLI</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">##</span></td></tr>
+      <tr class="total"><td colspan="3">Sous-total dossiers phares</td><td class="num"><span class="ph">0 000 000</span></td><td class="num"><span class="ph">###</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="block-title">Profil de risque consolidé (FLI + FLS)</h2>
+  <table class="fin">
+    <thead>
+      <tr>
+        <th>Cote</th>
+        <th class="num">Nb dossiers</th>
+        <th class="num">Capital ($)</th>
+        <th class="num">% portefeuille</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>A — Très faible risque</td><td class="num"><span class="ph">##</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">0,0 %</span></td></tr>
+      <tr><td>B — Faible</td><td class="num"><span class="ph">##</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">0,0 %</span></td></tr>
+      <tr><td>C — Modéré</td><td class="num"><span class="ph">##</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">0,0 %</span></td></tr>
+      <tr><td>D — Élevé (suivi rapproché)</td><td class="num"><span class="ph">##</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">0,0 %</span></td></tr>
+      <tr><td>E — En défaut / restructuration</td><td class="num"><span class="ph">##</span></td><td class="num"><span class="ph">000 000</span></td><td class="num"><span class="ph">0,0 %</span></td></tr>
+      <tr class="total"><td>Total</td><td class="num"><span class="ph">###</span></td><td class="num"><span class="ph">0 000 000</span></td><td class="num">100,0 %</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Lecture du tableau</strong> — <span class="ph">commentaire en 2-3 phrases : ex. la part
+    des cotes A-B est passée de XX % à XX %, témoignant de l'amélioration du profil moyen ;
+    les dossiers en cote E font l'objet d'un plan de redressement individuel</span>.
+  </div>
+
+  <div class="sheet-footer">
+    <span>3. Performance · Dossiers &amp; risque</span>
+    <span>Page 8 / 9</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 9 — RECOMMANDATIONS & SIGNATURES                        -->
+<!-- ============================================================ -->
+<section class="sheet">
+  <div class="sheet-header">
+    <div class="deps-mark">DÉ<span>PS</span></div>
+    <div>Recommandations &amp; résolutions</div>
+  </div>
+
+  <div class="section-eyebrow">Conclusion</div>
+  <h1 class="section-title">Recommandations au conseil</h1>
+  <p class="section-lede">
+    À l'issue de la présentation, trois résolutions sont soumises au vote des administrateurs.
+  </p>
+
+  <h2 class="block-title">Résolutions proposées</h2>
+  <ol class="tight">
+    <li><strong>Résolution 2026-CA-<span class="ph">###</span></strong> — Approuver les états financiers
+      vérifiés de DÉPS pour l'exercice clos le 31 décembre 2025.</li>
+    <li><strong>Résolution 2026-CA-<span class="ph">###</span></strong> — Adopter la politique
+      d'investissement commune (FLI / FLS / PAUPME) dans sa version datée du
+      <span class="ph">JJ MOIS 2025</span>, avec entrée en vigueur le
+      <span class="ph">JJ MOIS 2026</span>.</li>
+    <li><strong>Résolution 2026-CA-<span class="ph">###</span></strong> — Prendre acte du rapport de
+      performance des fonds 2025 et reconduire le mandat du comité d'investissement pour 2026.</li>
+  </ol>
+
+  <h2 class="block-title">Questions anticipées du CA</h2>
+  <ul class="tight">
+    <li><em>Pourquoi l'écart de <span class="ph">+/− X %</span> sur les revenus ?</em> — <span class="ph">réponse préparée</span></li>
+    <li><em>Comment se compare DÉPS aux autres MRC du Québec ?</em> — <span class="ph">benchmark à fournir</span></li>
+    <li><em>Quel est le pipeline 2026 ?</em> — <span class="ph">nombre de dossiers en analyse, valeur cumulative</span></li>
+    <li><em>Risque de concentration ?</em> — <span class="ph">renvoi au tableau page 8 + plan de mitigation</span></li>
+  </ul>
+
+  <h2 class="block-title">Signatures</h2>
+  <div class="signatures">
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-cap"><span class="ph">Nom · Président(e) du CA</span></div>
+    </div>
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-cap"><span class="ph">Nom · Secrétaire / Trésorier(ère)</span></div>
+    </div>
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-cap"><span class="ph">Nom · Commissaire industriel</span></div>
+    </div>
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-cap">Date — <span class="ph">JJ MOIS 2026</span></div>
+    </div>
+  </div>
+
+  <div class="sheet-footer">
+    <span>DÉPS · Cahier d'administrateur 2025</span>
+    <span>Page 9 / 9</span>
+  </div>
+</section>
+
+</body>
+</html>
