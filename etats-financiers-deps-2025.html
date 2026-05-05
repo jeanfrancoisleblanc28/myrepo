@@ -532,7 +532,7 @@
       box-shadow: none;
       page-break-after: always;
     }
-    .ph {
+    body:not(.hide-ph) .ph {
       background: #FFF4D6 !important;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
@@ -542,6 +542,10 @@
       print-color-adjust: exact;
     }
   }
+
+  /* Toggle « Aperçu sans placeholders » — respecte la couleur du parent. */
+  body.hide-ph .ph { background: transparent; border: 0; color: inherit; }
+  body.hide-ph .ph::before { content: ""; }
 </style>
 </head>
 <body>
@@ -557,11 +561,6 @@
     <button class="btn" onclick="window.print()">Imprimer / PDF</button>
   </div>
 </div>
-
-<style>
-  body.hide-ph .ph { background: transparent; border: 0; color: var(--deps-navy-soft); }
-  body.hide-ph .ph::before { content: ""; }
-</style>
 
 <!-- ============================================================ -->
 <!-- PAGE 1 — COUVERTURE                                          -->
