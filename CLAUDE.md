@@ -97,7 +97,7 @@ myrepo/
 - Python 3.8+ compatible, **sans dépendances externes** pour le mode règles (garder `requirements.txt` minimal — LLM en optionnel commenté).
 - Toute nouvelle donnée territoriale va dans `agent/data/zones_industrielles.json`, pas en dur dans le code.
 - Garder les trois modes (`rule_based` / `openai` / `anthropic`) fonctionnellement équivalents quand c'est possible.
-- **Formatage CI** : Python est vérifié par `black --check` (ligne 120) et `flake8` (`--max-line-length=120 --extend-ignore=E203,W503`). Lancer `black .` localement avant de committer.
+- **Formatage CI** : Python est vérifié par `black --check --diff .` (longueur par défaut, 88) et `flake8 --max-line-length=120 --extend-ignore=E203,W503`. Lancer `black .` localement avant de committer.
 
 ### Style de fichier (vérifié en CI)
 - **Pas de trailing whitespace** sur `*.md`, `*.yml`, `*.sh`, `*.py` — la CI échoue sinon.
