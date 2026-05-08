@@ -210,6 +210,53 @@ def handle_contacts(data: dict):
             print_wrapped(f"Description : {contact['description']}", indent="     ")
 
 
+# Mots-clés sectoriels → zone recommandée. Extrait pour permettre les tests
+# unitaires de la logique de recommandation sans déclencher l'I/O interactif.
+_RECOMMANDATIONS_SECTORIELLES = [
+    (
+        ["pétrochimie", "chimie", "raffinerie", "acier", "sidérurgie", "pétrole"],
+        {
+            "zone": "M-2 — Zone industrielle lourde (bord du fleuve, Sorel-Tracy)",
+            "secteur_geo": "Zone industrialo-portuaire / Chemin Saint-Roch, Tracy",
+            "prix": "3,00 – 4,00 $/pi²",
+            "atout": "Accès direct au port de Sorel et à la voie ferrée CN",
+        },
+    ),
+    (
+        ["logistique", "transport", "entrepôt", "distribution"],
+        {
+            "zone": "M-1 — Zone industrielle légère (accès A-30)",
+            "secteur_geo": "Boulevard Fiset / Autoroute 30, Sorel-Tracy",
+            "prix": "4,00 – 5,50 $/pi²",
+            "atout": "Intersection A-30/Rte 132, hub logistique régional",
+        },
+    ),
+    (
+        ["agroalimentaire", "alimentaire", "agricole", "transformation"],
+        {
+            "zone": "M-1 — Zone agro-industrielle (Sainte-Anne-de-Sorel / Saint-Robert)",
+            "secteur_geo": "Saint-Robert ou Sainte-Anne-de-Sorel",
+            "prix": "2,00 – 3,00 $/pi²",
+            "atout": "Proximité des terres agricoles et du fleuve",
+        },
+    ),
+]
+
+
+def recommend_zone(secteur: str) -> Optional[dict]:
+    """Recommande une zone industrielle selon le secteur d'activité.
+
+    Matching par mots-clés (insensible à la casse). Retourne None si aucun
+    secteur ne correspond — l'appelant affichera alors la recommandation
+    générique.
+    """
+    s = secteur.lower()
+    for mots_cles, recommandation in _RECOMMANDATIONS_SECTORIELLES:
+        if any(mot in s for mot in mots_cles):
+            return recommandation
+    return None
+
+
 def handle_analyse_projet(data: dict):
     print("\n" + "═" * 78)
     print("  ANALYSE DE PROJET INDUSTRIEL — QUESTIONNAIRE")
@@ -235,28 +282,14 @@ def handle_analyse_projet(data: dict):
     print("  📋 ANALYSE ET RECOMMANDATIONS DU COMMISSAIRE")
     print("─" * 78)
 
-    # Logique de recommandation basée sur les réponses
-    secteur = reponses["secteur"].lower()
     besoins = reponses["besoins_speciaux"].lower()
+    rec = recommend_zone(reponses["secteur"])
 
-    if any(mot in secteur for mot in ["pétrochimie", "chimie", "raffinerie", "acier", "sidérurgie", "pétrole"]):
-        zone_recommandee = "M-2 — Zone industrielle lourde (bord du fleuve, Sorel-Tracy)"
-        print(f"\n  ✅ Zone recommandée : {zone_recommandee}")
-        print("     Secteur : Zone industrialo-portuaire / Chemin Saint-Roch, Tracy")
-        print("     Prix estimé : 3,00 – 4,00 $/pi²")
-        print("     Atout majeur : Accès direct au port de Sorel et à la voie ferrée CN")
-    elif any(mot in secteur for mot in ["logistique", "transport", "entrepôt", "distribution"]):
-        zone_recommandee = "M-1 — Zone industrielle légère (accès A-30)"
-        print(f"\n  ✅ Zone recommandée : {zone_recommandee}")
-        print("     Secteur : Boulevard Fiset / Autoroute 30, Sorel-Tracy")
-        print("     Prix estimé : 4,00 – 5,50 $/pi²")
-        print("     Atout majeur : Intersection A-30/Rte 132, hub logistique régional")
-    elif any(mot in secteur for mot in ["agroalimentaire", "alimentaire", "agricole", "transformation"]):
-        zone_recommandee = "M-1 — Zone agro-industrielle (Sainte-Anne-de-Sorel / Saint-Robert)"
-        print(f"\n  ✅ Zone recommandée : {zone_recommandee}")
-        print("     Secteur : Saint-Robert ou Sainte-Anne-de-Sorel")
-        print("     Prix estimé : 2,00 – 3,00 $/pi²")
-        print("     Atout majeur : Proximité des terres agricoles et du fleuve")
+    if rec is not None:
+        print(f"\n  ✅ Zone recommandée : {rec['zone']}")
+        print(f"     Secteur : {rec['secteur_geo']}")
+        print(f"     Prix estimé : {rec['prix']}")
+        print(f"     Atout majeur : {rec['atout']}")
     else:
         print("\n  ✅ Recommandation générale : Zone M-1, Sorel-Tracy")
         print("     Plusieurs terrains disponibles selon vos besoins spécifiques.")
