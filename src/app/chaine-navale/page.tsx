@@ -16,7 +16,9 @@ import {
   objectifsStrategiques,
   planAction,
   recommandations,
+  statusBadgeVariant,
   statusLabels,
+  totalEntreprisesCartographiees,
   type SupplyChainTier,
   type TierColor,
 } from "@/lib/naval-supply-chain";
@@ -89,7 +91,10 @@ function TierSection({ tier }: { tier: SupplyChainTier }) {
                         <p className="font-medium leading-tight">
                           {entreprise.nom}
                         </p>
-                        <Badge variant="success" className="shrink-0">
+                        <Badge
+                          variant={statusBadgeVariant[entreprise.statut]}
+                          className="shrink-0"
+                        >
                           {statusLabels[entreprise.statut]}
                         </Badge>
                       </div>
@@ -140,16 +145,6 @@ function TierSection({ tier }: { tier: SupplyChainTier }) {
 }
 
 export default function ChaineNavalePage() {
-  const totalEntreprises = niveaux.reduce(
-    (acc, tier) =>
-      acc +
-      tier.categories.reduce(
-        (catAcc, cat) => catAcc + cat.entreprises.length,
-        0,
-      ),
-    0,
-  );
-
   return (
     <div className="flex flex-col gap-12">
       {/* Header */}
@@ -213,7 +208,9 @@ export default function ChaineNavalePage() {
         <Card>
           <CardHeader>
             <CardDescription>Fournisseurs cartographiés</CardDescription>
-            <CardTitle className="text-3xl">{totalEntreprises}</CardTitle>
+            <CardTitle className="text-3xl">
+              {totalEntreprisesCartographiees}
+            </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
             Entreprises recensées sur le territoire

@@ -317,3 +317,22 @@ export const statusLabels: Record<SupplierStatus, string> = {
   partenaire: "Partenaire",
   recherche: "À pourvoir",
 };
+
+export const statusBadgeVariant: Record<
+  SupplierStatus,
+  "success" | "secondary" | "outline"
+> = {
+  implante: "success",
+  partenaire: "secondary",
+  recherche: "outline",
+};
+
+export const totalEntreprisesCartographiees = niveaux.reduce(
+  (acc, tier) =>
+    acc +
+    tier.categories.reduce(
+      (catAcc, cat) => catAcc + cat.entreprises.length,
+      0,
+    ),
+  0,
+);
