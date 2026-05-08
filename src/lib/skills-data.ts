@@ -541,13 +541,169 @@ export function generateKit({ count, categoryIds, levels, seed }: KitOptions): S
     return true;
   });
 
-  const rand = seed !== undefined ? mulberry32(seed) : Math.random;
+  const rand = seed !== undefined ? mulberry32(seed) : () => Math.random();
   const shuffled = [...pool];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled.slice(0, Math.min(count, shuffled.length));
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Preset system
+
+/**
+ * A kit preset ("objectif") defines a balanced recipe for a specific workshop goal.
+ * `recipe` maps categoryId → desired number of skills from that category.
+ * Remaining slots are filled with random skills from the filtered pool.
+ */
+export interface KitPreset {
+  id: string;
+  label: string;
+  description: string;
+  emoji: string;
+  defaultCount: number;
+  defaultLevels?: SkillLevel[];
+  defaultCategories?: string[];
+  /** How many skills to draw per category. */
+  recipe: Record<string, number>;
+}
+
+export const kitPresets: KitPreset[] = [
+  {
+    id: "a11y-audit",
+    label: "Audit accessibilité",
+    description: "Auditer et corriger l'accessibilité d'une interface existante.",
+    emoji: "♿",
+    defaultCount: 5,
+    defaultLevels: ["advanced", "expert"],
+    recipe: { a11y: 2, components: 1, ux: 1, frameworks: 1 },
+  },
+  {
+    id: "design-system",
+    label: "Design System",
+    description: "Construire ou consolider un système de design scalable.",
+    emoji: "🎨",
+    defaultCount: 6,
+    recipe: { "design-system": 2, components: 2, frameworks: 1, writing: 1 },
+  },
+  {
+    id: "ux-research",
+    label: "UX Research",
+    description: "Structurer une démarche de recherche utilisateur et valider les décisions.",
+    emoji: "🔍",
+    defaultCount: 5,
+    recipe: { ux: 3, writing: 1, components: 1 },
+  },
+  {
+    id: "product-strategy",
+    label: "Stratégie produit",
+    description: "Aligner UX, performance et contenu sur les objectifs business.",
+    emoji: "🚀",
+    defaultCount: 6,
+    recipe: { ux: 2, performance: 1, writing: 1, a11y: 1, components: 1 },
+  },
+  {
+    id: "ui-polish",
+    label: "UI Polish",
+    description: "Affiner les détails visuels, animations et micro-interactions.",
+    emoji: "✨",
+    defaultCount: 5,
+    recipe: { motion: 2, components: 1, "design-system": 1, responsive: 1 },
+  },
+];
+
+export function getPreset(id: string): KitPreset | undefined {
+  return kitPresets.find((p) => p.id === id);
+}
+
+export interface BalancedKitOptions {
+  preset: KitPreset;
+  /** Overrides preset.defaultCount when provided. */
+  count?: number;
+  /** Overrides preset.defaultCategories when provided (and non-empty). */
+  categoryIds?: string[];
+  /** Overrides preset.defaultLevels when provided (and non-empty). */
+  levels?: SkillLevel[];
+  /** Optional seed for reproducibility. */
+  seed?: number;
+}
+
+/**
+ * Generate a balanced kit using a preset recipe.
+ * Skills are drawn per category according to the recipe, then remaining slots
+ * are filled randomly from the filtered pool. The final selection is shuffled
+ * so recipe order is not always visible.
+ * Fully deterministic when `seed` is provided.
+ */
+export function generateBalancedKit({
+  preset,
+  count,
+  categoryIds,
+  levels,
+  seed,
+}: BalancedKitOptions): Skill[] {
+  const effectiveCount = count ?? preset.defaultCount;
+  const effectiveLevels = levels && levels.length > 0 ? levels : preset.defaultLevels;
+  const effectiveCategories =
+    categoryIds && categoryIds.length > 0 ? categoryIds : preset.defaultCategories;
+
+  const rand = seed !== undefined ? mulberry32(seed) : () => Math.random();
+
+  function shuffle<T>(arr: T[]): T[] {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Build base pool respecting level and category filters
+  const poolBase = skills.filter((s) => {
+    if (
+      effectiveCategories &&
+      effectiveCategories.length > 0 &&
+      !effectiveCategories.includes(s.categoryId)
+    )
+      return false;
+    if (effectiveLevels && effectiveLevels.length > 0 && !effectiveLevels.includes(s.level))
+      return false;
+    return true;
+  });
+
+  if (poolBase.length === 0) return [];
+
+  const selected: Skill[] = [];
+  const usedIds = new Set<string>();
+
+  // Draw per recipe
+  for (const [catId, catCount] of Object.entries(preset.recipe)) {
+    if (selected.length >= effectiveCount) break;
+    const catPool = poolBase.filter((s) => s.categoryId === catId);
+    const picks = shuffle(catPool).slice(0, catCount);
+    for (const s of picks) {
+      if (selected.length >= effectiveCount) break;
+      if (!usedIds.has(s.id)) {
+        selected.push(s);
+        usedIds.add(s.id);
+      }
+    }
+  }
+
+  // Fill remaining slots from the rest of the pool
+  if (selected.length < effectiveCount) {
+    const remaining = shuffle(poolBase.filter((s) => !usedIds.has(s.id)));
+    for (const s of remaining) {
+      if (selected.length >= effectiveCount) break;
+      selected.push(s);
+      usedIds.add(s.id);
+    }
+  }
+
+  // Shuffle the final selection so recipe order stays hidden
+  return shuffle(selected).slice(0, effectiveCount);
 }
 
 export function getSkillsByIds(ids: string[]): Skill[] {

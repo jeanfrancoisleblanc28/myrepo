@@ -43,3 +43,4 @@ next-env.d.ts
 
 # Claude Code — paramètres locaux/personnels (conserver settings.json partagé)
 .claude/settings.local.json
+tsconfig.tsbuildinfo
