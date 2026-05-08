@@ -132,7 +132,7 @@ export function CommandPalette() {
         description: "Cartographie des fournisseurs Davie / SNCN",
         icon: <NavIcon />,
         group: "Navigation",
-        keywords: ["chaîne", "navale", "davie", "sorel", "fournisseur", "supply chain"],
+        keywords: ["chaîne", "chaine", "navale", "davie", "sorel", "fournisseur", "supply chain"],
         action: () => { router.push("/chaine-navale"); close(); },
       },
       {

@@ -350,7 +350,7 @@ export default function ChaineNavalePage() {
           <Link href="/dashboard">
             <Button>Ouvrir le dashboard</Button>
           </Link>
-          <a href="tel:4507432703">
+          <a href="tel:+14507432703">
             <Button variant="outline">450-743-2703</Button>
           </a>
         </div>
