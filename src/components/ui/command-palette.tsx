@@ -127,6 +127,15 @@ export function CommandPalette() {
         action: () => { router.push("/dashboard"); close(); },
       },
       {
+        id: "nav-chaine-navale",
+        label: "Chaîne navale",
+        description: "Cartographie des fournisseurs Davie / SNCN",
+        icon: <NavIcon />,
+        group: "Navigation",
+        keywords: ["chaîne", "chaine", "navale", "davie", "sorel", "fournisseur", "supply chain"],
+        action: () => { router.push("/chaine-navale"); close(); },
+      },
+      {
         id: "skills-catalog",
         label: "Catalogue UI/UX",
         description: "Parcourir toutes les compétences UI/UX",

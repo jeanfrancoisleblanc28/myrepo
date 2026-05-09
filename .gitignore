@@ -41,6 +41,9 @@ build/
 out/
 next-env.d.ts
 
+# TypeScript incremental build cache
+*.tsbuildinfo
+
 # Claude Code — paramètres locaux/personnels (conserver settings.json partagé)
 .claude/settings.local.json
 tsconfig.tsbuildinfo
