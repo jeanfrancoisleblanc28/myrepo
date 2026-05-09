@@ -157,3 +157,28 @@
 .skip-link:focus {
   top: 16px;
 }
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Chaîne navale — print / PDF rules
+ * Rules use break-inside / break-before; they are no-ops on continuous screen
+ * media but control pagination when the page is rendered to PDF.
+ * ────────────────────────────────────────────────────────────────────────── */
+.chaine-navale-print [class*="rounded-lg"]:not([data-tier]),
+.chaine-navale-print [class*="rounded-md"] {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.chaine-navale-print h1,
+.chaine-navale-print h2,
+.chaine-navale-print h3 {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+.chaine-navale-print [data-tier]:not(:first-of-type) {
+  break-before: page;
+  page-break-before: always;
+}
+.chaine-navale-print [data-pdf-newpage] {
+  break-before: page;
+  page-break-before: always;
+}

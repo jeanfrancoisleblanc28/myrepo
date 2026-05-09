@@ -44,6 +44,7 @@ const tierBadge: Record<TierColor, "default" | "secondary" | "outline"> = {
 function TierSection({ tier }: { tier: SupplyChainTier }) {
   return (
     <section
+      data-tier={tier.code}
       aria-labelledby={`tier-${tier.code}-heading`}
       className={cn(
         "rounded-lg border p-6 sm:p-8",
@@ -146,7 +147,7 @@ function TierSection({ tier }: { tier: SupplyChainTier }) {
 
 export default function ChaineNavalePage() {
   return (
-    <div className="flex flex-col gap-12">
+    <div className="chaine-navale-print flex flex-col gap-12">
       {/* Header */}
       <header className="flex flex-col gap-4">
         <Badge variant="outline" className="w-fit">
@@ -226,7 +227,7 @@ export default function ChaineNavalePage() {
         <h2 id="objectifs-heading" className="text-2xl font-bold">
           Pourquoi cartographier l&apos;écosystème naval ?
         </h2>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {objectifsStrategiques.map((obj) => (
             <Card key={obj.id}>
               <CardHeader>
@@ -240,6 +241,7 @@ export default function ChaineNavalePage() {
 
       {/* Carte des niveaux */}
       <section
+        data-pdf-newpage
         aria-labelledby="niveaux-heading"
         className="flex flex-col gap-6"
       >
@@ -260,6 +262,7 @@ export default function ChaineNavalePage() {
 
       {/* Plan d'action */}
       <section
+        data-pdf-newpage
         aria-labelledby="plan-heading"
         className="flex flex-col gap-4"
       >
