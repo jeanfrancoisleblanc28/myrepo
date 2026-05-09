@@ -41,6 +41,12 @@ build/
 out/
 next-env.d.ts
 
+# TypeScript incremental build artifact
+tsconfig.tsbuildinfo
+
+# Vitest coverage output
+coverage/
+
 # Claude Code — paramètres locaux/personnels (conserver settings.json partagé)
 .claude/settings.local.json
 tsconfig.tsbuildinfo

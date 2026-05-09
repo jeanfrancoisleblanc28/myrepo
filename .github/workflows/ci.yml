@@ -88,15 +88,31 @@ jobs:
           if [ -f agent/requirements.txt ]; then
             pip install -r agent/requirements.txt --quiet
           fi
+          if [ -f agent/requirements-dev.txt ]; then
+            pip install -r agent/requirements-dev.txt --quiet
+          fi
 
       - name: Run tests with coverage
-        run: |
-          if find . -name 'test_*.py' -o -name '*_test.py' | grep -q .; then
-            pytest --cov=. --cov-report=term-missing --tb=short
-          else
-            echo "No tests found yet - add tests in test_*.py files"
-            exit 0
-          fi
+        run: pytest --cov=agent --cov-report=term-missing --tb=short
+
+  frontend-test:
+    name: Frontend Tests (Vitest)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run Vitest
+        run: npm test
 
   security:
     name: Security Scan
