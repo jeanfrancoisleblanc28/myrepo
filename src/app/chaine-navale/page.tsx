@@ -8,10 +8,12 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SupplierMapLoader } from "@/components/chaine-navale/supplier-map-loader";
 import { cn } from "@/lib/cn";
 import {
   atoutsRegionaux,
   contexte,
+  fournisseursGeoreferences,
   niveaux,
   objectifsStrategiques,
   planAction,
@@ -236,6 +238,61 @@ export default function ChaineNavalePage() {
               </CardHeader>
             </Card>
           ))}
+        </div>
+      </section>
+
+      {/* Carte géographique */}
+      <section
+        aria-labelledby="map-heading"
+        data-pdf-hide
+        className="flex flex-col gap-4 print:hidden"
+      >
+        <div>
+          <h2 id="map-heading" className="text-2xl font-bold">
+            Carte géographique des fournisseurs
+          </h2>
+          <p className="mt-1 text-muted-foreground">
+            {fournisseursGeoreferences.length} entreprises géoréférencées,
+            positionnées sur les zones M-1 (industriel léger) et M-2
+            (industrialo-portuaire). Cliquez un marqueur pour le détail.
+          </p>
+        </div>
+        <SupplierMapLoader />
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <span
+              aria-hidden="true"
+              className="inline-block h-3 w-3 rounded-sm border border-red-700"
+              style={{ backgroundColor: "rgba(220,38,38,0.15)" }}
+            />
+            Zone M-2 — Industrialo-portuaire
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span
+              aria-hidden="true"
+              className="inline-block h-3 w-3 rounded-sm border border-blue-700"
+              style={{ backgroundColor: "rgba(37,99,235,0.15)" }}
+            />
+            Zone M-1 — Industriel léger
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span
+              aria-hidden="true"
+              className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-slate-900 text-[8px] font-bold text-white"
+            >
+              T1
+            </span>
+            Niveau 1 (Fournisseurs directs)
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span
+              aria-hidden="true"
+              className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-slate-600 text-[8px] font-bold text-white"
+            >
+              T3
+            </span>
+            Niveau 3 (Formation et support)
+          </span>
         </div>
       </section>
 

@@ -18,6 +18,11 @@ export interface NavalSupplier {
   implantation?: string;
   statut: SupplierStatus;
   partenariatStrategique?: string;
+  /**
+   * Approximate [lat, lng] used for the geographic map. Illustrative until
+   * validated by Service de l'urbanisme de Sorel-Tracy.
+   */
+  coordonnees?: [number, number];
 }
 
 export interface SupplierCategory {
@@ -119,6 +124,7 @@ export const niveaux: SupplyChainTier[] = [
             ],
             implantation: "Sorel-Tracy",
             statut: "implante",
+            coordonnees: [46.0568, -73.1162],
           },
           {
             nom: "Mount Royal Walsh",
@@ -128,6 +134,7 @@ export const niveaux: SupplyChainTier[] = [
             ],
             implantation: "Sorel-Tracy",
             statut: "implante",
+            coordonnees: [46.0590, -73.1095],
           },
           {
             nom: "Groupe Océan",
@@ -138,6 +145,7 @@ export const niveaux: SupplyChainTier[] = [
             ],
             implantation: "Sorel-Tracy",
             statut: "implante",
+            coordonnees: [46.0540, -73.1075],
           },
         ],
       },
@@ -154,6 +162,7 @@ export const niveaux: SupplyChainTier[] = [
             implantation: "Sorel-Tracy",
             statut: "implante",
             partenariatStrategique: "Partenariat avec TKMS (Allemagne)",
+            coordonnees: [46.0508, -73.1184],
           },
         ],
       },
@@ -236,6 +245,7 @@ export const niveaux: SupplyChainTier[] = [
             specialites: ["Techniques industrielles", "Génie mécanique"],
             implantation: "Sorel-Tracy",
             statut: "partenaire",
+            coordonnees: [46.0436, -73.1180],
           },
           {
             nom: "CFPEAST",
@@ -244,6 +254,7 @@ export const niveaux: SupplyChainTier[] = [
             ],
             implantation: "Sorel-Tracy",
             statut: "partenaire",
+            coordonnees: [46.0418, -73.1212],
           },
         ],
       },
@@ -335,4 +346,29 @@ export const totalEntreprisesCartographiees = niveaux.reduce(
       0,
     ),
   0,
+);
+
+export interface SupplierGeoPoint extends NavalSupplier {
+  tierCode: SupplyChainTier["code"];
+  tierNom: string;
+  categorieNom: string;
+  coordonnees: [number, number];
+}
+
+export const fournisseursGeoreferences: SupplierGeoPoint[] = niveaux.flatMap(
+  (tier) =>
+    tier.categories.flatMap((category) =>
+      category.entreprises
+        .filter(
+          (e): e is NavalSupplier & { coordonnees: [number, number] } =>
+            Array.isArray(e.coordonnees),
+        )
+        .map<SupplierGeoPoint>((e) => ({
+          ...e,
+          tierCode: tier.code,
+          tierNom: tier.nom,
+          categorieNom: category.nom,
+          coordonnees: e.coordonnees,
+        })),
+    ),
 );
