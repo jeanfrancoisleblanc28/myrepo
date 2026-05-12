@@ -74,7 +74,7 @@ function TierSection({ tier }: { tier: SupplyChainTier }) {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {tier.categories.map((category) => (
           <Card key={category.id} className="flex flex-col">
             <CardHeader>
@@ -305,13 +305,14 @@ export default function ChaineNavalePage() {
 
       {/* Analyse stratégique */}
       <section
+        data-pdf-newpage
         aria-labelledby="analyse-heading"
         className="flex flex-col gap-4"
       >
         <h2 id="analyse-heading" className="text-2xl font-bold">
           Analyse stratégique
         </h2>
-        <div className="grid gap-4 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-3">
           {analyseStrategique.map((bloc) => (
             <Card key={bloc.id}>
               <CardHeader>

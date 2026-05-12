@@ -182,3 +182,8 @@
   break-before: page;
   page-break-before: always;
 }
+/*
+ * The PDF export script (scripts/generate-chaine-navale-pdf.mjs) injects
+ * extra rules at render time to compact tier sections; we don't include
+ * them here so the on-screen layout stays at full reading density.
+ */
