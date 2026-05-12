@@ -9,15 +9,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SupplierMapLoader } from "@/components/chaine-navale/supplier-map-loader";
+import { CiteRef } from "@/components/chaine-navale/cite-ref";
 import { cn } from "@/lib/cn";
 import {
+  analyseStrategique,
   atoutsRegionaux,
   contexte,
   fournisseursGeoreferences,
+  friseSNCN,
   niveaux,
   objectifsStrategiques,
   planAction,
   recommandations,
+  sources,
   statusBadgeVariant,
   statusLabels,
   totalEntreprisesCartographiees,
@@ -93,6 +97,7 @@ function TierSection({ tier }: { tier: SupplyChainTier }) {
                       <div className="flex items-start justify-between gap-2">
                         <p className="font-medium leading-tight">
                           {entreprise.nom}
+                          <CiteRef refs={entreprise.sourceRefs} />
                         </p>
                         <Badge
                           variant={statusBadgeVariant[entreprise.statut]}
@@ -101,6 +106,34 @@ function TierSection({ tier }: { tier: SupplyChainTier }) {
                           {statusLabels[entreprise.statut]}
                         </Badge>
                       </div>
+
+                      {(entreprise.anneeFondation ||
+                        entreprise.effectifApprox) && (
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {entreprise.anneeFondation && (
+                            <span>
+                              Fondée en {entreprise.anneeFondation.valeur}
+                              {entreprise.anneeFondation.estime && " (est.)"}
+                            </span>
+                          )}
+                          {entreprise.anneeFondation &&
+                            entreprise.effectifApprox &&
+                            " • "}
+                          {entreprise.effectifApprox && (
+                            <span>
+                              {entreprise.effectifApprox.valeur} employés
+                              {entreprise.effectifApprox.estime && " (est.)"}
+                            </span>
+                          )}
+                        </p>
+                      )}
+
+                      {entreprise.apercu && (
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          {entreprise.apercu}
+                        </p>
+                      )}
+
                       <ul
                         className="mt-2 flex flex-wrap gap-1.5"
                         role="list"
@@ -114,6 +147,28 @@ function TierSection({ tier }: { tier: SupplyChainTier }) {
                           </li>
                         ))}
                       </ul>
+
+                      {entreprise.certifications &&
+                        entreprise.certifications.length > 0 && (
+                          <p className="mt-2 text-xs text-muted-foreground">
+                            <span className="font-medium text-foreground">
+                              Certifications :
+                            </span>{" "}
+                            {entreprise.certifications.map((c, i) => (
+                              <span key={c.nom}>
+                                {i > 0 && " • "}
+                                {c.nom}
+                                {c.statut === "typique-du-secteur" && (
+                                  <span className="text-muted-foreground/70">
+                                    {" "}
+                                    (typique du secteur)
+                                  </span>
+                                )}
+                              </span>
+                            ))}
+                          </p>
+                        )}
+
                       {entreprise.partenariatStrategique && (
                         <p className="mt-2 text-xs text-muted-foreground">
                           {entreprise.partenariatStrategique}
@@ -175,7 +230,10 @@ export default function ChaineNavalePage() {
         </h2>
         <Card>
           <CardHeader>
-            <CardDescription>Contrat initial SNCN</CardDescription>
+            <CardDescription>
+              Contrat initial SNCN
+              <CiteRef refs={["davie-pr-2023"]} />
+            </CardDescription>
             <CardTitle className="text-3xl">
               {contexte.contratInitialMilliards} G$
             </CardTitle>
@@ -188,6 +246,7 @@ export default function ChaineNavalePage() {
           <CardHeader>
             <CardDescription>
               Retombées prévues d&apos;ici {contexte.horizonRetombees}
+              <CiteRef refs={["davie-pr-2023"]} />
             </CardDescription>
             <CardTitle className="text-3xl">
               {contexte.retombeesPrevuesMilliards} G$
@@ -199,7 +258,10 @@ export default function ChaineNavalePage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardDescription>Engagement PME canadiennes</CardDescription>
+            <CardDescription>
+              Engagement PME canadiennes
+              <CiteRef refs={["davie-pme-200m"]} />
+            </CardDescription>
             <CardTitle className="text-3xl">
               {contexte.engagementPmeMillions} M$
             </CardTitle>
@@ -236,6 +298,33 @@ export default function ChaineNavalePage() {
                 <CardTitle className="text-lg">{obj.titre}</CardTitle>
                 <CardDescription>{obj.description}</CardDescription>
               </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Analyse stratégique */}
+      <section
+        aria-labelledby="analyse-heading"
+        className="flex flex-col gap-4"
+      >
+        <h2 id="analyse-heading" className="text-2xl font-bold">
+          Analyse stratégique
+        </h2>
+        <div className="grid gap-4 lg:grid-cols-3">
+          {analyseStrategique.map((bloc) => (
+            <Card key={bloc.id}>
+              <CardHeader>
+                <CardTitle className="text-lg">
+                  {bloc.titre}
+                  <CiteRef refs={bloc.sourceRefs} />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-3 text-sm leading-relaxed text-muted-foreground">
+                {bloc.paragraphes.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
+              </CardContent>
             </Card>
           ))}
         </div>
@@ -317,9 +406,70 @@ export default function ChaineNavalePage() {
         </div>
       </section>
 
-      {/* Plan d'action */}
+      {/* Frise chronologique SNCN */}
       <section
         data-pdf-newpage
+        aria-labelledby="frise-heading"
+        className="flex flex-col gap-4"
+      >
+        <div>
+          <h2 id="frise-heading" className="text-2xl font-bold">
+            Frise chronologique — SNCN et Sorel-Tracy
+          </h2>
+          <p className="mt-1 text-muted-foreground">
+            Jalons publics et internes structurant l&apos;arrivée de Davie
+            dans le programme fédéral et la réponse régionale.
+          </p>
+        </div>
+        <ol className="relative ml-3 flex flex-col gap-5 border-l border-muted pl-6" role="list">
+          {friseSNCN.map((event) => {
+            const statutColor =
+              event.statut === "passe"
+                ? "bg-emerald-500"
+                : event.statut === "en-cours"
+                  ? "bg-amber-500"
+                  : "bg-muted-foreground/60";
+            return (
+              <li key={event.triLabel} className="relative">
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "absolute -left-[31px] top-1.5 inline-block h-3 w-3 rounded-full ring-4 ring-background",
+                    statutColor,
+                  )}
+                />
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {event.date}
+                </p>
+                <p className="mt-1 font-medium leading-tight">
+                  {event.titre}
+                  <CiteRef refs={event.sourceRefs} />
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {event.description}
+                </p>
+              </li>
+            );
+          })}
+        </ol>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
+            Passé
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block h-2.5 w-2.5 rounded-full bg-amber-500" />
+            En cours
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span aria-hidden="true" className="inline-block h-2.5 w-2.5 rounded-full bg-muted-foreground/60" />
+            À venir
+          </span>
+        </div>
+      </section>
+
+      {/* Plan d'action */}
+      <section
         aria-labelledby="plan-heading"
         className="flex flex-col gap-4"
       >
@@ -414,6 +564,73 @@ export default function ChaineNavalePage() {
             <Button variant="outline">450-743-2703</Button>
           </a>
         </div>
+      </section>
+
+      {/* Sources & références */}
+      <section
+        data-pdf-newpage
+        id="sources"
+        aria-labelledby="sources-heading"
+        className="flex flex-col gap-4"
+      >
+        <div>
+          <h2 id="sources-heading" className="text-2xl font-bold">
+            Sources et références
+          </h2>
+          <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+            Les chiffres et énoncés étiquetés{" "}
+            <sup className="text-foreground">[n]</sup> renvoient à cette
+            bibliographie. Les estimations sont marquées explicitement (« est. »
+            ou « typique du secteur ») lorsque la source primaire n&apos;a pas
+            pu être confirmée.
+          </p>
+        </div>
+        <ol
+          className="flex flex-col gap-2 text-sm"
+          role="list"
+        >
+          {[...sources]
+            .sort((a, b) => a.numero - b.numero)
+            .map((src) => (
+              <li
+                key={src.id}
+                id={`source-${src.numero}`}
+                className="flex gap-3 rounded-md border bg-card p-3 scroll-mt-20"
+              >
+                <span className="shrink-0 font-mono text-xs font-semibold text-muted-foreground">
+                  [{src.numero}]
+                </span>
+                <div className="flex flex-col gap-0.5">
+                  <p className="font-medium leading-snug">{src.organisation}</p>
+                  <p className="text-muted-foreground">
+                    {src.titre}
+                    {src.date && (
+                      <span className="text-muted-foreground/70">
+                        {" "}
+                        — {src.date}
+                      </span>
+                    )}
+                  </p>
+                  {src.url && (
+                    <a
+                      href={src.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-primary hover:underline"
+                    >
+                      {src.url.replace(/^https?:\/\//, "")}
+                    </a>
+                  )}
+                </div>
+              </li>
+            ))}
+        </ol>
+        <p className="text-xs italic text-muted-foreground">
+          Note méthodologique : les sources [1]–[10] sont publiques. La source
+          [11] est une note interne DÉPS communiquée au comité de direction.
+          Toute donnée non sourcée doit être considérée comme une estimation
+          de travail à valider avec les organisations concernées.
+        </p>
       </section>
     </div>
   );
