@@ -14,26 +14,36 @@ This file provides guidance for AI assistants working with this repository.
 ├── CONTRIBUTING.md            # Contribution guidelines
 ├── LICENSE                    # MIT License
 ├── README.md                  # Project overview
-├── .gitignore                 # Ignore rules (Node, Python, IDE, OS, build artifacts)
+├── CHANGELOG.md               # Changelog tracking
+├── Makefile                   # Common development commands
+├── .gitignore                 # Ignore rules
 ├── .mcp.json                  # MCP server config (localhost:8080)
-├── cline_mcp_config.json      # Cline MCP config for PDF server (npx @anthropic-ai/pdf-server)
-└── setup_mcp_pdf_server.sh   # Setup script for MCP PDF server (Linux/Mac)
+├── cline_mcp_config.json      # Cline MCP config for PDF server
+├── package.json / next.config.js / tailwind.config.ts / tsconfig.json / postcss.config.js / .eslintrc.json
+│                              # Next.js / TypeScript / Tailwind config
+├── src/                       # Next.js application (app, components, lib, styles)
+├── agent/                     # Python "commissaire industriel" agent (with data/)
+├── docs/                      # Markdown notes and internal documentation
+├── deliverables/              # Finished deliverables (HTML, Word, etc.)
+│   ├── html/                  #   - organigramme.html and other standalone HTML
+│   └── documents/             #   - .docx evaluations, written reports
+├── presentations/             # Slide decks (PPTX) and their Python generators
+├── scripts/                   # Setup / maintenance shell scripts
+└── .github/                   # GitHub workflows and templates
 ```
 
 ## Key Configuration
 
 - **MCP Server**: Configured at `localhost:8080` via `.mcp.json`
 - **PDF Server**: Uses `@anthropic-ai/pdf-server` via npx, configured in `cline_mcp_config.json`
-- **Setup script**: `setup_mcp_pdf_server.sh` handles dependency installation, config setup, and validation (Linux/Mac only)
+- **Setup script**: `scripts/setup_mcp_pdf_server.sh` handles dependency installation, config setup, and validation (Linux/Mac only)
 
 ## Technology Stack
 
-Based on `.gitignore`, the project is set up to support:
-- **Node.js** (node_modules, npm/yarn)
-- **Python** (__pycache__, venv)
-- **C/C++** build artifacts (.o, .a, .lib)
-
-No package manager lockfiles or dependency manifests exist yet.
+- **Next.js / TypeScript / Tailwind CSS** — front-end app under `src/` (UI/UX skills generator, dashboard, presentation & document modes)
+- **Python** — `agent/commissaire_industriel.py` and `presentations/generate_deps_executive.py` (uses `python-pptx`)
+- **GitHub Actions** — CI workflows in `.github/`
+- `.gitignore` also covers C/C++ build artifacts in case native code is added.
 
 ## Git Conventions
 
