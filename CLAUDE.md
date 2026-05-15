@@ -8,7 +8,7 @@ Guide opérationnel pour Claude Code sur ce dépôt. Ces instructions priment su
 
 Dépôt **`jeanfrancoisleblanc28/myrepo`** — vitrine numérique du **commissaire industriel de la MRC Pierre-De Saurel** (Sorel-Tracy, Québec). Le produit combine :
 
-- **Un site Next.js 14 + Tailwind** qui héberge plusieurs vitrines : tableau de bord MCP, organigramme DÉPS, cartographie de la chaîne d'approvisionnement navale, et un générateur de kit UI/UX avec mode présentation.
+- **Un site Next.js 14 + Tailwind** qui héberge plusieurs vitrines : tableau de bord MCP, cartographie de la chaîne d'approvisionnement navale, et un générateur de kit UI/UX avec mode présentation.
 - **Un agent conversationnel Python** (`agent/commissaire_industriel.py`) qui aide les investisseurs à trouver un terrain industriel, modes règles / OpenAI / Anthropic.
 - **Deux pages HTML statiques autonomes** (`organigramme.html`, `showcase.html`) — pas de build.
 
@@ -105,7 +105,7 @@ myrepo/
 
 ## 5. Pièges spécifiques à éviter
 
-- **`src/lib/mcp-client.ts:49`** : l'override `headers: {}` dans `analyzePdf` est volontaire — ne PAS y remettre `Content-Type: application/json`, sinon le boundary `multipart/form-data` est cassé.
+- **`src/lib/mcp-client.ts`** : l'override `headers: {}` dans la fonction `analyzePdf` est volontaire — ne PAS y remettre `Content-Type: application/json`, sinon le boundary `multipart/form-data` est cassé.
 - **`setup_mcp_pdf_server.sh`** : contient des placeholders (`package1`, `package2`) — c'est un template, ne pas le traiter comme un script de production.
 - **`organigramme.html` et `showcase.html`** : fichiers statiques autonomes (pas de pipeline de build) — modifier directement le HTML inline, ne pas essayer de les migrer vers React sans instruction explicite.
 - **`public/chaine-navale.pdf`** : PDF généré ; ne pas le considérer comme une source de vérité — la donnée canonique est `src/lib/naval-supply-chain.ts`.
@@ -119,7 +119,7 @@ myrepo/
 - **Pas de nouveau gestionnaire de paquets** (rester sur npm). Pas de `pnpm` / `yarn` / `bun` sans demande.
 - **Pas de nouveau framework CSS** (Tailwind uniquement).
 - **Pas de librairie d'état global** (Zustand, Redux, Jotai) sans justification — React state + props suffisent pour l'instant.
-- **Pas de librairie d'animation lourde** (Framer Motion, GSAP) — les animations actuelles (aurora, confetti, transitions de présentation) sont en CSS/Canvas natif.
+- **Pas de librairie d'animation lourde** (Framer Motion, GSAP) — les animations actuelles (aurora, confetti, transitions de présentation) sont en CSS/Canvas natif. NB : `src/lib/skills-data.ts` mentionne Framer Motion / GSAP dans la description de la compétence `perf-anim` ; c'est un catalogue pédagogique générique de UI/UX, pas une liste de dépendances approuvées pour ce dépôt.
 - Avant d'ajouter une dépendance npm, vérifier que `clsx`, `tailwind-merge`, ou `lucide-react` ne couvrent pas déjà le besoin.
 - Côté Python : ne pas ajouter de dépendance au mode règles. Les SDK LLM restent commentés dans `requirements.txt`.
 
