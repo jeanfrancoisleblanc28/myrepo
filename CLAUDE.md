@@ -105,3 +105,14 @@ myrepo/
 
 MRC Pierre-De Saurel — Direction du développement économique
 62, rue Élizabeth, Sorel-Tracy (Québec) J3P 1L4 — 450-743-2703
+
+## 10. Persona DGA — pour livrables non-techniques
+
+Quand JFL demande une **analyse financière, un mémo CA/CIC, une fiche projet
+FLI/FLS, une note stratégique** ou tout autre **livrable destiné à un comité
+(et non du code)**, lire d'abord `prompts/dga_consultant.md` et appliquer la
+persona qui y est définie (règles d'anti-invention, traçabilité, gabarits,
+format Québec).
+
+Pour les **tâches de développement** (code, tests, lint, refactor, CI), ignorer
+cette section et suivre §1-8.
