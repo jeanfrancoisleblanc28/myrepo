@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Nouveau prêt{% endblock %}
+{% block content %}
+<h2>{{ 'Modifier le prêt' if loan else 'Nouveau prêt' }}</h2>
+<div class="card" style="max-width:640px">
+  {% if errors %}
+  <ul class="errors">{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+  {% endif %}
+  <form method="post">
+    <div class="form-group">
+      <label for="borrower_id">Emprunteur *</label>
+      <select id="borrower_id" name="borrower_id" required>
+        <option value="">— Sélectionner —</option>
+        {% for b in borrowers %}
+        <option value="{{ b.id }}"
+          {% if (form and form.borrower_id == b.id|string) or (loan and loan.borrower_id == b.id) %}selected{% endif %}>
+          {{ b.legal_name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="loan_number">Numéro de prêt *</label>
+      <input type="text" id="loan_number" name="loan_number"
+             value="{{ (form.loan_number if form else '') or (loan.loan_number if loan else '') }}" required>
+    </div>
+    <div class="form-group">
+      <label for="principal_amount">Capital initial ($) *</label>
+      <input type="number" id="principal_amount" name="principal_amount" step="0.01" min="0.01"
+             value="{{ (form.principal_amount if form else '') or (loan.principal_amount if loan else '') }}" required>
+    </div>
+    <div class="form-group">
+      <label for="annual_interest_rate">Taux d'intérêt annuel (décimal, ex: 0.065 = 6,5 %) *</label>
+      <input type="number" id="annual_interest_rate" name="annual_interest_rate"
+             step="0.000001" min="0" max="1"
+             value="{{ (form.annual_interest_rate if form else '') or (loan.annual_interest_rate if loan else '') }}" required>
+    </div>
+    <div class="form-group">
+      <label for="term_months">Durée (mois) *</label>
+      <input type="number" id="term_months" name="term_months" min="1"
+             value="{{ (form.term_months if form else '') or (loan.term_months if loan else '') }}" required>
+    </div>
+    <div class="form-group">
+      <label for="start_date">Date de début *</label>
+      <input type="date" id="start_date" name="start_date"
+             value="{{ (form.start_date if form else '') or (loan.start_date.isoformat() if loan else '') }}" required>
+    </div>
+    <button type="submit" class="btn btn-success">Enregistrer</button>
+    <a href="/loans/" class="btn btn-primary" style="margin-left:.5rem">Annuler</a>
+  </form>
+</div>
+{% endblock %}

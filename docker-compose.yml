@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - loan_data:/data
+    environment:
+      - DATABASE_URL=sqlite:////data/loan_manager.db
+
+volumes:
+  loan_data:

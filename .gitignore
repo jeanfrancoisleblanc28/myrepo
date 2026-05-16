@@ -12,6 +12,8 @@ __pycache__/
 .Python
 env/
 venv/
+.pytest_cache/
+.mypy_cache/
 
 # IDE
 .vscode/
@@ -35,6 +37,10 @@ build/
 *.o
 *.a
 *.lib
+
+# SQLite databases
+*.db
+*.sqlite3
 
 # Next.js
 .next/
