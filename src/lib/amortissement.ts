@@ -128,7 +128,13 @@ function ajouterMois(dateIso: string, moisAAjouter: number): string {
     throw new Error('La date de début doit être au format ISO AAAA-MM-JJ.');
   }
 
+  // Clamp le jour au dernier jour du mois cible pour éviter le débordement
+  // natif de setMonth (ex. 31 janvier + 1 mois → 3 mars).
+  const jourInitial = date.getDate();
+  date.setDate(1);
   date.setMonth(date.getMonth() + moisAAjouter);
+  const dernierJourMoisCible = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  date.setDate(Math.min(jourInitial, dernierJourMoisCible));
   return date.toISOString().slice(0, 10);
 }
 
@@ -178,7 +184,7 @@ function validerParametres(params: ParametresAmortissement): Required<Pick<Param
       precision
     );
 
-    if (Math.abs(totalTranches - round(params.capital, precision)) > 0.01) {
+    if (Math.abs(totalTranches - round(params.capital, precision)) > Math.pow(10, -precision)) {
       throw new Error('La somme des tranches doit correspondre au capital total.');
     }
 
@@ -203,33 +209,55 @@ function determinerPhase(mois: number, dureeAeramMois: number, moratoireMois: nu
 function preparerTranches(tranches: TrancheFinancement[] | undefined, capital: number, precision: number): VentilationTranche[] | undefined {
   if (!tranches?.length) return undefined;
 
-  return tranches.map((tranche) => ({
-    nom: tranche.nom,
-    type: tranche.type,
-    pourcentage: round(tranche.montant / capital, 8),
-    paiement: 0,
-    interet: 0,
-    capital: 0,
-    soldeTheorique: round(tranche.montant, precision),
-  }));
+  // Pour garantir que la somme des pourcentages atteigne exactement 1, la
+  // dernière tranche absorbe le reliquat d'arrondi (1 − somme des précédentes).
+  let pourcentagesCumules = 0;
+
+  return tranches.map((tranche, index, arr) => {
+    const estDerniere = index === arr.length - 1;
+    const pourcentage = estDerniere
+      ? round(1 - pourcentagesCumules, 8)
+      : round(tranche.montant / capital, 8);
+
+    if (!estDerniere) {
+      pourcentagesCumules = round(pourcentagesCumules + pourcentage, 8);
+    }
+
+    return {
+      nom: tranche.nom,
+      type: tranche.type,
+      pourcentage,
+      paiement: 0,
+      interet: 0,
+      capital: 0,
+      soldeTheorique: round(tranche.montant, precision),
+    };
+  });
 }
 
 function ventilerLigne(
   tranches: VentilationTranche[] | undefined,
+  soldesPrecedents: number[],
   paiement: number,
   interet: number,
   capitalPaye: number,
   precision: number
-): VentilationTranche[] | undefined {
-  if (!tranches) return undefined;
+): { ventilation: VentilationTranche[] | undefined; soldesActuels: number[] } {
+  if (!tranches) {
+    return { ventilation: undefined, soldesActuels: soldesPrecedents };
+  }
 
-  return tranches.map((tranche) => {
+  const soldesActuels: number[] = [];
+  const ventilation = tranches.map((tranche, index) => {
     const paiementTranche = round(paiement * tranche.pourcentage, precision);
     const interetTranche = round(interet * tranche.pourcentage, precision);
     const capitalTranche = round(capitalPaye * tranche.pourcentage, precision);
-    const nouveauSolde = round(Math.max(0, tranche.soldeTheorique - capitalTranche), precision);
+    const nouveauSolde = round(
+      Math.max(0, soldesPrecedents[index] - capitalTranche),
+      precision
+    );
 
-    tranche.soldeTheorique = nouveauSolde;
+    soldesActuels.push(nouveauSolde);
 
     return {
       nom: tranche.nom,
@@ -241,6 +269,8 @@ function ventilerLigne(
       soldeTheorique: nouveauSolde,
     };
   });
+
+  return { ventilation, soldesActuels };
 }
 
 export function calculAmortissementSecurise(params: ParametresAmortissement): ResultatAmortissement {
@@ -284,6 +314,7 @@ export function calculAmortissementSecurise(params: ParametresAmortissement): Re
   let paiementMensuelCourant = paiementMensuelInitial;
   let capitalApresCapitalisation = capitalInitial;
   const tranchesActives = preparerTranches(params.tranches, capitalInitial, precision);
+  let soldesTranches: number[] = tranchesActives?.map((t) => t.soldeTheorique) ?? [];
 
   for (let mois = 1; mois <= params.dureeMois; mois++) {
     const phase = determinerPhase(mois, dureeAeramMois, moratoireMois);
@@ -357,13 +388,16 @@ export function calculAmortissementSecurise(params: ParametresAmortissement): Re
     interetsCumules = round(interetsCumules + interet, precision);
     capitalCumule = round(capitalCumule + capitalPaye, precision);
 
-    const ventilation = ventilerLigne(
+    const resultatVentilation = ventilerLigne(
       tranchesActives,
+      soldesTranches,
       paiement,
       interet,
       capitalPaye,
       precision
     );
+    const ventilation = resultatVentilation.ventilation;
+    soldesTranches = resultatVentilation.soldesActuels;
 
     tableau.push({
       mois,
@@ -391,12 +425,30 @@ export function calculAmortissementSecurise(params: ParametresAmortissement): Re
   let resumeTranches: ResumeTranche[] | undefined;
 
   if (params.tranches?.length) {
-    resumeTranches = params.tranches.map((tranche) => {
-      const pourcentage = round(tranche.montant / capitalInitial, 8);
-      const totalPaiementsTranche = round(totalPaiements * pourcentage, precision);
-      const totalInteretsTranche = round(totalInterets * pourcentage, precision);
-      const totalCapitalTranche = round(totalCapital * pourcentage, precision);
-      const soldeFinalTheorique = round(Math.max(0, tranche.montant - totalCapitalTranche), precision);
+    // Agrégation depuis les lignes du tableau pour garantir l'égalité
+    // comptable entre le résumé et le détail des ventilations.
+    resumeTranches = params.tranches.map((tranche, index) => {
+      const ventilations = tableau
+        .map((ligne) => ligne.ventilation?.[index])
+        .filter((v): v is VentilationTranche => v !== undefined);
+
+      const totalPaiementsTranche = round(
+        ventilations.reduce((sum, v) => sum + v.paiement, 0),
+        precision
+      );
+      const totalInteretsTranche = round(
+        ventilations.reduce((sum, v) => sum + v.interet, 0),
+        precision
+      );
+      const totalCapitalTranche = round(
+        ventilations.reduce((sum, v) => sum + v.capital, 0),
+        precision
+      );
+      const soldeFinalTheorique = ventilations.length
+        ? ventilations[ventilations.length - 1].soldeTheorique
+        : round(tranche.montant, precision);
+      const pourcentage = tranchesActives?.[index]?.pourcentage
+        ?? round(tranche.montant / capitalInitial, 8);
 
       return {
         nom: tranche.nom,
