@@ -12,7 +12,6 @@ import {
   levelLabels,
   levelOrder,
   skills,
-  type Skill,
 } from "@/lib/skills-data";
 
 describe("skills-data — dataset integrity", () => {
@@ -198,7 +197,7 @@ describe("generateBalancedKit", () => {
     const preset = getPreset("a11y-audit")!;
     const kit = generateBalancedKit({ preset, count: 9, seed: 2 });
     for (const catId of Object.keys(preset.recipe)) {
-      const fromCat = kit.filter((s: Skill) => s.categoryId === catId);
+      const fromCat = kit.filter((s) => s.categoryId === catId);
       expect(fromCat.length).toBeGreaterThan(0);
     }
   });
@@ -230,6 +229,6 @@ describe("generateBalancedKit", () => {
     const recipeSum = Object.values(preset.recipe).reduce((a, b) => a + b, 0);
     const cappedCount = Math.max(1, recipeSum - 2);
     const kit = generateBalancedKit({ preset, count: cappedCount, seed: 4 });
-    expect(kit.length).toBeLessThanOrEqual(cappedCount);
+    expect(kit.length).toBe(cappedCount);
   });
 });
