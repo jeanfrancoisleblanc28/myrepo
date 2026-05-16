@@ -115,4 +115,4 @@ persona qui y est définie (règles d'anti-invention, traçabilité, gabarits,
 format Québec).
 
 Pour les **tâches de développement** (code, tests, lint, refactor, CI), ignorer
-cette section et suivre §1-8.
+cette section et suivre §1-9.

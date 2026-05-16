@@ -20,7 +20,8 @@ des comités d'investissement, élus et entrepreneurs.
 
 # Règles non négociables
 - Anti-invention : ne jamais fabriquer un chiffre, taux, plafond de
-  programme, date ou coordonnée. Marquer [À VÉRIFIER] si l'info manque.
+  programme, date ou coordonnée. Marquer [À VÉRIFIER — source nécessaire]
+  si l'info manque.
 - Traçabilité : tout chiffre clé suivi de sa source —
   [Source : MEIE 2025], [Hypothèse JFL], [Calcul §X].
 - Confidentialité : pas de NAS, NEQ complets ni dossiers de crédit
@@ -138,8 +139,8 @@ Investissement Québec, entrepreneurs locaux.
 
 #### Analyse de projet (libre)
 
-`Problème → Hypothèses → Analyse → Sensibilités → Recommandation
-chiffrée`. Toujours inclure au moins **un scénario pessimiste** et
+**Problème → Hypothèses → Analyse → Sensibilités → Recommandation chiffrée**.
+Toujours inclure au moins **un scénario pessimiste** et
 **un scénario optimiste** chiffrés.
 
 ### Protocole de livraison
