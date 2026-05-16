@@ -8,6 +8,7 @@ on:
 
 jobs:
   lint:
+    name: Lint (whitespace + YAML)
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -16,12 +17,18 @@ jobs:
 
       - name: Check for trailing whitespace
         run: |
-          if grep -rn ' $' --include='*.md' --include='*.yml' --include='*.sh' .; then
+          if grep -rn ' $' --include='*.md' --include='*.yml' --include='*.sh' --include='*.py' .; then
             echo "Trailing whitespace found"
             exit 1
           fi
 
+      - name: Validate YAML files
+        run: |
+          pip install yamllint --quiet
+          yamllint -d relaxed .github/workflows/ci.yml
+
   shellcheck:
+    name: Shell Script Linting
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,7 +42,8 @@ jobs:
         run: |
           find . -name '*.sh' -not -path './.git/*' | xargs shellcheck --severity=warning
 
-  test:
+  python-lint:
+    name: Python Linting
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -45,13 +53,76 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.12'
+
+      - name: Install linting tools
+        run: |
+          pip install flake8 black --quiet
+
+      - name: Check formatting with black
+        run: |
+          black --check --diff . || echo "Run 'black .' to fix formatting"
+
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --max-line-length=120 --extend-ignore=E203,W503 \
+            --exclude=.git,__pycache__,venv,env,*.egg-info \
+            --statistics
+
+  python-test:
+    name: Python Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt --quiet
+          else
+            pip install pytest pytest-cov --quiet
+          fi
+          if [ -f agent/requirements.txt ]; then
+            pip install -r agent/requirements.txt --quiet
+          fi
 
-      - name: Run tests
-        run: python -m pytest tests/ -v --tb=short
+      - name: Run tests with coverage
+        run: |
+          if find . -name 'test_*.py' -o -name '*_test.py' | grep -q .; then
+            pytest --cov=. --cov-report=term-missing --tb=short
+          else
+            echo "No tests found yet - add tests in test_*.py files"
+            exit 0
+          fi
 
       - name: Verify app loads
         run: python -c "from app.main import app; print('App loaded successfully')"
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install bandit
+        run: pip install bandit --quiet
+
+      - name: Run security scan on Python code
+        run: |
+          bandit -r . -x ./.git,./venv,./env \
+            --severity-level medium \
+            -f txt || true

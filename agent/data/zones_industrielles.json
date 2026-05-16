@@ -1,0 +1,248 @@
+{
+  "mrc": "Pierre-De Saurel",
+  "region_administrative": "Montérégie",
+  "description": "La MRC Pierre-De Saurel est reconnue pour sa vocation industrielle lourde, notamment grâce à sa position stratégique sur le fleuve Saint-Laurent, à la confluence du Richelieu, avec accès autoroutier (A-30, A-132) et ferroviaire.",
+  "municipalites": [
+    {
+      "nom": "Sorel-Tracy",
+      "type": "Ville principale",
+      "population": 34000,
+      "zones": [
+        {
+          "code": "M-1",
+          "type": "Industrielle légère",
+          "description": "Industries légères, entrepôts, ateliers de fabrication",
+          "superficie_disponible_ha": 45,
+          "prix_moyen_pied_carre": 4.50,
+          "infrastructures": ["eau potable", "égout", "électricité MT/HT", "gaz naturel", "fibre optique"],
+          "acces": ["Route 132", "Autoroute 30", "Port de Sorel"],
+          "secteurs": ["Boulevard Fiset", "Rue Royale", "Chemin des Patriotes Nord"]
+        },
+        {
+          "code": "M-2",
+          "type": "Industrielle lourde",
+          "description": "Industries lourdes, pétrochimie, sidérurgie, industries extractives",
+          "superficie_disponible_ha": 120,
+          "prix_moyen_pied_carre": 3.25,
+          "infrastructures": ["eau industrielle", "égout industriel", "électricité HT 120kV", "gaz naturel haute pression", "accès ferroviaire", "quai fluvial"],
+          "acces": ["Route 132 (bord du fleuve)", "Autoroute 30", "Voie ferrée CN/CP", "Fleuve Saint-Laurent (tirant d'eau 8m)"],
+          "secteurs": ["Zone industrialo-portuaire", "Parc industriel Tracy", "Zone pétrolière Chemin Saint-Roch"],
+          "entreprises_cles": ["ArcelorMittal Produits longs Canada", "Bitumar", "Pétrolia", "Industries Rolland"]
+        }
+      ]
+    },
+    {
+      "nom": "Saint-Joseph-de-Sorel",
+      "type": "Municipalité",
+      "population": 1800,
+      "zones": [
+        {
+          "code": "M-1",
+          "type": "Industrielle légère",
+          "description": "Industriel léger, commercial lourd",
+          "superficie_disponible_ha": 12,
+          "prix_moyen_pied_carre": 3.75,
+          "infrastructures": ["eau potable", "égout", "électricité"],
+          "acces": ["Route 132", "Pont Turcotte vers Sorel-Tracy"]
+        }
+      ]
+    },
+    {
+      "nom": "Sainte-Anne-de-Sorel",
+      "type": "Municipalité",
+      "population": 2600,
+      "zones": [
+        {
+          "code": "M-1",
+          "type": "Industrielle légère / Agro-alimentaire",
+          "description": "Transformation alimentaire, entreposage agricole, industries liées aux îles",
+          "superficie_disponible_ha": 8,
+          "prix_moyen_pied_carre": 2.80,
+          "infrastructures": ["eau potable", "égout partiel", "électricité"],
+          "acces": ["Route 132", "Chemin des Barques"]
+        }
+      ]
+    },
+    {
+      "nom": "Saint-Robert",
+      "type": "Municipalité",
+      "zones": [
+        {
+          "code": "M-1",
+          "type": "Industrielle légère / agroalimentaire",
+          "superficie_disponible_ha": 6,
+          "prix_moyen_pied_carre": 2.20
+        }
+      ]
+    },
+    {
+      "nom": "Massueville",
+      "type": "Municipalité",
+      "zones": [
+        {
+          "code": "M-1",
+          "type": "Industrielle légère",
+          "superficie_disponible_ha": 3,
+          "prix_moyen_pied_carre": 2.00
+        }
+      ]
+    }
+  ],
+  "avantages_concurrentiels": [
+    "Accès direct au fleuve Saint-Laurent (navigation internationale)",
+    "Port de Sorel — quai commercial avec accès pour barges et navires marchands",
+    "Proximité des grands marchés: Montréal (75km), Québec (175km), États-Unis (100km)",
+    "Main-d'œuvre industrielle qualifiée (tradition sidérurgique et pétrochimique depuis 1880)",
+    "Énergie électrique compétitive (Hydro-Québec tarif L/M)",
+    "Gaz naturel Énergir — réseau haute pression disponible en zone industrielle",
+    "Autoroute 30 — contournement direct vers le pont Mercier et les États-Unis",
+    "Desserte ferroviaire CN/CP pour transport de matières lourdes",
+    "Main-d'œuvre disponible, coûts d'exploitation parmi les plus bas au Québec",
+    "Réglementation municipale favorable à l'implantation industrielle"
+  ],
+  "programmes_aide": [
+    {
+      "nom": "Programme d'aide à l'implantation industrielle — MRC Pierre-De Saurel",
+      "type": "Subvention/Remise de taxes",
+      "description": "Congé de taxes foncières jusqu'à 5 ans pour nouvelles implantations en zone M-2",
+      "contact": "Direction du développement économique MRC"
+    },
+    {
+      "nom": "FARR — Fonds d'appui au rayonnement des régions",
+      "type": "Subvention provinciale",
+      "description": "Jusqu'à 500 000$ pour projets d'investissement régionaux structurants"
+    },
+    {
+      "nom": "Investissement Québec — Financement industriel",
+      "type": "Prêt / Garantie de prêt",
+      "description": "Financement jusqu'à 50% des coûts d'acquisition et de construction"
+    },
+    {
+      "nom": "Programme d'aide à la modernisation — Développement économique Canada",
+      "type": "Subvention fédérale",
+      "description": "Aide à la modernisation des équipements et à la transition verte"
+    },
+    {
+      "nom": "Crédit d'impôt à l'investissement — Revenu Québec",
+      "type": "Crédit fiscal",
+      "description": "Jusqu'à 20% sur les investissements admissibles en région"
+    }
+  ],
+  "contacts_cles": {
+    "mrc_developpement_economique": {
+      "nom": "Direction du développement économique",
+      "organisation": "MRC Pierre-De Saurel",
+      "adresse": "62, rue Élizabeth, Sorel-Tracy (Québec) J3P 1L4",
+      "telephone": "450-743-2703",
+      "site_web": "https://www.mrcpierredesaurel.com"
+    },
+    "cld_pierre_de_saurel": {
+      "nom": "Centre Local de Développement (CLD)",
+      "organisation": "CLD Pierre-De Saurel",
+      "telephone": "450-742-5491",
+      "description": "Accompagnement aux entrepreneurs, financement, réseautage"
+    },
+    "ville_sorel_tracy": {
+      "nom": "Service de l'urbanisme et du développement économique",
+      "organisation": "Ville de Sorel-Tracy",
+      "telephone": "450-780-5600",
+      "site_web": "https://www.sorel-tracy.qc.ca"
+    },
+    "registre_foncier": {
+      "nom": "Registre foncier du Québec",
+      "site_web": "https://www.registrefoncier.gouv.qc.ca",
+      "description": "Consultation des titres de propriété et actes notariés"
+    },
+    "melccfp": {
+      "nom": "Ministère de l'Environnement, de la Lutte contre les changements climatiques, de la Faune et des Parcs",
+      "description": "Autorisation environnementale pour projets industriels (LQE art. 22)",
+      "site_web": "https://www.environnement.gouv.qc.ca"
+    }
+  },
+  "reglementation_cle": [
+    "Schéma d'aménagement et de développement révisé — MRC Pierre-De Saurel",
+    "Règlement de zonage — Ville de Sorel-Tracy",
+    "Loi sur la qualité de l'environnement (LQE) — art. 22 (autorisation environnementale)",
+    "Loi sur les cités et villes du Québec",
+    "Loi sur l'aménagement et l'urbanisme (LAU)",
+    "Règlement sur la protection et la réhabilitation des terrains contaminés (RPRT)",
+    "Normes d'émission atmosphériques — MELCCFP",
+    "Code de construction du Québec (Bâtiment industriel)"
+  ],
+  "etapes_transaction": {
+    "acquisition": [
+      {
+        "etape": 1,
+        "nom": "Identification du besoin",
+        "description": "Définir la superficie, le type de zonage requis (M-1 ou M-2), les accès nécessaires (route, rail, fleuve), les exigences en services (électricité HT, eau industrielle, gaz)"
+      },
+      {
+        "etape": 2,
+        "nom": "Recherche de terrain",
+        "description": "Consultation du registre des terrains disponibles MRC, visite des parcs industriels de Sorel-Tracy, consultation du système SIGEC et de la cartographie municipale"
+      },
+      {
+        "etape": 3,
+        "nom": "Due diligence technique",
+        "description": "Phase I ESA (évaluation environnementale de site — ASTM E1527), arpentage, certificat de localisation, vérification des titres au Registre foncier, analyse du zonage"
+      },
+      {
+        "etape": 4,
+        "nom": "Due diligence réglementaire",
+        "description": "Vérification auprès de l'urbanisme municipal: usages permis, dérogations, servitudes, droit de préemption municipal"
+      },
+      {
+        "etape": 5,
+        "nom": "Évaluation foncière",
+        "description": "Évaluation par évaluateur agréé (membre de l'OEQ), comparaison avec l'évaluation municipale au rôle"
+      },
+      {
+        "etape": 6,
+        "nom": "Offre d'achat",
+        "description": "Rédaction de la promesse d'achat avec conditions: financement, environnement satisfaisant, zonage conforme, délai d'inspection"
+      },
+      {
+        "etape": 7,
+        "nom": "Financement",
+        "description": "Prêt commercial bancaire, Investissement Québec, FARR, subventions MRC. Ratio prêt/valeur typique: 65-75%"
+      },
+      {
+        "etape": 8,
+        "nom": "Acte de vente notarié",
+        "description": "Signature devant notaire, inscription à l'index des immeubles, paiement de la taxe de mutation (1,5% sur la valeur dépassant 500 000$)"
+      },
+      {
+        "etape": 9,
+        "nom": "Post-acquisition",
+        "description": "Demande de permis de construction, autorisation environnementale MELCCFP si applicable, raccordement aux services, démarrage des travaux"
+      }
+    ],
+    "vente": [
+      {
+        "etape": 1,
+        "nom": "Préparation du dossier de vente",
+        "description": "Certificat de localisation à jour, évaluation agréée, registre des titres, bilan environnemental, plan de drainage, inventaire des infrastructures"
+      },
+      {
+        "etape": 2,
+        "nom": "Stratégie de mise en marché",
+        "description": "Inscription sur les plateformes immobilières industrielles (CBRE, Colliers, JLL, MRC), ciblage des acheteurs potentiels par secteur (pétrochimie, acier, logistique, agroalimentaire)"
+      },
+      {
+        "etape": 3,
+        "nom": "Négociation",
+        "description": "Réponse aux LOI (lettres d'intention), négociation du prix et des conditions, période d'exclusivité pour due diligence acheteur"
+      },
+      {
+        "etape": 4,
+        "nom": "Acceptation de l'offre",
+        "description": "Signature de la promesse de vente, dépôt en fidéicommis, levée des conditions suspensives"
+      },
+      {
+        "etape": 5,
+        "nom": "Clôture",
+        "description": "Acte de vente devant notaire, remise des titres, répartition des taxes, transfert des responsabilités"
+      }
+    ]
+  }
+}

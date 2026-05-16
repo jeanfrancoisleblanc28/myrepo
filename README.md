@@ -133,3 +133,9 @@ record borrowers and loans, generate amortization schedules, record payments wit
 automatic interest-first allocation, and export CSV reports.
 
 **Quick start:** `pip install -r requirements.txt && uvicorn app.main:app --reload`
+
+---
+
+## Contact
+
+Pour toute question ou problème, veuillez ouvrir une issue GitHub ou contacter les responsables du projet.

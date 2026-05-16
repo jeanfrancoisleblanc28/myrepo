@@ -1,0 +1,10 @@
+# Dépendances Python — Agent Commissaire Industriel
+# ─────────────────────────────────────────────────
+# Aucune dépendance externe requise pour le mode interactif de base.
+# Installez les options ci-dessous seulement pour le mode IA (LLM).
+
+# Mode IA avec OpenAI GPT-4 (optionnel)
+# openai>=1.30.0
+
+# Mode IA avec Anthropic Claude (optionnel)
+# anthropic>=0.28.0
