@@ -225,12 +225,12 @@ Le plan proposé repose sur une approche **progressive, humaine et encadrée** v
 
 #### Tableau 7.1 — Phases du plan de réintégration
 
-| Phase | Intitulé          | Durée            | Objectifs principaux                                                  |
-| :---: | :---------------- | :--------------- | :-------------------------------------------------------------------- |
-| **1** | Reconnexion       | Semaines 1 à 2   | Mise à jour organisationnelle et reprise graduelle                    |
-| **2** | Réactivation      | Semaines 3 à 4   | Réintégration partielle des responsabilités                           |
-| **3** | Consolidation     | Semaines 5 à 8   | Retour progressif à l'autonomie opérationnelle                        |
-| **4** | Stabilisation     | Semaines 9 à 12  | Pleine capacité fonctionnelle et ajustements                          |
+| Phase | Intitulé          | Durée                                 | Objectifs principaux                                                  |
+| :---: | :---------------- | :------------------------------------ | :-------------------------------------------------------------------- |
+| **1** | Reconnexion       | **Semaines 1 à 2** [Hypothèse JFL]    | Mise à jour organisationnelle et reprise graduelle                    |
+| **2** | Réactivation      | **Semaines 3 à 4** [Hypothèse JFL]    | Réintégration partielle des responsabilités                           |
+| **3** | Consolidation     | **Semaines 5 à 8** [Hypothèse JFL]    | Retour progressif à l'autonomie opérationnelle                        |
+| **4** | Stabilisation     | **Semaines 9 à 12** [Hypothèse JFL]   | Pleine capacité fonctionnelle et ajustements                          |
 
 ### 7.3  Détail des phases
 
@@ -245,7 +245,7 @@ Le plan proposé repose sur une approche **progressive, humaine et encadrée** v
 
 **Charge suggérée**
 
-- 2 à 3 journées par semaine.
+- **2 à 3 journées par semaine** [Hypothèse JFL].
 - Horaire flexible.
 - Limitation des dossiers complexes.
 
@@ -257,6 +257,12 @@ Le plan proposé repose sur une approche **progressive, humaine et encadrée** v
 - Participation aux suivis stratégiques.
 - Implication progressive dans les décisions opérationnelles.
 
+**Charge suggérée**
+
+- **3 à 4 journées par semaine** [Hypothèse JFL].
+- Horaire encore modulable selon les besoins.
+- Réintroduction graduelle des dossiers à enjeu modéré.
+
 #### Phase 3 — Consolidation *(semaines 5 à 8)*
 
 **Objectifs**
@@ -265,6 +271,12 @@ Le plan proposé repose sur une approche **progressive, humaine et encadrée** v
 - Coordination accrue des équipes.
 - Participation active aux dossiers stratégiques.
 
+**Charge suggérée**
+
+- **4 à 5 journées par semaine** [Hypothèse JFL].
+- Retour à l'horaire régulier sur la majorité des semaines.
+- Reprise progressive des dossiers complexes et des représentations externes.
+
 #### Phase 4 — Stabilisation *(semaines 9 à 12)*
 
 **Objectifs**
@@ -272,6 +284,14 @@ Le plan proposé repose sur une approche **progressive, humaine et encadrée** v
 - Retour complet à la fonction.
 - Validation de l'équilibre de charge.
 - Ajustements organisationnels si requis.
+
+**Charge suggérée**
+
+- **Temps plein** [Hypothèse JFL].
+- Pleine reprise de l'ensemble des responsabilités stratégiques.
+- Bilan de mi-parcours et ajustements si l'équilibre de charge le requiert.
+
+> **Note de cadrage.** Les charges suggérées ci-dessus constituent des hypothèses de travail soumises à la validation du CA et ajustables selon l'évolution de la situation. Elles ne préjugent pas d'une prescription médicale ou d'un avis professionnel externe.
 
 <br>
 
