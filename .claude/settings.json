@@ -6,7 +6,14 @@
       "mcp__github__get_commit",
       "mcp__github__list_branches",
       "mcp__github__list_pull_requests",
-      "mcp__github__pull_request_read"
+      "mcp__github__pull_request_read",
+      "mcp__github__update_pull_request",
+      "mcp__github__add_issue_comment",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git fetch *)",
+      "Bash(mkdir *)"
     ]
   }
 }
