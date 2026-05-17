@@ -532,6 +532,7 @@
       box-shadow: none;
       page-break-after: always;
     }
+    .sheet:last-child { page-break-after: auto; }
     body:not(.hide-ph) .ph {
       background: #FFF4D6 !important;
       -webkit-print-color-adjust: exact;
@@ -543,8 +544,18 @@
     }
   }
 
-  /* Toggle « Aperçu sans placeholders » — respecte la couleur du parent. */
-  body.hide-ph .ph { background: transparent; border: 0; color: inherit; }
+  /* Toggle « Aperçu sans placeholders » — rendu texte normal,
+     sans padding/police/poids spécifiques aux placeholders. */
+  body.hide-ph .ph {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    display: inline;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+  }
   body.hide-ph .ph::before { content: ""; }
 </style>
 </head>
@@ -555,10 +566,15 @@
     DÉPS · <em>Cahier d'administrateur</em> · États financiers 2025
   </div>
   <div class="toolbar-actions">
-    <button class="btn ghost" onclick="document.body.classList.toggle('hide-ph')">
-      Aperçu sans placeholders
+    <button
+      type="button"
+      class="btn ghost"
+      id="toggle-ph"
+      aria-pressed="false"
+      onclick="(function(b){var on=document.body.classList.toggle('hide-ph');b.setAttribute('aria-pressed',String(on));b.firstElementChild.textContent=on?'Afficher les placeholders':'Aperçu sans placeholders';})(this)">
+      <span>Aperçu sans placeholders</span>
     </button>
-    <button class="btn" onclick="window.print()">Imprimer / PDF</button>
+    <button type="button" class="btn" onclick="window.print()">Imprimer / PDF</button>
   </div>
 </div>
 
