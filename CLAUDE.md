@@ -54,6 +54,9 @@ myrepo/
 ├── organigramme.html                 # Page statique autonome (DÉPS)
 ├── etats-financiers-deps-2025.html   # Cahier d'administrateur — états financiers
 ├── showcase.html                     # Showcase UI/UX (single-file)
+├── package.json                      # Scripts npm + dépendances frontend
+├── tsconfig.json                     # Config TS (alias `@/*` → `./src/*`)
+├── Makefile                          # `make setup` / `make lint` (shell)
 ├── .mcp.json                         # Config serveur MCP (localhost:8080)
 ├── .claude/settings.json             # Permissions Claude Code (allow/deny lists)
 └── .github/workflows/ci.yml          # Lint, shellcheck, black, flake8, bandit, pytest, yamllint
