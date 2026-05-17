@@ -38,6 +38,49 @@ This file provides guidance for AI assistants working with this repository.
 - **PDF Server**: Uses `@anthropic-ai/pdf-server` via npx, configured in `cline_mcp_config.json`
 - **Setup script**: `scripts/setup_mcp_pdf_server.sh` handles dependency installation, config setup, and validation (Linux/Mac only)
 
+## Claude Code Configuration
+
+Two artifacts work together — keep them separate, no overlap:
+
+- **`CLAUDE.md`** (this file, at repo root) — global guidance: repo layout, build/test/lint commands, code style, git conventions. The source of truth for *how to work in this repo*.
+- **`.claude/`** (folder) — Claude Code-specific configuration only (permission allowlist in `settings.json`, hooks, agent definitions). Never put project documentation here.
+
+## Development Commands
+
+Common entry points are exposed via the `Makefile` — run `make help` to list them.
+
+| Command | What it does |
+|---|---|
+| `make help` | Show every documented `make` target with its description |
+| `make setup` | Install JS deps (`npm install`) and Python deps (`pip install -r requirements.txt`) if present |
+| `make lint` | Run `shellcheck` (severity=warning) on every `.sh` file outside `.git/` |
+| `make clean` | Remove build artifacts: `dist/`, `build/`, `__pycache__/`, `*.pyc`, `env/`, `venv/` |
+
+Frontend-specific (not in the Makefile, run directly):
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start Next.js dev server (http://localhost:3000) |
+| `npm run build` | Production build |
+| `npm run lint` | ESLint on `src/` |
+| `npm run typecheck` | TypeScript strict check |
+
+Python agent:
+
+```bash
+python agent/commissaire_industriel.py            # rule-based mode
+python agent/commissaire_industriel.py --anthropic  # Claude API
+python agent/commissaire_industriel.py --openai     # OpenAI API
+```
+
+Presentation generation:
+
+```bash
+python presentations/generate_deps_executive.py    # produces DEPS_Executive_Premium.pptx
+```
+
+**Before committing TypeScript changes**, always run `npm run lint && npm run typecheck`. There is no JS/TS test suite at present.
+
 ## Technology Stack
 
 - **Next.js / TypeScript / Tailwind CSS** — front-end app under `src/` (UI/UX skills generator, dashboard, presentation & document modes)
