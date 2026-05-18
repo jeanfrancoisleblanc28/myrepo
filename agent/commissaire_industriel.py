@@ -15,6 +15,7 @@ import json
 import os
 import sys
 import textwrap
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
@@ -210,6 +211,98 @@ def handle_contacts(data: dict):
             print_wrapped(f"Description : {contact['description']}", indent="     ")
 
 
+# Mots-clés sectoriels qui déclenchent une recommandation de zone.
+# Extraits comme constantes pour permettre des tests unitaires sur la logique
+# de recommandation (voir agent/tests/test_recommend_zone.py).
+INDUSTRIE_LOURDE_KEYWORDS = (
+    "pétrochimie", "chimie", "raffinerie", "acier", "sidérurgie", "pétrole",
+)
+LOGISTIQUE_KEYWORDS = ("logistique", "transport", "entrepôt", "distribution")
+AGROALIMENTAIRE_KEYWORDS = (
+    "agroalimentaire", "alimentaire", "agricole", "transformation alimentaire",
+)
+
+
+@dataclass(frozen=True)
+class ZoneRecommendation:
+    """Recommandation de zone industrielle calculée à partir d'un questionnaire."""
+
+    code: str  # "M-1" ou "M-2"
+    zone_label: str
+    secteur: str  # localisation textuelle (peut être vide pour le fallback)
+    prix_estime: str  # ex. "3,00 – 4,00 $/pi²" (vide pour le fallback)
+    atout: str  # atout majeur ou message générique
+    besoins_speciaux: str  # repris brut depuis l'entrée utilisateur (lowercased)
+    is_default: bool = False  # True quand aucun mot-clé n'a matché
+
+
+def recommend_zone(reponses: dict) -> ZoneRecommendation:
+    """Calcule une recommandation de zone à partir des réponses du questionnaire.
+
+    Fonction pure : aucune E/S, déterministe pour une entrée donnée. La logique
+    de matching par mots-clés vit ici afin d'être testable en isolation.
+    """
+    secteur = (reponses.get("secteur") or "").lower()
+    besoins = (reponses.get("besoins_speciaux") or "").lower()
+
+    if any(mot in secteur for mot in INDUSTRIE_LOURDE_KEYWORDS):
+        return ZoneRecommendation(
+            code="M-2",
+            zone_label="M-2 — Zone industrielle lourde (bord du fleuve, Sorel-Tracy)",
+            secteur="Zone industrialo-portuaire / Chemin Saint-Roch, Tracy",
+            prix_estime="3,00 – 4,00 $/pi²",
+            atout="Accès direct au port de Sorel et à la voie ferrée CN",
+            besoins_speciaux=besoins,
+        )
+    if any(mot in secteur for mot in LOGISTIQUE_KEYWORDS):
+        return ZoneRecommendation(
+            code="M-1",
+            zone_label="M-1 — Zone industrielle légère (accès A-30)",
+            secteur="Boulevard Fiset / Autoroute 30, Sorel-Tracy",
+            prix_estime="4,00 – 5,50 $/pi²",
+            atout="Intersection A-30/Rte 132, hub logistique régional",
+            besoins_speciaux=besoins,
+        )
+    if any(mot in secteur for mot in AGROALIMENTAIRE_KEYWORDS):
+        return ZoneRecommendation(
+            code="M-1",
+            zone_label="M-1 — Zone agro-industrielle (Sainte-Anne-de-Sorel / Saint-Robert)",
+            secteur="Saint-Robert ou Sainte-Anne-de-Sorel",
+            prix_estime="2,00 – 3,00 $/pi²",
+            atout="Proximité des terres agricoles et du fleuve",
+            besoins_speciaux=besoins,
+        )
+    return ZoneRecommendation(
+        code="M-1",
+        zone_label="M-1 — Sorel-Tracy",
+        secteur="",
+        prix_estime="",
+        atout="Plusieurs terrains disponibles selon vos besoins spécifiques.",
+        besoins_speciaux=besoins,
+        is_default=True,
+    )
+
+
+def _print_recommendation(reco: ZoneRecommendation) -> None:
+    """Affiche une recommandation pour la CLI interactive."""
+    if reco.is_default:
+        print("\n  ✅ Recommandation générale : Zone M-1, Sorel-Tracy")
+        print(f"     {reco.atout}")
+    else:
+        print(f"\n  ✅ Zone recommandée : {reco.zone_label}")
+        print(f"     Secteur : {reco.secteur}")
+        print(f"     Prix estimé : {reco.prix_estime}")
+        print(f"     Atout majeur : {reco.atout}")
+
+    if reco.besoins_speciaux:
+        print()
+        print_wrapped(
+            f"📌 Besoins spéciaux notés : {reco.besoins_speciaux.capitalize()}",
+            indent="  ",
+        )
+        print("     Ces exigences seront vérifiées lors de la sélection finale du terrain.")
+
+
 def handle_analyse_projet(data: dict):
     print("\n" + "═" * 78)
     print("  ANALYSE DE PROJET INDUSTRIEL — QUESTIONNAIRE")
@@ -235,35 +328,9 @@ def handle_analyse_projet(data: dict):
     print("  📋 ANALYSE ET RECOMMANDATIONS DU COMMISSAIRE")
     print("─" * 78)
 
-    # Logique de recommandation basée sur les réponses
-    secteur = reponses["secteur"].lower()
-    besoins = reponses["besoins_speciaux"].lower()
+    reco = recommend_zone(reponses)
+    _print_recommendation(reco)
 
-    if any(mot in secteur for mot in ["pétrochimie", "chimie", "raffinerie", "acier", "sidérurgie", "pétrole"]):
-        zone_recommandee = "M-2 — Zone industrielle lourde (bord du fleuve, Sorel-Tracy)"
-        print(f"\n  ✅ Zone recommandée : {zone_recommandee}")
-        print("     Secteur : Zone industrialo-portuaire / Chemin Saint-Roch, Tracy")
-        print("     Prix estimé : 3,00 – 4,00 $/pi²")
-        print("     Atout majeur : Accès direct au port de Sorel et à la voie ferrée CN")
-    elif any(mot in secteur for mot in ["logistique", "transport", "entrepôt", "distribution"]):
-        zone_recommandee = "M-1 — Zone industrielle légère (accès A-30)"
-        print(f"\n  ✅ Zone recommandée : {zone_recommandee}")
-        print("     Secteur : Boulevard Fiset / Autoroute 30, Sorel-Tracy")
-        print("     Prix estimé : 4,00 – 5,50 $/pi²")
-        print("     Atout majeur : Intersection A-30/Rte 132, hub logistique régional")
-    elif any(mot in secteur for mot in ["agroalimentaire", "alimentaire", "agricole", "transformation"]):
-        zone_recommandee = "M-1 — Zone agro-industrielle (Sainte-Anne-de-Sorel / Saint-Robert)"
-        print(f"\n  ✅ Zone recommandée : {zone_recommandee}")
-        print("     Secteur : Saint-Robert ou Sainte-Anne-de-Sorel")
-        print("     Prix estimé : 2,00 – 3,00 $/pi²")
-        print("     Atout majeur : Proximité des terres agricoles et du fleuve")
-    else:
-        print("\n  ✅ Recommandation générale : Zone M-1, Sorel-Tracy")
-        print("     Plusieurs terrains disponibles selon vos besoins spécifiques.")
-
-    if besoins:
-        print(f"\n  📌 Besoins spéciaux notés : {besoins.capitalize()}")
-        print("     Ces exigences seront vérifiées lors de la sélection finale du terrain.")
     print()
     print_wrapped(
         "Prochaine étape : Je vous invite à une rencontre de 30 minutes à nos bureaux "
