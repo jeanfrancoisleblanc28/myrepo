@@ -219,7 +219,7 @@ INDUSTRIE_LOURDE_KEYWORDS = (
 )
 LOGISTIQUE_KEYWORDS = ("logistique", "transport", "entrepôt", "distribution")
 AGROALIMENTAIRE_KEYWORDS = (
-    "agroalimentaire", "alimentaire", "agricole", "transformation",
+    "agroalimentaire", "alimentaire", "agricole", "transformation alimentaire",
 )
 
 
@@ -295,7 +295,11 @@ def _print_recommendation(reco: ZoneRecommendation) -> None:
         print(f"     Atout majeur : {reco.atout}")
 
     if reco.besoins_speciaux:
-        print(f"\n  📌 Besoins spéciaux notés : {reco.besoins_speciaux.capitalize()}")
+        print()
+        print_wrapped(
+            f"📌 Besoins spéciaux notés : {reco.besoins_speciaux.capitalize()}",
+            indent="  ",
+        )
         print("     Ces exigences seront vérifiées lors de la sélection finale du terrain.")
 
 

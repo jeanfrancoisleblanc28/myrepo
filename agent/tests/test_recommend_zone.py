@@ -1,5 +1,7 @@
 """Tests unitaires pour `recommend_zone` (logique de recommandation de zone)."""
 
+from dataclasses import FrozenInstanceError
+
 import pytest
 
 from commissaire_industriel import ZoneRecommendation, recommend_zone
@@ -47,13 +49,25 @@ def test_logistique_route_vers_m1_a30(secteur):
 
 @pytest.mark.parametrize(
     "secteur",
-    ["agroalimentaire", "agricole", "Transformation alimentaire", "transformation laitière"],
+    ["agroalimentaire", "agricole", "Transformation alimentaire", "Industrie alimentaire"],
 )
 def test_agroalimentaire_route_vers_m1_agro(secteur):
     reco = recommend_zone(_reponse(secteur=secteur))
     assert reco.code == "M-1"
     assert "agro-industrielle" in reco.zone_label
     assert "Saint-Robert" in reco.secteur
+
+
+@pytest.mark.parametrize(
+    "secteur",
+    ["transformation métallique", "transformation du bois", "atelier de transformation plastique"],
+)
+def test_transformation_non_alimentaire_ne_route_pas_vers_agro(secteur):
+    """Régression : 'transformation' seul ne doit pas faussement déclencher la zone agro."""
+    reco = recommend_zone(_reponse(secteur=secteur))
+    assert reco.code == "M-1"
+    assert "agro-industrielle" not in reco.zone_label
+    assert reco.is_default is True
 
 
 def test_secteur_inconnu_retourne_default():
@@ -124,5 +138,5 @@ def test_sans_besoins_speciaux_le_champ_reste_vide():
 def test_retour_est_un_dataclass_immuable():
     reco = recommend_zone(_reponse(secteur="logistique"))
     assert isinstance(reco, ZoneRecommendation)
-    with pytest.raises(Exception):
+    with pytest.raises(FrozenInstanceError):
         reco.code = "M-2"  # type: ignore[misc]
